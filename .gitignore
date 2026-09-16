@@ -42,3 +42,9 @@ xcuserdata/
 
 # ── Logs ────────────────────────────────────────────────────────────────────
 *.log
+
+# ── Fonts (fetched, not committed) ──────────────────────────────────────────
+# Fraunces + Inter variable .ttf masters are downloaded by scripts/fetch_fonts.sh
+# (same posture as a-new-word-every-day). .gitkeep and OFL.txt stay committed.
+RecipeToGroceryList/Resources/Fonts/*.ttf
+RecipeToGroceryList/Resources/Fonts/*.otf

@@ -1,0 +1,121 @@
+name: Checks
+
+# Config guardrails that don't need Xcode. Companion to ios-tests.yml, which
+# handles the actual iOS build/test. Inherited from workout-logger@5bffddfb80fc
+# and a-new-word-every-day@e829bcc9c0dc .github/workflows/checks.yml.
+#
+#   - the vendored design system matches its manifest (accidental-drift guard)
+#   - the App Group identifier in project.yml matches Shared/AppGroup.swift, so
+#     the Share Extension's inbox lands where the app looks for it
+#   - the bundled typeface list agrees between Theme.bundledTypefaces, Info.plist
+#     and fetch_fonts.sh
+#   - the store's write-path boundary holds (RecipeStore spans several files, so
+#     its raw connection and writers are internal; the compiler no longer polices
+#     feature-code access — check_store_boundary.sh does) and the extension never
+#     names the database
+#   - seed_ingredients.json is exactly what scripts/build_seed.py produces from
+#     the hand-authored, CC0 scripts/seed_source.json (bundled data is built,
+#     not hand-edited — SPEC §3)
+#   - the golden corpus fixture is well-formed and only references unit keys and
+#     seed slugs that actually exist
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  config-guardrails:
+    name: Config guardrails
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vendored design system integrity (accidental-drift guard)
+        run: bash scripts/check_designsystem_sync.sh
+      - name: App Group identifier sync (project.yml ↔ Swift)
+        run: bash scripts/check_appgroup_sync.sh
+      - name: Bundled typeface list sync (Theme.bundledTypefaces ↔ Info.plist ↔ fetch script)
+        run: bash scripts/check_fonts_sync.sh
+      - name: Store write-path boundary (raw db + store writers stay in Storage/; extension never opens the DB)
+        run: bash scripts/check_store_boundary.sh
+      - name: Seed regenerates deterministically from seed_source.json
+        run: |
+          set -euo pipefail
+          python3 scripts/build_seed.py --check
+          # git status --porcelain (unlike git diff) also catches a generated
+          # seed that was never committed — untracked output must fail too.
+          CHANGED=$(git status --porcelain RecipeToGroceryList/Resources/seed_ingredients.json)
+          if [ -n "$CHANGED" ]; then
+            echo "$CHANGED"
+            echo "::error::seed_ingredients.json is out of date or untracked — run python3 scripts/build_seed.py and commit the output."
+            exit 1
+          fi
+      - name: Golden corpus fixture is well-formed (ingredient_lines.json)
+        run: |
+          python3 - <<'PY'
+          import json, re, sys
+
+          # The closed unit vocabulary is declared in Swift; read the `key: "…"`
+          # literals so the fixture can never reference a unit the splitter
+          # does not know.
+          units_src = open("RecipeToGroceryList/Model/Units.swift", encoding="utf-8").read()
+          unit_keys = set(re.findall(r'UnitDefinition\(key:\s*"([^"]+)"', units_src))
+          if not unit_keys:
+              sys.exit("::error::no UnitDefinition(key: \"…\") literals found in RecipeToGroceryList/Model/Units.swift")
+
+          seed = json.load(open("RecipeToGroceryList/Resources/seed_ingredients.json", encoding="utf-8"))
+          items = seed if isinstance(seed, list) else next((v for v in seed.values() if isinstance(v, list)), None)
+          if not isinstance(items, list) or not items:
+              sys.exit("::error::seed_ingredients.json holds no ingredient list")
+          slugs = {item["slug"] for item in items}
+
+          fixture_path = "RecipeToGroceryListTests/Fixtures/ingredient_lines.json"
+          fixture = json.load(open(fixture_path, encoding="utf-8"))
+          if not isinstance(fixture, dict):
+              sys.exit(f"::error::{fixture_path} must be a top-level object with 'baseline' and 'lines'")
+
+          errors = []
+          baseline = fixture.get("baseline")
+          if not isinstance(baseline, dict):
+              errors.append("missing top-level 'baseline' object")
+              baseline = {}
+          for key in ("splitter", "resolution"):
+              value = baseline.get(key)
+              if isinstance(value, bool) or not isinstance(value, (int, float)) or not 0 <= value <= 1:
+                  errors.append(f"baseline.{key} must be a number in 0…1, got {value!r}")
+
+          lines = fixture.get("lines")
+          if not isinstance(lines, list):
+              sys.exit("::error::fixture 'lines' must be an array")
+          if len(lines) < 200:
+              errors.append(f"only {len(lines)} lines — the golden corpus needs at least 200 (SPEC §11)")
+
+          required = {"line", "quantity", "unit_key", "name", "note", "slug", "source"}
+          for i, row in enumerate(lines):
+              tag = f"lines[{i}]"
+              if not isinstance(row, dict):
+                  errors.append(f"{tag}: not an object"); continue
+              missing = required - set(row)
+              if missing:
+                  errors.append(f"{tag}: missing keys {sorted(missing)}"); continue
+              if not isinstance(row["line"], str) or not row["line"].strip():
+                  errors.append(f"{tag}: 'line' must be a non-empty string")
+              if not isinstance(row["name"], str):
+                  errors.append(f"{tag}: 'name' must be a string")
+              q = row["quantity"]
+              if q is not None and (isinstance(q, bool) or not isinstance(q, (int, float)) or q < 0):
+                  errors.append(f"{tag}: 'quantity' must be null or a non-negative number, got {q!r}")
+              if row["unit_key"] is not None and row["unit_key"] not in unit_keys:
+                  errors.append(f"{tag}: unit_key {row['unit_key']!r} is not declared in Units.swift")
+              if row["note"] is not None and not isinstance(row["note"], str):
+                  errors.append(f"{tag}: 'note' must be null or a string")
+              if row["slug"] is not None and row["slug"] not in slugs:
+                  errors.append(f"{tag}: slug {row['slug']!r} is not in seed_ingredients.json")
+              if not isinstance(row["source"], str) or not row["source"]:
+                  errors.append(f"{tag}: 'source' must be a non-empty string")
+
+          if errors:
+              sys.exit(f"::error::{fixture_path} invalid:\n" + "\n".join(errors[:50]))
+          print(f"{fixture_path} OK — {len(lines)} lines, baseline splitter={baseline['splitter']} "
+                f"resolution={baseline['resolution']}, {len(unit_keys)} unit keys, {len(slugs)} seed slugs")
+          PY

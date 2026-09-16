@@ -6,8 +6,9 @@ any set of saved recipes, and get a single merged list you can check off in
 the store. No login, no payment inside the app, nothing leaves the phone except
 the one page fetch you explicitly hand it.
 
-This document is the design for v1. Nothing is implemented yet — see
-[Status & scope](#status--scope). Sibling apps:
+This document is the design for v1. v1 is implemented on this branch, gate by
+gate per the [PR gates](#12-pr-gates) table — see
+[Status & scope](#status--scope) for what remains. Sibling apps:
 [Private Workout Logger](https://github.com/lukefwalton/workout-logger)
 (`workout-logger`) and
 [A New Word Every Day](https://github.com/lukefwalton/a-new-word-every-day)
@@ -508,12 +509,44 @@ marked **Closed** are decided and listed only so the reasoning is on record.
 
 ## Status & scope
 
-**v0.2 — design only.** Supersedes v0.1 (which lived in a chat, not the repo).
-No code exists. Changes from v0.1: corrected the inheritance section against
-the actual `workout-logger` source (layer naming, `@MainActor` placement,
-what the `compactMap` gate does, `NLContextualEmbedding` not `NLEmbedding`,
-pricing precedent); pulled design, theming, fonts, release tooling, seed-build
-and data-licensing patterns from `a-new-word-every-day`; dropped the clarification loop; replaced persisted
-`list_item` with computed membership + `check_state`; added the fetch policy,
-Share Extension inbox, per-row fallback, `resolution` provenance, *Keep as
-text*, check-state GC rule, unit table, golden corpus, and "done when" per gate.
+**v1.0 — implemented, device verification outstanding.** Every gate in §12 has
+landed on this branch in order: 0 scaffold, 1 schema + seed, 2 paste → splitter
+→ Confirm → save, 3 fuzzy/embedding resolution + aliases + golden corpus, 4
+Foundation Models adapter with per-row mapping, 5 Recipes screen, 6 List screen,
+7 URL import + Share Extension inbox, 8 photo import, plus the copy, corpus
+measurement and tooling for 9 and 10. The design above is unchanged except where
+a learnings entry says otherwise.
+
+What is **not** done, because it cannot be done where this was written (no
+Swift toolchain — see `docs/learnings/001-scaffold-and-inheritance.md`):
+
+- the first real `xcodebuild` (`bash scripts/fetch_fonts.sh && bash
+  scripts/generate.sh && bash scripts/run_tests.sh`) and whatever it turns up;
+- **gate 9** — manual QA on a device without Apple Intelligence, recorded in
+  `docs/learnings/008-non-ai-path.md`;
+- **gate 10** — the TestFlight archive via `scripts/archive_for_testflight.sh`,
+  real app-icon artwork, the two §13 decisions (free vs paid, source license)
+  and the checklist in `docs/app-store-metadata.md`.
+
+### Implementation notes
+
+Decision write-ups, one per gate, in `docs/learnings/`:
+
+1. [001 — scaffold and inheritance](learnings/001-scaffold-and-inheritance.md): what was copied from which sibling at which revision; database in the app sandbox (not the App Group); typeface picker limited to the two bundled faces; license and price left open; placeholder icon; the no-toolchain constraint and the owner's first steps.
+2. `002-seed-and-normalization.md`: the seed source of record, `build_seed.py`, the §7.1 normalizer and its Python mirror.
+3. `003-fuzzy-thresholds.md`: the symmetric token metric, the substring traps, thresholds calibrated on the golden corpus.
+4. `004-foundation-models-per-row-fallback.md`: `ModelIngredientMapping`, one session per recipe, why a bad row never declines the recipe.
+5. `005-computed-list.md`: `GroceryListBuilder`, check-state GC, the sum rule.
+6. `006-url-import-and-inbox.md`: the fetch policy as code, JSON-LD/microdata extraction, the Share Extension's one-way inbox.
+7. `007-photo-import.md`: Vision configuration, line merging, the single-column limitation.
+8. `008-non-ai-path.md`: the `refiner == nil` path end to end, corpus pass rate without layer 4, the manual QA record (gate 9).
+9. `009-app-store-readiness.md`: privacy manifest, metadata, screenshots, NOTICE audit, the archive (gate 10).
+
+History: **v0.2** (design only) superseded v0.1, which lived in a chat; it
+corrected the inheritance section against the actual `workout-logger` source,
+pulled the design/theming/fonts/release/seed-build/data-licensing patterns from
+`a-new-word-every-day`, dropped the clarification loop, replaced persisted
+`list_item` with computed membership + `check_state`, and added the fetch
+policy, Share Extension inbox, per-row fallback, `resolution` provenance, *Keep
+as text*, the check-state GC rule, the unit table, the golden corpus and "done
+when" per gate.

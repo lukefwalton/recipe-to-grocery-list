@@ -1,0 +1,150 @@
+# XcodeGen project definition for Recipe to Grocery List.
+# Generate the Xcode project with:  bash scripts/generate.sh
+# (install XcodeGen via `brew install xcodegen`). Set DEVELOPMENT_TEAM in
+# project.local.yml (copy from project.local.yml.example) or in Signing &
+# Capabilities after generate.
+#
+# Shape inherited from the siblings (workout-logger@5bffddfb80fc project.yml for
+# the app/tests split, SQLite link flag and the explicit Info.plist;
+# a-new-word-every-day@e829bcc9c0dc project.yml for the archive/profile scheme
+# actions and the fonts-as-enumerated-resources layout).
+#
+# The only entitlement is an App Group (group.com.lukewalton.recipetogrocerylist)
+# and it exists for exactly one thing: the Share Extension's one-way inbox — a
+# small JSON file the extension writes and the app drains (SPEC §5.1). The
+# database itself lives in the app's private sandbox, NOT the App Group, because
+# the extension never opens it. No account, no analytics; the app's single
+# network request is the page fetch the user hands it.
+
+name: RecipeToGroceryList
+options:
+  bundleIdPrefix: com.lukewalton
+  projectFormat: xcode15_0
+  deploymentTarget:
+    iOS: "17.0"            # family floor; Foundation Models is gated at iOS 26 inside the code
+  createIntermediateGroups: true
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGN_STYLE: Automatic
+
+# Vendored local Swift Package: the LFW design system (palette, typography,
+# theming, onboarding kit). Synced FROM a-new-word-every-day, never edited here —
+# scripts/check_designsystem_sync.sh guards the copy.
+packages:
+  LFWDesignSystem:
+    path: lfwdesignsystem
+
+targets:
+  RecipeToGroceryList:
+    type: application
+    platform: iOS
+    sources:
+      - path: RecipeToGroceryList/App
+      - path: RecipeToGroceryList/Features
+      - path: RecipeToGroceryList/Model
+      - path: RecipeToGroceryList/Parsing
+      - path: RecipeToGroceryList/Import
+      - path: RecipeToGroceryList/Vision
+      - path: RecipeToGroceryList/Shared
+      - path: RecipeToGroceryList/Storage
+      - path: RecipeToGroceryList/Resources
+        buildPhase: resources    # seed_ingredients.json + PrivacyInfo.xcprivacy + Fonts/*.ttf + OFL.txt
+        excludes:
+          - Assets.xcassets
+      - path: RecipeToGroceryList/Resources/Assets.xcassets
+    # App Group: shared with the Share Extension for the inbox file only. Keep the
+    # identifier in sync with AppGroup.identifier in
+    # RecipeToGroceryList/Shared/AppGroup.swift — scripts/check_appgroup_sync.sh
+    # (and CI) enforce it. XcodeGen writes the .entitlements and wires
+    # CODE_SIGN_ENTITLEMENTS.
+    entitlements:
+      path: RecipeToGroceryList/App/RecipeToGroceryList.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.lukewalton.recipetogrocerylist
+    dependencies:
+      - target: RecipeShareExtension   # embed the extension into the app bundle
+      - package: LFWDesignSystem
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lukewalton.recipetogrocerylist
+        INFOPLIST_FILE: RecipeToGroceryList/App/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # iOS bundles SQLite; link it so `import SQLite3` resolves everywhere.
+        OTHER_LDFLAGS: ["-lsqlite3"]
+
+  # Share Extension (SPEC §5.1): receives a URL or plain text from the share
+  # sheet, appends it to the App Group inbox, says "Added. Open Recipe to Grocery
+  # List to finish." Zero parsing, zero networking, no SQLite, no design system —
+  # it compiles only its own folder plus the Shared module (AppGroup, ShareInbox,
+  # RecipeDateFormat). scripts/check_store_boundary.sh fails CI if anything under
+  # RecipeShareExtension/ so much as names the store.
+  RecipeShareExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      # The folder also carries the extension's own PrivacyInfo.xcprivacy (App
+      # Store requires a manifest per shipped bundle); XcodeGen auto-bundles the
+      # .xcprivacy as a resource. Its Info.plist is a committed file (the
+      # NSExtension activation rule lives there), so it is pointed at with
+      # INFOPLIST_FILE rather than generated from an `info:` block.
+      - path: RecipeShareExtension
+      - path: RecipeToGroceryList/Shared
+    entitlements:
+      path: RecipeShareExtension/RecipeShareExtension.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.lukewalton.recipetogrocerylist
+    dependencies:
+      - sdk: UIKit.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lukewalton.recipetogrocerylist.share
+        INFOPLIST_FILE: RecipeShareExtension/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+
+  RecipeToGroceryListTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: RecipeToGroceryListTests
+        excludes:
+          - Fixtures
+      # Golden corpus + saved HTML pages, bundled flat so tests load them with
+      # Bundle(for: Self.self).url(forResource:withExtension:) — keep basenames unique.
+      - path: RecipeToGroceryListTests/Fixtures
+        buildPhase: resources
+      # The seed JSON is loaded from the test bundle so store tests can seed
+      # without hosting into the app.
+      - path: RecipeToGroceryList/Resources
+        buildPhase: resources
+        excludes:
+          - Assets.xcassets
+    dependencies:
+      - target: RecipeToGroceryList
+      - package: LFWDesignSystem   # tests import LFW types directly (theme config, typefaces)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lukewalton.recipetogrocerylist.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  RecipeToGroceryList:
+    build:
+      targets:
+        RecipeToGroceryList: all
+    test:
+      targets:
+        - RecipeToGroceryListTests
+    run:
+      config: Debug
+    archive:
+      config: Release
+    profile:
+      config: Release

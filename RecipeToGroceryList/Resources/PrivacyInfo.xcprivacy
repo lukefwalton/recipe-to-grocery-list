@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  App Store privacy manifest (validated at upload — see
+	  docs/learnings/001-scaffold-and-inheritance.md). Recipe to Grocery List
+	  collects nothing, tracks nothing, and contacts no server of its own; the
+	  one network request is the page fetch the user asks for. The only
+	  required-reason API it touches is UserDefaults, via UserDefaults.standard
+	  in App/SettingsStore.swift (theme + onboarding flag) — reason CA92.1,
+	  app-functionality persistence, the same entry as
+	  workout-logger@5bffddfb80fc WorkoutChatLog/Resources/PrivacyInfo.xcprivacy.
+	  The App Group inbox is a plain file in the group container, not shared
+	  UserDefaults, so no 1C8F.1 entry; SQLite and FileManager.containerURL are
+	  not on Apple's required-reason list.
+	-->
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+</dict>
+</plist>

@@ -1,0 +1,3 @@
+# Variable .ttf files (Fraunces, Inter) are fetched here by scripts/fetch_fonts.sh
+# and are gitignored (binaries). OFL.txt (the license we must ship) sits next to
+# this file and IS committed.
