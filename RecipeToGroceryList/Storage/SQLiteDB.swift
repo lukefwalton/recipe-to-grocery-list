@@ -11,7 +11,7 @@ private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.sel
 /// about recipes. The domain SQL lives in `RecipeStore`.
 ///
 /// Inherited verbatim from `workout-logger` (`Storage/SQLiteDB.swift` at
-/// `5bffddfb80fc`); see `docs/learnings/001-scaffold.md`. Only the doc comments
+/// `5bffddfb80fc`); see `docs/learnings/001-scaffold-and-inheritance.md`. Only the doc comments
 /// that named workout types were re-pointed at this app's.
 ///
 /// `@unchecked Sendable` rests on two layers. `SQLITE_OPEN_FULLMUTEX` (see

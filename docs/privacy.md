@@ -8,6 +8,17 @@ no tracking. The app makes exactly one kind of network request, and only when yo
 ask it to: when you give it a link, the app downloads that page, once, and
 nothing else.
 
+## The promise, in five sentences
+
+These are the exact sentences the app shows on its Privacy screen (Settings →
+Privacy); the rest of this page explains each of them.
+
+- Your recipes, ingredients and list live in a database on this phone.
+- When you give it a link, the app downloads that page, once, and nothing else.
+- Photos are read on this phone and never stored.
+- On devices with Apple Intelligence, the app may use Apple's on-device model to read ingredient lines. No cloud AI, ever.
+- No account, no analytics, no crash reporter, no third-party code.
+
 ## What we collect
 
 **Nothing.** Recipe to Grocery List has no analytics, no advertising SDKs, no
