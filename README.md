@@ -49,6 +49,9 @@ SwiftUI, on-device, shared design system, XcodeGen, one write path.
 
 ## Documentation
 
+This README is the overview. [docs/SPEC.md](docs/SPEC.md) is the normative
+design document; when the two disagree, the spec wins and the README gets fixed.
+
 - [docs/SPEC.md](docs/SPEC.md) — the v1 design: principles, what is inherited
   from the sibling apps and what deliberately isn't, data model, parse pipeline,
   units policy, list behavior, privacy, testing, PR gates, open decisions.

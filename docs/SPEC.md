@@ -87,6 +87,17 @@ Look, feel, theming, fonts, release scripts, and the data-licensing posture come
 from `a-new-word-every-day`, which is the most polished of the family and the
 canonical home of the design system.
 
+Every citation below was checked against a specific revision and refers to that
+revision, not to whatever the sibling repos contain later:
+
+| Repo | Revision | Date |
+|---|---|---|
+| `lukefwalton/workout-logger` | `5bffddfb80fc` | 2026-07-11 |
+| `lukefwalton/a-new-word-every-day` | `e829bcc9c0dc` (`lfwdesignsystem` 2.3.0) | 2026-09-01 |
+
+When a gate copies a pattern, cite the file at the revision you copied from; if it
+has moved on, re-read it and update this table in the same PR.
+
 | Pattern | Source | Notes |
 |---|---|---|
 | Raw `sqlite3` C API, no ORM; WAL, `foreign_keys = ON`, whole-closure lock around `transaction` / `readTransaction`, read-only enforcement via `sqlite3_stmt_readonly` | `Storage/SQLiteDB.swift` | Rationale in `docs/learnings/001-spine.md`: zero dependencies, app-owned SQL |
@@ -475,6 +486,10 @@ Sequential; each PR is one gate, lands with tests, and adds a `docs/learnings/` 
 ---
 
 ## 13. Open decisions
+
+Every row is the owner's call; nothing here is decided by a gate landing. "Decide
+by" is the gate that cannot start until the answer is in this document. Rows
+marked **Closed** are decided and listed only so the reasoning is on record.
 
 | Question | Lean | Decide by |
 |---|---|---|
