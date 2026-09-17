@@ -358,8 +358,8 @@ Input is the normalized `name` (regex or LLM). `canonicalGuess` is only consulte
 | 0 | exact `canonical_name` match (NOCASE) | `exact` | resolved |
 | 1 | `ingredient_aliases` hit | `alias` | resolved |
 | 1.5 | loose key (7.1 applied to both sides) against names and aliases | `loose` | resolved |
-| 2 | fuzzy: `max(jaroWinkler(whole), tokenAverage)` ≥ threshold (start 0.78, recalibrate) against names and aliases | `fuzzy` | resolved, highlighted |
-| 3 | `NLContextualEmbedding` mean-pooled cosine ≥ threshold (start 0.85) when fuzzy is below its escalation bar; additive, never displaces a fuzzy hit | `embedding` | resolved, highlighted |
+| 2 | fuzzy: `max(jaroWinkler(whole), tokenAverage)` ≥ threshold (start 0.78, recalibrate) against names and aliases — shipped at **0.86**, with a symmetric token metric and a head-noun cap (`003`) | `fuzzy` | resolved, highlighted |
+| 3 | `NLContextualEmbedding` mean-pooled cosine ≥ threshold (start 0.85) when fuzzy is below its escalation bar; additive, never displaces a fuzzy hit — shipped at 0.85 with the bar at **0.93**, which must stay above the layer-2 threshold or this path is unreachable (`003`) | `embedding` | resolved, highlighted |
 | 4 | run layers 0–1.5 again on the LLM's `canonicalGuess`; if it hits, that ingredient is the suggestion | `llm` | suggested, requires tap |
 | — | nothing hit | `none` | **new ingredient**, requires tap |
 
@@ -500,7 +500,7 @@ marked **Closed** are decided and listed only so the reasoning is on record.
 | Category grouping | **Closed**: ship the eight categories in §6 in store order. Dropping grouping saves nothing and the seed carries the data anyway. | — |
 | Photo capture API | **Closed**: still photo + `VNRecognizeTextRequest`. | — |
 | May `canonicalGuess` propose something outside the seed + custom set? | Yes, unconstrained; but it can only ever produce a *suggestion*, and a guess that matches nothing lands in *New* like any other row. Model proposes, app confirms. | Gate 4 |
-| Fuzzy / embedding thresholds | Start at workout values (0.78 / 0.85), recalibrate on the corpus, expect tighter | Gate 3 |
+| Fuzzy / embedding thresholds | **Closed**: recalibrated on the corpus as instructed, and it did come out tighter — 0.86 fuzzy / 0.85 semantic with a 0.93 escalation bar, plus a head-noun cap on the metric. `docs/learnings/003-fuzzy-thresholds.md` has the sweep. | Gate 3 |
 | Share Extension in v1 or v1.1 | v1, gate 7, but paste-a-URL ships first and the extension can slip without blocking release | Gate 7 |
 | Ingredient merge/rename UI | v1.1 | — |
 | Theming | **Closed**: reuse `LFWThemeConfig` with Forest default and the existing palette/typeface picker. No new tokens, no new components unless the word repo gets them first. | — |

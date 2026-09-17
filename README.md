@@ -76,8 +76,13 @@ design document; when the two disagree, the spec wins and the README gets fixed.
 - [docs/app-store-metadata.md](docs/app-store-metadata.md) and
   [docs/app-store-review-notes.md](docs/app-store-review-notes.md) — listing
   copy (no price words), review notes, the 1.0 checklist.
-- [docs/learnings/](docs/learnings/) — decision write-ups per gate, starting
-  with [001 — scaffold and inheritance](docs/learnings/001-scaffold-and-inheritance.md).
+- [docs/learnings/](docs/learnings/) — decision write-ups, one per gate, 001–010:
+  [scaffold and inheritance](docs/learnings/001-scaffold-and-inheritance.md),
+  the seed and normalizer, [fuzzy thresholds calibrated on the
+  corpus](docs/learnings/003-fuzzy-thresholds.md), per-row model fallback, the
+  computed list, URL import and the inbox, photo import, [the device without
+  Apple Intelligence](docs/learnings/008-non-ai-path.md), App Store readiness,
+  and [the CI guards that stand in for a compiler](docs/learnings/010-guards-without-a-compiler.md).
 - [.github/STANDARDS.md](.github/STANDARDS.md) — the doctrine PRs are reviewed
   against. [NOTICE.md](NOTICE.md) — the reuse log.
 
@@ -104,7 +109,9 @@ bash scripts/run_tests.sh                         # or open RecipeToGroceryList.
 Register the App Group (`group.com.lukewalton.recipetogrocerylist`) for your team;
 the Share Extension needs it. CI: `.github/workflows/ios-tests.yml` (unit tests +
 a Foundation Models compile guard) and `checks.yml` (design-system checksum, App
-Group sync, font list, store boundary, seed regeneration, golden-corpus fixture).
+Group sync, font list, store boundary, seed regeneration, golden-corpus fixture,
+the SQL schema executed and diffed against the spec, and a source check that every
+file is compiled and imports what it uses).
 
 ## License
 
