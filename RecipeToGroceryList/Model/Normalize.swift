@@ -70,8 +70,15 @@ enum IngredientNormalizer {
     /// One trailing plural, on words longer than 3 characters (spec: "tomatoes →
     /// tomato, but hummus stays"). Words ending in -us / -ss / -is are never
     /// plurals in this vocabulary and keep their s.
+    ///
+    /// Letters **and hyphens** qualify, because a hyphenated compound is still one
+    /// food word and `looseKey` promises that "chick peas", "chickpeas" and
+    /// "chick-peas" all join — they cannot if the hyphenated spelling keeps its
+    /// plural. Anything else with a non-letter ("m&ms", "2%") is left alone: those
+    /// are not plurals to strip. Verified against the whole seed: allowing the
+    /// hyphen changes no canonical, alias or loose key in `seed_source.json`.
     static func singularize(_ word: String) -> String {
-        guard word.count > 3, word.allSatisfy(\.isLetter) else { return word }
+        guard word.count > 3, word.allSatisfy({ $0.isLetter || $0 == "-" }) else { return word }
         if singularExceptions.contains(word) { return word }
         if word.hasSuffix("ies"), word.count > 4 {
             return String(word.dropLast(3)) + "y"                 // berries → berry

@@ -83,11 +83,15 @@ final class IngredientNormalizerTests: XCTestCase {
         XCTAssertEqual(IngredientNormalizer.singularize("Swiss"), "Swiss", "case-sensitive exception list, capitalised input keeps its s via the -ss rule")
     }
 
-    func testSingularizeSkipsWordsWithNonLetters() {
-        // Documented current behaviour: a hyphenated last word is not singularized, so
-        // "chick-peas" stays as is (the loose key still joins "chick peas"/"chickpeas").
-        XCTAssertEqual(IngredientNormalizer.singularize("chick-peas"), "chick-peas")
+    func testSingularizeAcceptsHyphensAndSkipsOtherNonLetters() {
+        // A hyphenated compound is still one food word, so it singularizes — this is
+        // what makes `looseKey`'s promise about "chick-peas" true (below).
+        XCTAssertEqual(IngredientNormalizer.singularize("chick-peas"), "chick-pea")
+        XCTAssertEqual(IngredientNormalizer.singularize("half-and-half"), "half-and-half",
+                       "no trailing plural to strip")
+        // Anything else with a non-letter is left alone; those are not plurals.
         XCTAssertEqual(IngredientNormalizer.singularize("m&ms"), "m&ms")
+        XCTAssertEqual(IngredientNormalizer.singularize("2%s"), "2%s")
     }
 
     // MARK: - looseKey
@@ -96,6 +100,8 @@ final class IngredientNormalizerTests: XCTestCase {
         XCTAssertEqual(IngredientNormalizer.looseKey("chick peas"), "chickpea")
         XCTAssertEqual(IngredientNormalizer.looseKey("Chickpea"), "chickpea")
         XCTAssertEqual(IngredientNormalizer.looseKey("chickpeas"), "chickpea")
+        XCTAssertEqual(IngredientNormalizer.looseKey("chick-peas"), "chickpea",
+                       "the doc comment's third spelling, and the reason singularize accepts a hyphen")
         XCTAssertEqual(IngredientNormalizer.looseKey("Green-onion"), "greenonion")
         XCTAssertEqual(IngredientNormalizer.looseKey("green onion"), "greenonion")
         XCTAssertEqual(IngredientNormalizer.looseKey("Bell Pepper"), "bellpepper")

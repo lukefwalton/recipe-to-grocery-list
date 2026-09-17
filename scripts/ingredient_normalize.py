@@ -104,10 +104,14 @@ def trimming_punctuation(token: str) -> str:
 
 def singularize(word: str) -> str:
     """Swift `singularize`: one trailing plural on words longer than 3 characters
-    ("tomatoes → tomato, but hummus stays"). Branch order is the Swift order."""
-    # guard word.count > 3, word.allSatisfy(\.isLetter)
+    ("tomatoes → tomato, but hummus stays"). Branch order is the Swift order.
+
+    Letters and hyphens qualify, so a hyphenated compound singularizes too
+    ("chick-peas" → "chick-pea") and layer 1.5's key joins it with "chick peas"
+    and "chickpeas". Anything else with a non-letter ("m&ms") is left alone."""
+    # guard word.count > 3, word.allSatisfy({ $0.isLetter || $0 == "-" })
     # (After `_fold` no combining marks remain, so len() == Swift's Character count.)
-    if len(word) <= 3 or not word.isalpha():
+    if len(word) <= 3 or not all(ch.isalpha() or ch == "-" for ch in word):
         return word
     if word in SINGULAR_EXCEPTIONS:
         return word
@@ -188,11 +192,12 @@ def _self_test() -> None:
         (singularize, "chips", "chips"),
         # The exception set is case-sensitive; capitalised input keeps its s via -ss.
         (singularize, "Swiss", "Swiss"),
-        # Not all letters → never singularized (IngredientNormalizerTests pins this;
-        # the loose key still joins "chick peas"/"chickpeas").
-        (singularize, "half-and-half", "half-and-half"),
-        (singularize, "chick-peas", "chick-peas"),
+        # Hyphens qualify, so a compound singularizes and layer 1.5's key joins the
+        # three spellings of chickpea; anything else with a non-letter is left alone.
+        (singularize, "half-and-half", "half-and-half"),   # no trailing s to strip
+        (singularize, "chick-peas", "chick-pea"),
         (singularize, "m&ms", "m&ms"),
+        (singularize, "2%s", "2%s"),
         # normalize — doc comments and §7.1
         (normalize, "the Green Onions", "green onion"),
         (normalize, "jalapeño (fresh)", "jalapeno"),
@@ -210,6 +215,7 @@ def _self_test() -> None:
         (normalize, "the onions,", "onion"),
         (normalize, "Brussels sprouts", "brussels sprout"),
         (normalize, "Chick peas", "chick pea"),
+        (normalize, "Chick-Peas", "chick-pea"),
         (normalize, "salt & pepper", "salt pepper"),
         (normalize, "2% milk", "2 milk"),
         (normalize, "Tomatoes (diced (small))", "tomato"),
@@ -224,7 +230,7 @@ def _self_test() -> None:
         (loose_key, "chick peas", "chickpea"),
         (loose_key, "Chickpea", "chickpea"),
         (loose_key, "chickpeas", "chickpea"),
-        (loose_key, "chick-peas", "chickpeas"),   # hyphenated last word is not singularized
+        (loose_key, "chick-peas", "chickpea"),    # the three spellings meet here
         (loose_key, "Green-onion", "greenonion"),
         (loose_key, "green onion", "greenonion"),
         (loose_key, "half-and-half", "halfandhalf"),
