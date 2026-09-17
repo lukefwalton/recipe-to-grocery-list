@@ -1063,7 +1063,9 @@
       "fresh cilantro",
       "cilantro leaves",
       "chinese parsley",
-      "fresh coriander leaves"
+      "fresh coriander leaves",
+      "chopped fresh cilantro",
+      "chopped cilantro"
     ]
   },
   {
@@ -2409,7 +2411,8 @@
     "aliases": [
       "fresh lemon",
       "whole lemon",
-      "meyer lemon"
+      "meyer lemon",
+      "lemon wedges"
     ]
   },
   {
@@ -2995,7 +2998,8 @@
       "shredded parmesan",
       "parmigiano",
       "freshly grated parmesan",
-      "grana padano"
+      "grana padano",
+      "grated parmesan cheese"
     ]
   },
   {
@@ -3010,7 +3014,9 @@
       "flat leaf parsley",
       "fresh flat-leaf parsley",
       "dried parsley",
-      "parsley flakes"
+      "parsley flakes",
+      "chopped parsley",
+      "chopped fresh parsley"
     ]
   },
   {
@@ -3554,7 +3560,8 @@
       "uncooked rice",
       "plain white rice",
       "cooked rice",
-      "steamed rice"
+      "steamed rice",
+      "cooked white rice"
     ]
   },
   {
@@ -3989,7 +3996,8 @@
       "linguini",
       "angel hair pasta",
       "angel hair",
-      "bucatini"
+      "bucatini",
+      "dried spaghetti"
     ]
   },
   {
