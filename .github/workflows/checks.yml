@@ -13,6 +13,10 @@ name: Checks
 #     its raw connection and writers are internal; the compiler no longer polices
 #     feature-code access — check_store_boundary.sh does) and the extension never
 #     names the database
+#   - Schema.v1 is valid SQLite (it is a *string* the compiler cannot check, run on
+#     the one code path a user cannot retry), agrees with the SPEC §6 block that
+#     duplicates it, and its CHECK vocabularies match IngredientCategory /
+#     SourceKind / RowResolution
 #   - seed_ingredients.json is exactly what scripts/build_seed.py produces from
 #     the hand-authored, CC0 scripts/seed_source.json (bundled data is built,
 #     not hand-edited — SPEC §3)
@@ -38,6 +42,8 @@ jobs:
         run: bash scripts/check_fonts_sync.sh
       - name: Store write-path boundary (raw db + store writers stay in Storage/; extension never opens the DB)
         run: bash scripts/check_store_boundary.sh
+      - name: Schema v1 executes in SQLite and matches SPEC §6 + the Swift enums
+        run: python3 scripts/check_schema.py
       - name: Seed regenerates deterministically from seed_source.json
         run: |
           set -euo pipefail

@@ -10,8 +10,11 @@ import Foundation
 /// legacy-shape guard (this app has never shipped a different shape, so there is
 /// nothing to refuse). The v1 literal below is the SPEC §6 SQL verbatim plus the
 /// lookup indexes the store's hot queries need; `SchemaTests` pins the table set
-/// and the version stamp, and `scratchpad/sql_check.py` diffs the literal against
-/// the spec block during review.
+/// and the version stamp, and `scripts/check_schema.py` runs in CI to execute this
+/// literal in real SQLite, diff it against the spec block, and check its CHECK
+/// vocabularies against `IngredientCategory` / `SourceKind` / `RowResolution`.
+/// That guard exists because this is a *string*: a typo in it compiles cleanly and
+/// fails at first launch, on the one code path a user cannot retry.
 enum Schema {
     static let latestVersion = 1
 
