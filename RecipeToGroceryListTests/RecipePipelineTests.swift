@@ -13,6 +13,7 @@ final class RecipePipelineTests: XCTestCase {
     }
 
     /// Four canonicals. "stock for soup", "salt" and "flour" fuzzy-score below 0.78
+    /// — and so, a fortiori, below the calibrated 0.86 threshold —
     /// against every name and alias here (checked with the Python port of the metric),
     /// so they reach layer 4 / land in *New* deterministically.
     private let index = IngredientIndex(entries: [

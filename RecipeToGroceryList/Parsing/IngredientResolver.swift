@@ -21,9 +21,11 @@ struct IngredientResolution: Equatable, Sendable {
 /// semantic layer is opportunistic — additive, never displacing a fuzzy hit, and
 /// silent when embeddings are not ready.
 ///
-/// Thresholds start at the workout values (0.78 / 0.85) and are recalibrated on the
-/// golden corpus (§11, §13); they are instance properties so tests and a future
-/// Settings toggle can vary them without touching the algorithm.
+/// Thresholds started at the workout values (0.78 / 0.85) and **were** recalibrated
+/// on the golden corpus (§11, §13) — they now sit at 0.86 fuzzy, 0.85 semantic, with
+/// a 0.93 escalation bar (`docs/learnings/003-fuzzy-thresholds.md`). They are
+/// instance properties so tests and a future Settings toggle can vary them without
+/// touching the algorithm.
 struct IngredientResolver {
     let index: IngredientIndex
     /// Canonical vectors embedded once per index (`SemanticCandidateSet.build`).
@@ -36,9 +38,26 @@ struct IngredientResolver {
     /// Layer 3 is consulted only while the best fuzzy score is below this bar.
     var semanticEscalationBar: Double = IngredientResolver.defaultSemanticEscalationBar
 
-    static let defaultFuzzyThreshold = 0.78
+    /// Calibrated on the golden corpus (§11, §13), which is exactly what the spec
+    /// asked for: "start at workout values (0.78 / 0.85), recalibrate on the
+    /// corpus, expect tighter". Sweeping the corpus with the head-noun cap in
+    /// place, 0.86 is where wrong matches reach **zero** — at 0.78 seven lines
+    /// resolved to something they are not (saffron→Salmon, ong choy→Bok choy,
+    /// calamansi juice→Lemon juice), and past 0.86 accuracy only falls as real
+    /// matches start being missed. The asymmetry is the point: a wrong match is a
+    /// wrong ingredient the user may accept, while a miss lands in *New* and costs
+    /// one deliberate tap (§7.5).
+    static let defaultFuzzyThreshold = 0.86
     static let defaultSemanticThreshold = 0.85
-    static let defaultSemanticEscalationBar = 0.85
+    /// The bar must sit **above** `defaultFuzzyThreshold`, or layer 3's "additive,
+    /// never displacing" behaviour (§7.4) is unreachable: every fuzzy hit would
+    /// already clear the bar and the semantic layer would only ever run when fuzzy
+    /// found nothing. The spec's starting pair kept the bar 0.07 above the
+    /// threshold (0.78 / 0.85); recalibrating the threshold to 0.86 carries that
+    /// gap along. A marginal fuzzy hit (0.86…0.93, "sour creme" → Sour cream) can
+    /// therefore still gather semantic alternatives for the picker, while a
+    /// confident one (≥ 0.93) skips the embedding entirely.
+    static let defaultSemanticEscalationBar = 0.93
     /// How many near misses ride along for the "change ingredient" picker.
     static let alternativesLimit = 3
 

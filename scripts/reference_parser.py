@@ -706,9 +706,16 @@ def similarity(query: str, candidate: str) -> float:
     if q == c:
         return 1.0
     token_score = token_similarity(q, c)
-    if len(fuzzy_tokens(q)) != len(fuzzy_tokens(c)):
-        return token_score
-    return max(jaro_winkler(q, c), token_score)
+    if len(fuzzy_tokens(q)) == len(fuzzy_tokens(c)):
+        score = max(jaro_winkler(q, c), token_score)
+    else:
+        score = token_score
+    # Two ingredient names are at most as similar as their head nouns: a shared
+    # modifier ("grated gruyere" vs the alias "grated nutmeg") must not carry a match.
+    qh, ch = fuzzy_tokens(q), fuzzy_tokens(c)
+    if not qh or not ch:
+        return score
+    return min(score, jaro_winkler(qh[-1], ch[-1]))
 
 
 # ---------------------------------------------------------------------------
@@ -717,7 +724,7 @@ def similarity(query: str, candidate: str) -> float:
 
 # IngredientResolver.defaultFuzzyThreshold / alternativesLimit. Layer 3 (embeddings) is off
 # here, exactly as GoldenCorpusTests scores it — the path every device has (§7.6).
-DEFAULT_FUZZY_THRESHOLD = 0.78
+DEFAULT_FUZZY_THRESHOLD = 0.86
 ALTERNATIVES_LIMIT = 3
 
 
@@ -1006,8 +1013,8 @@ def explain(line: str, seed_path: Path) -> None:
 # Self-test — the Swift authors' designed cases
 # ---------------------------------------------------------------------------
 
-# scratchpad/splitter_check.py CASES, the cases IngredientLineSplitterTests and
-# QuantityParserTests pin: (line, quantity, unit_key, name, note).
+# The cases IngredientLineSplitterTests and QuantityParserTests pin, in the same
+# shape: (line, quantity, unit_key, name, note).
 SPLITTER_CASES: tuple[tuple[str, float | None, str | None, str, str | None], ...] = (
     ("2 cups vegetable broth", 2.0, "cup", "vegetable broth", None),
     ("1 1/2 tsp. kosher salt", 1.5, "tsp", "kosher salt", None),
@@ -1137,17 +1144,17 @@ FUZZY_VALUE_CASES: tuple[tuple[str, float], ...] = (
     ("jaroWinkler('dixon','dicksonx')", 0.8133),
     ("jaroWinkler('tomatos','tomato')", 0.9714),
     ("similarity('cream','Sour cream')", 0.5),
-    ("similarity('chicken','Chicken broth')", 0.5),
-    ("similarity('garlic','Garlic powder')", 0.5),
+    ("similarity('chicken','Chicken broth')", 0.0),
+    ("similarity('garlic','Garlic powder')", 0.0),
     ("similarity('smoked paprika','Paprika')", 0.7183),
     ("similarity('brown sugar','Sugar')", 0.5),
     ("similarity('veggie broth','Vegetable broth')", 0.8963),
-    ("similarity('bell peper','Bell pepper')", 0.9818),
+    ("similarity('bell peper','Bell pepper')", 0.9611),
     ("similarity('mozzarela','Mozzarella')", 0.98),
     ("similarity('chiken','Chicken')", 0.9667),
     ("similarity('asdfqwer','Bell pepper')", 0.2639),
     ("similarity('ice cream','Cream')", 0.8444),
-    ("similarity('baking soda','Baking powder')", 0.9021),
+    ("similarity('baking soda','Baking powder')", 0.6111),
 )
 
 
@@ -1222,27 +1229,30 @@ def selftest() -> int:
         ("similarity('   ','Onion') == 0", similarity("   ", "Onion") == 0),
         ("similarity('(note only)','Onion') == 0", similarity("(note only)", "Onion") == 0),
         # The substring traps stay under the threshold; the real variants clear it.
-        ("cream/Sour cream < 0.78", similarity("cream", "Sour cream") < DEFAULT_FUZZY_THRESHOLD),
-        ("chicken/Chicken broth < 0.78", similarity("chicken", "Chicken broth") < DEFAULT_FUZZY_THRESHOLD),
-        ("Chicken Broth/Chicken < 0.78", similarity("Chicken Broth", "Chicken") < DEFAULT_FUZZY_THRESHOLD),
-        ("garlic clove/Garlic < 0.78", similarity("garlic clove", "Garlic") < DEFAULT_FUZZY_THRESHOLD),
-        ("red onion/Onion < 0.78", similarity("red onion", "Onion") < DEFAULT_FUZZY_THRESHOLD),
-        ("green onions/Onion < 0.78", similarity("green onions", "Onion") < DEFAULT_FUZZY_THRESHOLD),
-        ("smoked paprika/Paprika < 0.78", similarity("smoked paprika", "Paprika") < DEFAULT_FUZZY_THRESHOLD),
-        ("brown sugar/Sugar < 0.78", similarity("brown sugar", "Sugar") < DEFAULT_FUZZY_THRESHOLD),
-        ("cilantro/Coriander < 0.78", similarity("cilantro", "Coriander") < DEFAULT_FUZZY_THRESHOLD),
-        ("veggie broth/Vegetable broth >= 0.78",
+        ("cream/Sour cream < the threshold", similarity("cream", "Sour cream") < DEFAULT_FUZZY_THRESHOLD),
+        ("chicken/Chicken broth < the threshold", similarity("chicken", "Chicken broth") < DEFAULT_FUZZY_THRESHOLD),
+        ("Chicken Broth/Chicken < the threshold", similarity("Chicken Broth", "Chicken") < DEFAULT_FUZZY_THRESHOLD),
+        ("garlic clove/Garlic < the threshold", similarity("garlic clove", "Garlic") < DEFAULT_FUZZY_THRESHOLD),
+        ("red onion/Onion < the threshold", similarity("red onion", "Onion") < DEFAULT_FUZZY_THRESHOLD),
+        ("green onions/Onion < the threshold", similarity("green onions", "Onion") < DEFAULT_FUZZY_THRESHOLD),
+        ("smoked paprika/Paprika < the threshold", similarity("smoked paprika", "Paprika") < DEFAULT_FUZZY_THRESHOLD),
+        ("brown sugar/Sugar < the threshold", similarity("brown sugar", "Sugar") < DEFAULT_FUZZY_THRESHOLD),
+        ("cilantro/Coriander < the threshold", similarity("cilantro", "Coriander") < DEFAULT_FUZZY_THRESHOLD),
+        ("veggie broth/Vegetable broth >= the threshold",
          similarity("veggie broth", "Vegetable broth") >= DEFAULT_FUZZY_THRESHOLD),
-        ("veggie stock/Vegetable stock >= 0.78",
+        ("veggie stock/Vegetable stock >= the threshold",
          similarity("veggie stock", "Vegetable stock") >= DEFAULT_FUZZY_THRESHOLD),
-        ("greek yoghurt/Greek yogurt >= 0.78",
+        ("greek yoghurt/Greek yogurt >= the threshold",
          similarity("greek yoghurt", "Greek yogurt") >= DEFAULT_FUZZY_THRESHOLD),
         ("qwertyuiop/Olive oil < 0.6", similarity("qwertyuiop", "Olive oil") < 0.6),
         # The word-count gate itself.
-        ("same word count may use the whole-string score",
-         similarity("bell peper", "Bell pepper") > token_similarity("bell peper", "bell pepper")),
-        ("different word counts use the token metric alone",
-         abs(similarity("chicken", "Chicken broth") - token_similarity("chicken", "chicken broth")) < 1e-9),
+        ("same word count uses the whole-string score, capped by the head nouns",
+         abs(similarity("bell peper", "Bell pepper") - jaro_winkler("peper", "pepper")) < 1e-9),
+        ("different word counts never exceed the token metric",
+         similarity("chicken", "Chicken broth") <= token_similarity("chicken", "chicken broth") + 1e-9),
+        ("a shared modifier does not carry a match",
+         similarity("grated gruyere", "grated nutmeg") < DEFAULT_FUZZY_THRESHOLD
+         and similarity("shredded carot", "shredded cheddar") < DEFAULT_FUZZY_THRESHOLD),
         ("similarity is symmetric",
          all(abs(similarity(a, b) - similarity(b, a)) < 1e-9
              for a, b in (("veggie broth", "Vegetable broth"), ("chicken", "Chicken broth"),

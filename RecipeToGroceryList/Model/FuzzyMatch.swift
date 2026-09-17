@@ -19,7 +19,19 @@ import Foundation
 /// only when both sides have the same number of words — its job is single-word typos
 /// (`mozzarela`) and same-shape multi-word typos (`bell peper`); when the word counts
 /// differ, the symmetric token metric alone decides. Verified against a Python port
-/// before the threshold tests were written (`scratchpad/fuzzy_check.py`).
+/// before the threshold tests were written; that port is committed as
+/// `scripts/reference_parser.py`, whose `--selftest` pins seventeen similarity
+/// values against this file's documented behaviour.
+///
+/// The **head noun** is the last guard, and the one the golden corpus insisted on.
+/// A shared modifier was still carrying whole matches: `grated gruyère` scored 0.87
+/// against the alias *grated nutmeg*, and `shredded carot` 0.92 against *shredded
+/// cheddar*, purely on the first word. In a food name the identity lives in the
+/// last word — "grated X" is X — so a pair is capped at its head nouns' similarity.
+/// True matches are unaffected (their heads agree: `veggie broth`/`vegetable broth`
+/// = 1.00, `bell peper`/`bell pepper` = 0.96), while those two traps fall to 0.54
+/// and 0.50. Measured over the whole corpus: four false matches removed, nothing
+/// else moved (`docs/learnings/003-fuzzy-thresholds.md`).
 ///
 /// Jaro–Winkler is the published algorithm (Jaro 1989, Winkler 1990), re-implemented
 /// here rather than vendored (family rule: port, don't depend). Pure and unit-tested;
@@ -35,8 +47,15 @@ enum FuzzyMatch {
         let tokenScore = tokenSimilarity(q, c)
         // Different word counts: the extra word must cost something, and only the
         // token metric charges for it (see the type comment).
-        guard tokens(q).count == tokens(c).count else { return tokenScore }
-        return max(jaroWinkler(q, c), tokenScore)
+        let score: Double
+        if tokens(q).count == tokens(c).count {
+            score = max(jaroWinkler(q, c), tokenScore)
+        } else {
+            score = tokenScore
+        }
+        // Two ingredient names are at most as similar as their head nouns.
+        guard let queryHead = tokens(q).last, let candidateHead = tokens(c).last else { return score }
+        return min(score, jaroWinkler(queryHead, candidateHead))
     }
 
     static func tokens(_ s: String) -> [String] {

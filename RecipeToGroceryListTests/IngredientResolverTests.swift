@@ -221,16 +221,24 @@ final class IngredientResolverTests: XCTestCase {
     }
 
     func testSemanticCandidatesAreAdditiveAndNeverDisplaceAFuzzyHit() {
-        // "ice cream" fuzzy-hits Cream at 0.844 — above the fuzzy threshold but below the
-        // 0.85 escalation bar, so layer 3 is consulted; its (silly) near-miss is appended.
-        let built = semanticResolver(entries: [Self.entry(15, "Cream", .dairy), Self.entry(1, "Vegetable broth", .pantry)],
-                                     vectors: ["ice cream": [1, 0], "Vegetable broth": [0.99, 0.1], "Cream": [0, 1]])
-        let outcome = built.resolver.resolve("ice cream")
-        XCTAssertEqual(outcome.hit?.ingredientID, 15, "fuzzy hit is kept")
+        // "sour creme" fuzzy-hits Sour cream at 0.907 — over the 0.86 threshold but
+        // under the 0.93 escalation bar, so layer 3 is still consulted and its
+        // (silly) near-miss is appended rather than substituted.
+        let built = semanticResolver(entries: [Self.entry(4, "Sour cream", .dairy), Self.entry(1, "Vegetable broth", .pantry)],
+                                     vectors: ["sour creme": [1, 0], "Vegetable broth": [0.99, 0.1], "Sour cream": [0, 1]])
+        let outcome = built.resolver.resolve("sour creme")
+        XCTAssertEqual(outcome.hit?.ingredientID, 4, "fuzzy hit is kept")
         XCTAssertEqual(outcome.hit?.resolution, .fuzzy)
-        XCTAssertEqual(outcome.hit?.score ?? 0, 0.8444, accuracy: 0.001)
+        XCTAssertEqual(outcome.hit?.score ?? 0, 0.9067, accuracy: 0.001)
         XCTAssertEqual(outcome.alternatives.map(\.ingredientID), [1])
         XCTAssertEqual(outcome.alternatives.first?.via, .embedding)
+    }
+
+    /// The bar only means anything while it sits above the threshold — otherwise
+    /// every fuzzy hit clears it and the additive path above is unreachable.
+    func testTheEscalationBarSitsAboveTheFuzzyThreshold() {
+        XCTAssertGreaterThan(IngredientResolver.defaultSemanticEscalationBar,
+                             IngredientResolver.defaultFuzzyThreshold)
     }
 
     func testSemanticLayerIsNotConsultedWhenFuzzyIsConfident() {
@@ -250,12 +258,15 @@ final class IngredientResolverTests: XCTestCase {
         XCTAssertNil(built.resolver.resolve("stock for soup").hit, "0.995 is below a 0.999 bar")
     }
 
-    func testDefaultsMatchTheSpecStartingValues() {
-        XCTAssertEqual(IngredientResolver.defaultFuzzyThreshold, 0.78)
+    /// The spec starts these at the workout app's values and says to recalibrate on
+    /// the corpus, expecting tighter (§13). It ended tighter:
+    /// `docs/learnings/003-fuzzy-thresholds.md`.
+    func testDefaultsMatchTheCalibratedValues() {
+        XCTAssertEqual(IngredientResolver.defaultFuzzyThreshold, 0.86)
         XCTAssertEqual(IngredientResolver.defaultSemanticThreshold, 0.85)
-        XCTAssertEqual(resolver.fuzzyThreshold, 0.78)
+        XCTAssertEqual(resolver.fuzzyThreshold, 0.86)
         XCTAssertEqual(resolver.semanticThreshold, 0.85)
-        XCTAssertEqual(resolver.semanticEscalationBar, 0.85)
+        XCTAssertEqual(resolver.semanticEscalationBar, 0.93)
         XCTAssertFalse(resolver.embedding.isReady, "default embedding is the no-op")
     }
 

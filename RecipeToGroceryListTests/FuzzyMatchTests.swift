@@ -3,8 +3,10 @@ import XCTest
 
 /// Layer 2's metric (§7.4). Every number below was computed with a line-for-line
 /// Python port of `Normalize.swift` + `FuzzyMatch.swift` before it was asserted
-/// (session scratchpad `fuzzy_check.py`), so the traps here are real values of the
-/// shipped metric, not hopes. The 0.78 threshold is `IngredientResolver.defaultFuzzyThreshold`.
+/// (`scripts/reference_parser.py`, which the golden corpus also runs on), so these
+/// are real values of the shipped metric, not hopes. `threshold` is
+/// `IngredientResolver.defaultFuzzyThreshold`, calibrated to 0.86 on the corpus
+/// (`docs/learnings/003-fuzzy-thresholds.md`).
 final class FuzzyMatchTests: XCTestCase {
 
     private let threshold = IngredientResolver.defaultFuzzyThreshold
@@ -52,14 +54,18 @@ final class FuzzyMatchTests: XCTestCase {
         XCTAssertEqual(FuzzyMatch.similarity("cream", "Sour cream"), 0.5, accuracy: 0.001)
         XCTAssertLessThan(FuzzyMatch.similarity("cream", "Sour cream"), threshold)
 
-        XCTAssertEqual(FuzzyMatch.similarity("chicken", "Chicken broth"), 0.5, accuracy: 0.001)
-        XCTAssertLessThan(FuzzyMatch.similarity("chicken", "Chicken broth"), threshold)
+        // "chicken" vs "chicken broth": the token metric halves it, and the head
+        // nouns ("chicken" / "broth") share nothing, so the cap takes it to zero.
+        XCTAssertEqual(FuzzyMatch.similarity("chicken", "Chicken broth"), 0, accuracy: 0.001)
         XCTAssertLessThan(FuzzyMatch.similarity("Chicken Broth", "Chicken"), threshold, "and from the other side")
 
-        XCTAssertEqual(FuzzyMatch.similarity("garlic", "Garlic powder"), 0.5, accuracy: 0.001)
-        XCTAssertLessThan(FuzzyMatch.similarity("garlic clove", "Garlic"), threshold)
-        XCTAssertLessThan(FuzzyMatch.similarity("red onion", "Onion"), threshold)
-        XCTAssertLessThan(FuzzyMatch.similarity("green onions", "Onion"), threshold)
+        XCTAssertEqual(FuzzyMatch.similarity("garlic", "Garlic powder"), 0, accuracy: 0.001)
+        XCTAssertEqual(FuzzyMatch.similarity("garlic clove", "Garlic"), 0.4556, accuracy: 0.001)
+        XCTAssertEqual(FuzzyMatch.similarity("red onion", "Onion"), 0.5, accuracy: 0.001)
+        XCTAssertEqual(FuzzyMatch.similarity("green onions", "Onion"), 0.7333, accuracy: 0.001)
+        for pair in [("garlic clove", "Garlic"), ("red onion", "Onion"), ("green onions", "Onion")] {
+            XCTAssertLessThan(FuzzyMatch.similarity(pair.0, pair.1), threshold)
+        }
     }
 
     func testModifiersThatChangeIdentityStayBelowThreshold() {
@@ -68,6 +74,22 @@ final class FuzzyMatchTests: XCTestCase {
         XCTAssertEqual(FuzzyMatch.similarity("brown sugar", "Sugar"), 0.5, accuracy: 0.001)
         XCTAssertLessThan(FuzzyMatch.similarity("brown sugar", "Sugar"), threshold)
         XCTAssertLessThan(FuzzyMatch.similarity("cilantro", "Coriander"), threshold, "different words, an alias's job")
+    }
+
+    /// The head-noun cap (§7.4): a shared *modifier* must not carry a match. Both
+    /// of these scored high enough to resolve before the cap existed — the golden
+    /// corpus is what surfaced them.
+    func testASharedModifierDoesNotCarryAMatch() {
+        XCTAssertEqual(FuzzyMatch.similarity("grated gruyere", "grated nutmeg"), 0.5397, accuracy: 0.001,
+                       "was 0.8667 before the cap, and resolved Gruyère to Nutmeg")
+        XCTAssertEqual(FuzzyMatch.similarity("shredded carot", "shredded cheddar"), 0.5029, accuracy: 0.001,
+                       "was 0.9214, and resolved a carrot to cheddar")
+        XCTAssertEqual(FuzzyMatch.similarity("baking soda", "Baking powder"), 0.6111, accuracy: 0.001,
+                       "was 0.9021 — two genuinely different leaveners")
+        for pair in [("grated gruyere", "grated nutmeg"), ("shredded carot", "shredded cheddar"),
+                     ("baking soda", "Baking powder")] {
+            XCTAssertLessThan(FuzzyMatch.similarity(pair.0, pair.1), threshold)
+        }
     }
 
     // MARK: - similarity: real variants clear the threshold
@@ -80,12 +102,15 @@ final class FuzzyMatchTests: XCTestCase {
 
     func testTyposAndShorthandClearTheThreshold() {
         XCTAssertEqual(FuzzyMatch.similarity("veggie broth", "Vegetable broth"), 0.8963, accuracy: 0.001)
-        XCTAssertGreaterThanOrEqual(FuzzyMatch.similarity("veggie broth", "Vegetable broth"), threshold)
-        XCTAssertGreaterThanOrEqual(FuzzyMatch.similarity("veggie stock", "Vegetable stock"), threshold)
-        XCTAssertEqual(FuzzyMatch.similarity("bell peper", "Bell pepper"), 0.9818, accuracy: 0.001)
+        XCTAssertEqual(FuzzyMatch.similarity("bell peper", "Bell pepper"), 0.9611, accuracy: 0.001)
         XCTAssertEqual(FuzzyMatch.similarity("mozzarela", "Mozzarella"), 0.98, accuracy: 0.001)
         XCTAssertEqual(FuzzyMatch.similarity("chiken", "Chicken"), 0.9667, accuracy: 0.001)
-        XCTAssertGreaterThanOrEqual(FuzzyMatch.similarity("greek yoghurt", "Greek yogurt"), threshold)
+        XCTAssertEqual(FuzzyMatch.similarity("greek yoghurt", "Greek yogurt"), 0.9667, accuracy: 0.001)
+        for pair in [("veggie broth", "Vegetable broth"), ("veggie stock", "Vegetable stock"),
+                     ("bell peper", "Bell pepper"), ("mozzarela", "Mozzarella"),
+                     ("chiken", "Chicken"), ("greek yoghurt", "Greek yogurt")] {
+            XCTAssertGreaterThanOrEqual(FuzzyMatch.similarity(pair.0, pair.1), threshold, "\(pair.0) / \(pair.1)")
+        }
     }
 
     func testGarbageScoresLow() {
@@ -94,12 +119,14 @@ final class FuzzyMatchTests: XCTestCase {
     }
 
     func testWholeStringScoreOnlyAppliesToSameWordCount() {
-        // Same word count: the whole-string Jaro–Winkler may lift the score.
-        XCTAssertGreaterThan(FuzzyMatch.similarity("bell peper", "Bell pepper"),
-                             FuzzyMatch.tokenSimilarity("bell peper", "bell pepper"))
-        // Different word counts: only the symmetric token metric decides.
-        XCTAssertEqual(FuzzyMatch.similarity("chicken", "Chicken broth"),
-                       FuzzyMatch.tokenSimilarity("chicken", "chicken broth"), accuracy: 1e-9)
+        // Same word count and agreeing heads: the whole-string Jaro–Winkler can
+        // lift the score above the token metric… up to the head-noun cap.
+        XCTAssertEqual(FuzzyMatch.similarity("bell peper", "Bell pepper"),
+                       FuzzyMatch.jaroWinkler("peper", "pepper"), accuracy: 1e-9,
+                       "capped by the heads, which is still comfortably over the threshold")
+        // Different word counts: the whole-string score never applies at all.
+        XCTAssertLessThanOrEqual(FuzzyMatch.similarity("chicken", "Chicken broth"),
+                                 FuzzyMatch.tokenSimilarity("chicken", "chicken broth"))
     }
 
     func testSimilarityIsSymmetricAndEmptySafe() {
@@ -111,12 +138,14 @@ final class FuzzyMatchTests: XCTestCase {
         XCTAssertEqual(FuzzyMatch.similarity("(note only)", "Onion"), 0, "normalizes to empty")
     }
 
-    /// A remaining trap the metric does *not* catch, recorded so calibration on the
-    /// golden corpus (§11) sees it: a two-word query with one exact word scores at
-    /// least 0.5 plus half the other word's similarity. The seed covers it by having
-    /// "Ice cream" as its own canonical (an exact hit never reaches layer 2).
+    /// The trap the metric still doesn't catch on its own, recorded so it stays
+    /// known: a two-word query whose head noun *is* the candidate scores 0.5 plus
+    /// half the head's own similarity. "Ice cream" clears that only because 0.844
+    /// now sits below the calibrated threshold — and the seed also carries it as
+    /// its own canonical, so an exact hit never reaches layer 2.
     func testKnownRemainingTrapIsDocumented() {
         XCTAssertEqual(FuzzyMatch.similarity("ice cream", "Cream"), 0.8444, accuracy: 0.001)
-        XCTAssertEqual(FuzzyMatch.similarity("baking soda", "Baking powder"), 0.9021, accuracy: 0.001)
+        XCTAssertLessThan(FuzzyMatch.similarity("ice cream", "Cream"), threshold,
+                          "below 0.86; it would have matched at the workout app's 0.78")
     }
 }
