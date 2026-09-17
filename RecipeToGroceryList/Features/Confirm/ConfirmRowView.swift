@@ -36,6 +36,19 @@ struct ConfirmRowView: View {
     @State private var sheet: RowSheet?
     @State private var refusal: AliasRefusal?
 
+    /// Written out rather than left to the memberwise initializer. Swift makes the
+    /// synthesized memberwise init **private** when any stored property is private,
+    /// and `sheet`/`refusal` are (`@State` synthesizes a private `_sheet`), so
+    /// `ConfirmRowView(model:row:theme:)` would not be callable from `ConfirmView`.
+    /// The same reason `OCRCandidateRow` spells its init out in
+    /// `workout-logger@5bffddfb80fc`. This also states the view's real API: three
+    /// inputs, and the local state is nobody else's business.
+    init(model: ConfirmModel, row: DraftRow, theme: LFWThemeConfig) {
+        _model = ObservedObject(wrappedValue: model)
+        self.row = row
+        self.theme = theme
+    }
+
     private var palette: LFWPaletteColors { theme.colors }
 
     private enum RowSheet: Identifiable {

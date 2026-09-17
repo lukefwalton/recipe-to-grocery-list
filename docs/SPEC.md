@@ -541,6 +541,7 @@ Decision write-ups, one per gate, in `docs/learnings/`:
 7. `007-photo-import.md`: Vision configuration, line merging, the single-column limitation.
 8. `008-non-ai-path.md`: the `refiner == nil` path end to end, corpus pass rate without layer 4, the manual QA record (gate 9).
 9. `009-app-store-readiness.md`: privacy manifest, metadata, screenshots, NOTICE audit, the archive (gate 10).
+10. `010-guards-without-a-compiler.md`: the three CI guards that stand in for a toolchain, and the build errors they found.
 
 History: **v0.2** (design only) superseded v0.1, which lived in a chat; it
 corrected the inheritance section against the actual `workout-logger` source,

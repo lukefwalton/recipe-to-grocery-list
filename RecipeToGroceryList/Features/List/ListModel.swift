@@ -1,4 +1,8 @@
 import Foundation
+// `ObservableObject` and `@Published` live in Combine. This file imports Combine
+// rather than SwiftUI on purpose: the model owns no view types, so nothing here
+// should depend on the view layer.
+import Combine
 
 /// State behind the List tab (spec §8 display, §9 behaviour). The list is a PURE
 /// FUNCTION of the store — `RecipeStore.groceryListInput()` read in one snapshot,

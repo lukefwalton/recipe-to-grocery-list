@@ -1,4 +1,8 @@
 import Foundation
+// `ObservableObject` and `@Published` live in Combine, not Foundation; SwiftUI
+// re-exports it, but this model owns no view types and should not import the view
+// layer to get a protocol.
+import Combine
 
 /// A refused *Same as…* / *Use* tap (spec §7.5): the row's name, normalized the one
 /// way (§7.1), already means another canonical — in the registry, as a canonical

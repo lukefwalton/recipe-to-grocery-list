@@ -313,6 +313,13 @@ private struct RecipeDetailView: View {
     @State private var canonicalNames: [Int64: String] = [:]
     @State private var loadError: String?
 
+    /// Written out because every property above `recipeID` is private, which makes the
+    /// synthesized memberwise initializer private; `RecipesView` pushes this detail
+    /// screen and could not otherwise construct it.
+    init(recipeID: Int64) {
+        self.recipeID = recipeID
+    }
+
     private var theme: LFWThemeConfig { appModel.theme }
     private var palette: LFWPaletteColors { appModel.theme.colors }
 

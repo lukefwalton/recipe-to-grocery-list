@@ -1,4 +1,8 @@
 import Foundation
+// `ObservableObject` and `@Published` live in Combine, not Foundation; SwiftUI
+// re-exports it, but this model owns no view types and should not import the view
+// layer to get a protocol.
+import Combine
 
 /// State behind the Recipes tab (spec §4.1): the saved recipes newest first, the
 /// "cooking this" toggle, delete and rename. Reads go through `RecipeStore.recipes()`;

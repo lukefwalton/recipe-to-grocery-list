@@ -22,6 +22,10 @@ name: Checks
 #     not hand-edited — SPEC §3)
 #   - the golden corpus fixture is well-formed and only references unit keys and
 #     seed slugs that actually exist
+#   - every .swift file belongs to a target (XcodeGen silently omits a file in a
+#     directory no target lists) and every file imports the frameworks its symbols
+#     come from (three view models shipped `ObservableObject` with only Foundation
+#     imported — see docs/learnings/010-guards-without-a-compiler.md)
 
 on:
   pull_request:
@@ -44,6 +48,12 @@ jobs:
         run: bash scripts/check_store_boundary.sh
       - name: Schema v1 executes in SQLite and matches SPEC §6 + the Swift enums
         run: python3 scripts/check_schema.py
+      - name: Every Swift file is compiled, and imports what it uses
+        run: |
+          # PyYAML reads project.yml. Installed explicitly rather than assumed: a
+          # guard that skips because a dependency is missing is a guard that is off.
+          python3 -m pip install --quiet --disable-pip-version-check pyyaml
+          python3 scripts/check_sources.py
       - name: Seed regenerates deterministically from seed_source.json
         run: |
           set -euo pipefail

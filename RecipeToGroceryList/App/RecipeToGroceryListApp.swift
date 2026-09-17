@@ -62,6 +62,14 @@ private struct AppRoot: View {
     @ObservedObject var model: AppModel
     @Environment(\.scenePhase) private var scenePhase
 
+    /// Written out because `scenePhase` is a private stored property, which makes the
+    /// synthesized memberwise initializer private too — and `private` reaches only the
+    /// enclosing declaration, not a sibling type in the same file. Without this,
+    /// `AppRoot(model:)` above would not resolve.
+    init(model: AppModel) {
+        _model = ObservedObject(wrappedValue: model)
+    }
+
     /// Onboarding is always dark (it sits on the family's deep-sea gradient, §4.1);
     /// after it, the palette decides. Decided here rather than left to the inner
     /// `.preferredColorScheme(.dark)` alone so the outcome doesn't depend on which

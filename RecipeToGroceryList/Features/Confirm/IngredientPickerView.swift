@@ -36,6 +36,25 @@ struct IngredientPickerView: View {
     @State private var category: IngredientCategory = .other
     @State private var refusal: String?
 
+    /// Spelled out because the synthesized memberwise initializer is **private**
+    /// whenever any stored property is private, and every `@State` here is. Without
+    /// it `ConfirmRowView` could not construct this sheet at all.
+    init(title: String,
+         name: String,
+         index: IngredientIndex,
+         pending: [PendingIngredient],
+         closeMatches: [IngredientSuggestion],
+         theme: LFWThemeConfig,
+         onPick: @escaping (IngredientPick) throws -> Void) {
+        self.title = title
+        self.name = name
+        self.index = index
+        self.pending = pending
+        self.closeMatches = closeMatches
+        self.theme = theme
+        self.onPick = onPick
+    }
+
     private var palette: LFWPaletteColors { theme.colors }
 
     var body: some View {
@@ -290,6 +309,15 @@ struct CategoryPickerSheet: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var selection: IngredientCategory = .other
+
+    /// Spelled out for the same reason as `IngredientPickerView` above: a private
+    /// stored property makes the memberwise initializer private, and `ConfirmRowView`
+    /// presents this sheet from another file.
+    init(name: String, theme: LFWThemeConfig, onCreate: @escaping (IngredientCategory) -> Void) {
+        self.name = name
+        self.theme = theme
+        self.onCreate = onCreate
+    }
 
     var body: some View {
         NavigationStack {
