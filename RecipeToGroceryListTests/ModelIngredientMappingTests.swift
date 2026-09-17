@@ -5,7 +5,7 @@ import XCTest
 /// invented lines, invented quantities, junk confidence). No FoundationModels import
 /// anywhere — this is the FM-free half of the adapter, and the half where the bugs
 /// would live. Regex values asserted here were computed with the Python mirror of the
-/// splitter first (`splitter_check.py` in the session scratchpad).
+/// splitter first (`scripts/reference_parser.py`), not written from memory.
 final class ModelIngredientMappingTests: XCTestCase {
 
     private func structured(_ lines: String...) -> [StructuredLine] {

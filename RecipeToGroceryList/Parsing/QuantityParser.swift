@@ -31,8 +31,10 @@ struct ParsedQuantity: Equatable, Sendable {
 /// ("10-inch", "2%", "1/2-inch") means the line does not start with a quantity, and
 /// the whole text stays the name — a wrong quantity is worse than none (§1).
 ///
-/// Mirrors the workout app's deterministic-first posture; the Python design check
-/// that fixed the ordering rules lives in the session scratchpad (`splitter_check.py`).
+/// Mirrors the workout app's deterministic-first posture. The Python port that fixed
+/// these ordering rules is committed as `scripts/reference_parser.py`; its
+/// `--selftest` replays sixty splitter lines, so a change here that the tests miss
+/// still has somewhere to fail.
 enum QuantityParser {
     /// "one"…"twelve" (§7.2). Deliberately no "half"/"dozen": "half an onion" is a
     /// prep note, not a countable quantity, and inventing 0.5 would be a wrong number.
