@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Explicit Info.plist (GENERATE_INFOPLIST_FILE NO), the family shape:
+	  workout-logger@5bffddfb80fc WorkoutChatLog/App/Info.plist for the skeleton
+	  and camera/photo strings, a-new-word-every-day@e829bcc9c0dc
+	  WordOfTheDay/App/Info.plist for the launch colour, full-screen flag and
+	  UIAppFonts. Deliberately absent: CFBundleURLTypes (no URL scheme — the
+	  Share Extension hands off through the App Group inbox, not a deep link)
+	  and NSAppTransportSecurity (ATS default: https only, no exceptions; SPEC
+	  §5.1 refuses http links outright).
+	-->
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Recipe to Grocery List</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.food-and-drink</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright © 2026 Luke F. Walton.</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+	</dict>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Fraunces.ttf</string>
+		<string>Inter.ttf</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>To read ingredients off a page. The photo is processed on this phone and never stored or uploaded.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To read ingredients off a photo of a page. The image is processed on this phone and never stored or uploaded.</string>
+</dict>
+</plist>

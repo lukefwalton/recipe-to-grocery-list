@@ -1,0 +1,61 @@
+name: Bug report
+description: Something in the app or the Share Extension isn't working right.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Fill in what you can — it all helps.
+
+        **Issues are public.** Please don't post recipes you don't have the right
+        to share, and redact anything private from screenshots before attaching
+        them. If a specific web page failed to import, the URL alone is usually
+        enough — we never need the page itself.
+
+        Found a **security or privacy vulnerability?** Don't file it here — see
+        [SECURITY.md](https://github.com/lukefwalton/recipe-to-grocery-list/blob/main/SECURITY.md).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What went wrong, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open …
+        2. Paste / share / photograph …
+        3. See …
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does it happen?
+      options:
+        - Adding a recipe from a link (paste or Share Extension)
+        - Adding a recipe from pasted text
+        - Adding a recipe from a photo
+        - Confirming ingredients (wrong quantity / unit / match)
+        - The grocery list (grouping, sums, check-off)
+        - Settings, theme or fonts
+        - Somewhere else / not sure
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: iOS version, device & app version
+      placeholder: "e.g. iOS 17.5, iPhone 14, app v1.0 — and whether Apple Intelligence is available"
+    validations:
+      required: false
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots, the exact ingredient line that parsed wrong, or other context (issues are public — redact anything private).
+    validations:
+      required: false

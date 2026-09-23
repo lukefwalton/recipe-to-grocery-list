@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Export options for `xcodebuild -exportArchive` (see
+	  scripts/archive_for_testflight.sh). Deliberately team-id free, the
+	  workout-logger form: with -allowProvisioningUpdates the team comes from
+	  the archive's signing, so nothing account-specific is committed. A
+	  team-pinned copy belongs in the gitignored ExportOptionsLocal.plist.
+	-->
+	<key>method</key>
+	<string>app-store-connect</string>
+	<key>uploadSymbols</key>
+	<true/>
+</dict>
+</plist>

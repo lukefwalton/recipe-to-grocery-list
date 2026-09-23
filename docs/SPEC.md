@@ -6,8 +6,9 @@ any set of saved recipes, and get a single merged list you can check off in
 the store. No login, no payment inside the app, nothing leaves the phone except
 the one page fetch you explicitly hand it.
 
-This document is the design for v1. Nothing is implemented yet — see
-[Status & scope](#status--scope). Sibling apps:
+This document is the design for v1. v1 is implemented on this branch, gate by
+gate per the [PR gates](#12-pr-gates) table — see
+[Status & scope](#status--scope) for what remains. Sibling apps:
 [Private Workout Logger](https://github.com/lukefwalton/workout-logger)
 (`workout-logger`) and
 [A New Word Every Day](https://github.com/lukefwalton/a-new-word-every-day)
@@ -357,8 +358,8 @@ Input is the normalized `name` (regex or LLM). `canonicalGuess` is only consulte
 | 0 | exact `canonical_name` match (NOCASE) | `exact` | resolved |
 | 1 | `ingredient_aliases` hit | `alias` | resolved |
 | 1.5 | loose key (7.1 applied to both sides) against names and aliases | `loose` | resolved |
-| 2 | fuzzy: `max(jaroWinkler(whole), tokenAverage)` ≥ threshold (start 0.78, recalibrate) against names and aliases | `fuzzy` | resolved, highlighted |
-| 3 | `NLContextualEmbedding` mean-pooled cosine ≥ threshold (start 0.85) when fuzzy is below its escalation bar; additive, never displaces a fuzzy hit | `embedding` | resolved, highlighted |
+| 2 | fuzzy: `max(jaroWinkler(whole), tokenAverage)` ≥ threshold (start 0.78, recalibrate) against names and aliases — shipped at **0.86**, with a symmetric token metric and a head-noun cap (`003`) | `fuzzy` | resolved, highlighted |
+| 3 | `NLContextualEmbedding` mean-pooled cosine ≥ threshold (start 0.85) when fuzzy is below its escalation bar; additive, never displaces a fuzzy hit — shipped at 0.85 with the bar at **0.93**, which must stay above the layer-2 threshold or this path is unreachable (`003`) | `embedding` | resolved, highlighted |
 | 4 | run layers 0–1.5 again on the LLM's `canonicalGuess`; if it hits, that ingredient is the suggestion | `llm` | suggested, requires tap |
 | — | nothing hit | `none` | **new ingredient**, requires tap |
 
@@ -499,7 +500,7 @@ marked **Closed** are decided and listed only so the reasoning is on record.
 | Category grouping | **Closed**: ship the eight categories in §6 in store order. Dropping grouping saves nothing and the seed carries the data anyway. | — |
 | Photo capture API | **Closed**: still photo + `VNRecognizeTextRequest`. | — |
 | May `canonicalGuess` propose something outside the seed + custom set? | Yes, unconstrained; but it can only ever produce a *suggestion*, and a guess that matches nothing lands in *New* like any other row. Model proposes, app confirms. | Gate 4 |
-| Fuzzy / embedding thresholds | Start at workout values (0.78 / 0.85), recalibrate on the corpus, expect tighter | Gate 3 |
+| Fuzzy / embedding thresholds | **Closed**: recalibrated on the corpus as instructed, and it did come out tighter — 0.86 fuzzy / 0.85 semantic with a 0.93 escalation bar, plus a head-noun cap on the metric. `docs/learnings/003-fuzzy-thresholds.md` has the sweep. | Gate 3 |
 | Share Extension in v1 or v1.1 | v1, gate 7, but paste-a-URL ships first and the extension can slip without blocking release | Gate 7 |
 | Ingredient merge/rename UI | v1.1 | — |
 | Theming | **Closed**: reuse `LFWThemeConfig` with Forest default and the existing palette/typeface picker. No new tokens, no new components unless the word repo gets them first. | — |
@@ -508,12 +509,45 @@ marked **Closed** are decided and listed only so the reasoning is on record.
 
 ## Status & scope
 
-**v0.2 — design only.** Supersedes v0.1 (which lived in a chat, not the repo).
-No code exists. Changes from v0.1: corrected the inheritance section against
-the actual `workout-logger` source (layer naming, `@MainActor` placement,
-what the `compactMap` gate does, `NLContextualEmbedding` not `NLEmbedding`,
-pricing precedent); pulled design, theming, fonts, release tooling, seed-build
-and data-licensing patterns from `a-new-word-every-day`; dropped the clarification loop; replaced persisted
-`list_item` with computed membership + `check_state`; added the fetch policy,
-Share Extension inbox, per-row fallback, `resolution` provenance, *Keep as
-text*, check-state GC rule, unit table, golden corpus, and "done when" per gate.
+**v1.0 — implemented, device verification outstanding.** Every gate in §12 has
+landed on this branch in order: 0 scaffold, 1 schema + seed, 2 paste → splitter
+→ Confirm → save, 3 fuzzy/embedding resolution + aliases + golden corpus, 4
+Foundation Models adapter with per-row mapping, 5 Recipes screen, 6 List screen,
+7 URL import + Share Extension inbox, 8 photo import, plus the copy, corpus
+measurement and tooling for 9 and 10. The design above is unchanged except where
+a learnings entry says otherwise.
+
+What is **not** done, because it cannot be done where this was written (no
+Swift toolchain — see `docs/learnings/001-scaffold-and-inheritance.md`):
+
+- the first real `xcodebuild` (`bash scripts/fetch_fonts.sh && bash
+  scripts/generate.sh && bash scripts/run_tests.sh`) and whatever it turns up;
+- **gate 9** — manual QA on a device without Apple Intelligence, recorded in
+  `docs/learnings/008-non-ai-path.md`;
+- **gate 10** — the TestFlight archive via `scripts/archive_for_testflight.sh`,
+  real app-icon artwork, the two §13 decisions (free vs paid, source license)
+  and the checklist in `docs/app-store-metadata.md`.
+
+### Implementation notes
+
+Decision write-ups, one per gate, in `docs/learnings/`:
+
+1. [001 — scaffold and inheritance](learnings/001-scaffold-and-inheritance.md): what was copied from which sibling at which revision; database in the app sandbox (not the App Group); typeface picker limited to the two bundled faces; license and price left open; placeholder icon; the no-toolchain constraint and the owner's first steps.
+2. `002-seed-and-normalization.md`: the seed source of record, `build_seed.py`, the §7.1 normalizer and its Python mirror.
+3. `003-fuzzy-thresholds.md`: the symmetric token metric, the substring traps, thresholds calibrated on the golden corpus.
+4. `004-foundation-models-per-row-fallback.md`: `ModelIngredientMapping`, one session per recipe, why a bad row never declines the recipe.
+5. `005-computed-list.md`: `GroceryListBuilder`, check-state GC, the sum rule.
+6. `006-url-import-and-inbox.md`: the fetch policy as code, JSON-LD/microdata extraction, the Share Extension's one-way inbox.
+7. `007-photo-import.md`: Vision configuration, line merging, the single-column limitation.
+8. `008-non-ai-path.md`: the `refiner == nil` path end to end, corpus pass rate without layer 4, the manual QA record (gate 9).
+9. `009-app-store-readiness.md`: privacy manifest, metadata, screenshots, NOTICE audit, the archive (gate 10).
+10. `010-guards-without-a-compiler.md`: the three CI guards that stand in for a toolchain, and the build errors they found.
+
+History: **v0.2** (design only) superseded v0.1, which lived in a chat; it
+corrected the inheritance section against the actual `workout-logger` source,
+pulled the design/theming/fonts/release/seed-build/data-licensing patterns from
+`a-new-word-every-day`, dropped the clarification loop, replaced persisted
+`list_item` with computed membership + `check_state`, and added the fetch
+policy, Share Extension inbox, per-row fallback, `resolution` provenance, *Keep
+as text*, the check-state GC rule, the unit table, the golden corpus and "done
+when" per gate.

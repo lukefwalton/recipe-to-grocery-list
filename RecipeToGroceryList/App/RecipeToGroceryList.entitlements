@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  The app's only entitlement. XcodeGen regenerates this file from the
+	  `entitlements.properties` block in project.yml on every generate, so
+	  project.yml is the place to edit; this copy is committed so a plain
+	  `xcodegen generate` on a fresh checkout matches what CI signs.
+	  The group is shared with the Share Extension for its one-way inbox file
+	  only — the database stays in the app sandbox (SPEC §5.1).
+	-->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.lukewalton.recipetogrocerylist</string>
+	</array>
+</dict>
+</plist>

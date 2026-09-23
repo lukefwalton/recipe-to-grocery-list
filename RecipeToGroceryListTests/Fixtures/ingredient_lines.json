@@ -1,0 +1,2888 @@
+{
+  "baseline": {
+    "splitter": 0.95,
+    "resolution": 0.93
+  },
+  "lines": [
+    {
+      "line": "2 cups vegetable broth",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "vegetable broth",
+      "note": null,
+      "slug": "vegetable_broth",
+      "source": "paste"
+    },
+    {
+      "line": "1 1/2 tsp. kosher salt",
+      "quantity": 1.5,
+      "unit_key": "tsp",
+      "name": "kosher salt",
+      "note": null,
+      "slug": "salt",
+      "source": "paste"
+    },
+    {
+      "line": "3 cloves garlic, minced",
+      "quantity": 3,
+      "unit_key": "clove",
+      "name": "garlic",
+      "note": "minced",
+      "slug": "garlic",
+      "source": "paste"
+    },
+    {
+      "line": "Salt and pepper to taste",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Salt and pepper",
+      "note": "to taste",
+      "slug": "salt_and_pepper",
+      "source": "paste"
+    },
+    {
+      "line": "1 (14.5 oz) can diced tomatoes",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "diced tomatoes",
+      "note": "14.5 oz",
+      "slug": "canned_tomatoes",
+      "source": "paste"
+    },
+    {
+      "line": "½ cup heavy cream",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "heavy cream",
+      "note": null,
+      "slug": "heavy_cream",
+      "source": "paste"
+    },
+    {
+      "line": "2–3 tablespoons olive oil, divided",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "olive oil",
+      "note": "2–3, divided",
+      "slug": "olive_oil",
+      "source": "paste"
+    },
+    {
+      "line": "a pinch of nutmeg",
+      "quantity": 1,
+      "unit_key": "pinch",
+      "name": "nutmeg",
+      "note": null,
+      "slug": "nutmeg",
+      "source": "paste"
+    },
+    {
+      "line": "one large onion, diced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "onion",
+      "note": "large, diced",
+      "slug": "onion",
+      "source": "paste"
+    },
+    {
+      "line": "500ml chicken stock",
+      "quantity": 500,
+      "unit_key": "ml",
+      "name": "chicken stock",
+      "note": null,
+      "slug": "chicken_broth",
+      "source": "paste"
+    },
+    {
+      "line": "2 T soy sauce",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "soy sauce",
+      "note": null,
+      "slug": "soy_sauce",
+      "source": "paste"
+    },
+    {
+      "line": "1 t vanilla extract",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "vanilla extract",
+      "note": null,
+      "slug": "vanilla_extract",
+      "source": "paste"
+    },
+    {
+      "line": "Juice of 1 lemon",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Juice of 1 lemon",
+      "note": null,
+      "slug": "lemon_juice",
+      "source": "paste"
+    },
+    {
+      "line": "handful fresh basil leaves, torn",
+      "quantity": null,
+      "unit_key": null,
+      "name": "handful fresh basil leaves",
+      "note": "torn",
+      "slug": "basil",
+      "source": "paste"
+    },
+    {
+      "line": "4 oz cream cheese, softened",
+      "quantity": 4,
+      "unit_key": "oz",
+      "name": "cream cheese",
+      "note": "softened",
+      "slug": "cream_cheese",
+      "source": "paste"
+    },
+    {
+      "line": "2 large eggs, beaten",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "eggs",
+      "note": "large, beaten",
+      "slug": "egg",
+      "source": "paste"
+    },
+    {
+      "line": "1 pound ground beef",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "ground beef",
+      "note": null,
+      "slug": "ground_beef",
+      "source": "paste"
+    },
+    {
+      "line": "1/4 cup extra-virgin olive oil",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "extra-virgin olive oil",
+      "note": null,
+      "slug": "olive_oil",
+      "source": "paste"
+    },
+    {
+      "line": "3 1/2 cups all-purpose flour",
+      "quantity": 3.5,
+      "unit_key": "cup",
+      "name": "all-purpose flour",
+      "note": null,
+      "slug": "all_purpose_flour",
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp baking soda",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "baking soda",
+      "note": null,
+      "slug": "baking_soda",
+      "source": "paste"
+    },
+    {
+      "line": "1/2 teaspoon baking powder",
+      "quantity": 0.5,
+      "unit_key": "tsp",
+      "name": "baking powder",
+      "note": null,
+      "slug": "baking_powder",
+      "source": "paste"
+    },
+    {
+      "line": "2 cloves of garlic",
+      "quantity": 2,
+      "unit_key": "clove",
+      "name": "garlic",
+      "note": null,
+      "slug": "garlic",
+      "source": "paste"
+    },
+    {
+      "line": "1 medium yellow onion, finely chopped",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "yellow onion",
+      "note": "medium, finely chopped",
+      "slug": "onion",
+      "source": "paste"
+    },
+    {
+      "line": "4 boneless, skinless chicken breasts",
+      "quantity": 4,
+      "unit_key": null,
+      "name": "boneless skinless chicken breasts",
+      "note": null,
+      "slug": "chicken_breast",
+      "source": "paste"
+    },
+    {
+      "line": "1 (28 oz) can crushed tomatoes",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "crushed tomatoes",
+      "note": "28 oz",
+      "slug": "canned_tomatoes",
+      "source": "paste"
+    },
+    {
+      "line": "2 tablespoons tomato paste",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "tomato paste",
+      "note": null,
+      "slug": "tomato_paste",
+      "source": "paste"
+    },
+    {
+      "line": "2 bay leaves",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "bay leaves",
+      "note": null,
+      "slug": "bay_leaf",
+      "source": "paste"
+    },
+    {
+      "line": "1/2 cup grated Parmesan cheese",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "grated Parmesan cheese",
+      "note": null,
+      "slug": "parmesan_cheese",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup plain Greek yogurt",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "plain Greek yogurt",
+      "note": null,
+      "slug": "greek_yogurt",
+      "source": "paste"
+    },
+    {
+      "line": "2 tsp ground cumin",
+      "quantity": 2,
+      "unit_key": "tsp",
+      "name": "ground cumin",
+      "note": null,
+      "slug": "ground_cumin",
+      "source": "paste"
+    },
+    {
+      "line": "1 tbsp olive oil, plus more for drizzling",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "olive oil",
+      "note": "plus more for drizzling",
+      "slug": "olive_oil",
+      "source": "paste"
+    },
+    {
+      "line": "Olive oil, for frying",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Olive oil",
+      "note": "for frying",
+      "slug": "olive_oil",
+      "source": "paste"
+    },
+    {
+      "line": "1 lemon, halved",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "lemon",
+      "note": "halved",
+      "slug": "lemon",
+      "source": "paste"
+    },
+    {
+      "line": "12 oz spaghetti",
+      "quantity": 12,
+      "unit_key": "oz",
+      "name": "spaghetti",
+      "note": null,
+      "slug": "spaghetti",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup whole milk",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "whole milk",
+      "note": null,
+      "slug": "milk",
+      "source": "paste"
+    },
+    {
+      "line": "2 tablespoons unsalted butter, melted",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "unsalted butter",
+      "note": "melted",
+      "slug": "butter",
+      "source": "paste"
+    },
+    {
+      "line": "1/3 cup soy sauce",
+      "quantity": 0.3333333333333333,
+      "unit_key": "cup",
+      "name": "soy sauce",
+      "note": null,
+      "slug": "soy_sauce",
+      "source": "paste"
+    },
+    {
+      "line": "¾ cup powdered sugar",
+      "quantity": 0.75,
+      "unit_key": "cup",
+      "name": "powdered sugar",
+      "note": null,
+      "slug": "powdered_sugar",
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp red pepper flakes",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "red pepper flakes",
+      "note": null,
+      "slug": "red_pepper_flakes",
+      "source": "paste"
+    },
+    {
+      "line": "2 stalks celery, chopped",
+      "quantity": 2,
+      "unit_key": "stalk",
+      "name": "celery",
+      "note": "chopped",
+      "slug": "celery",
+      "source": "paste"
+    },
+    {
+      "line": "1 bunch scallions, thinly sliced",
+      "quantity": 1,
+      "unit_key": "bunch",
+      "name": "scallions",
+      "note": "thinly sliced",
+      "slug": "scallion",
+      "source": "paste"
+    },
+    {
+      "line": "4 cups low-sodium chicken broth",
+      "quantity": 4,
+      "unit_key": "cup",
+      "name": "low-sodium chicken broth",
+      "note": null,
+      "slug": "chicken_broth",
+      "source": "paste"
+    },
+    {
+      "line": "1 head garlic",
+      "quantity": 1,
+      "unit_key": "head",
+      "name": "garlic",
+      "note": null,
+      "slug": "garlic",
+      "source": "paste"
+    },
+    {
+      "line": "3 sprigs fresh thyme",
+      "quantity": 3,
+      "unit_key": "sprig",
+      "name": "fresh thyme",
+      "note": null,
+      "slug": "thyme",
+      "source": "paste"
+    },
+    {
+      "line": "2 tablespoons honey",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "honey",
+      "note": null,
+      "slug": "honey",
+      "source": "paste"
+    },
+    {
+      "line": "1/4 teaspoon ground nutmeg",
+      "quantity": 0.25,
+      "unit_key": "tsp",
+      "name": "ground nutmeg",
+      "note": null,
+      "slug": "nutmeg",
+      "source": "paste"
+    },
+    {
+      "line": "1 1/2 pounds russet potatoes, peeled",
+      "quantity": 1.5,
+      "unit_key": "lb",
+      "name": "russet potatoes",
+      "note": "peeled",
+      "slug": "potato",
+      "source": "paste"
+    },
+    {
+      "line": "2 medium carrots, diced",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "carrots",
+      "note": "medium, diced",
+      "slug": "carrot",
+      "source": "paste"
+    },
+    {
+      "line": "1 red bell pepper, seeded and sliced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "red bell pepper",
+      "note": "seeded and sliced",
+      "slug": "bell_pepper",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup frozen peas",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "frozen peas",
+      "note": null,
+      "slug": "frozen_peas",
+      "source": "paste"
+    },
+    {
+      "line": "8 oz cremini mushrooms, sliced",
+      "quantity": 8,
+      "unit_key": "oz",
+      "name": "cremini mushrooms",
+      "note": "sliced",
+      "slug": "mushroom",
+      "source": "paste"
+    },
+    {
+      "line": "1 tablespoon Dijon mustard",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "Dijon mustard",
+      "note": null,
+      "slug": "dijon_mustard",
+      "source": "paste"
+    },
+    {
+      "line": "2 teaspoons Worcestershire sauce",
+      "quantity": 2,
+      "unit_key": "tsp",
+      "name": "Worcestershire sauce",
+      "note": null,
+      "slug": "worcestershire_sauce",
+      "source": "paste"
+    },
+    {
+      "line": "1/2 cup dry white wine",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "dry white wine",
+      "note": null,
+      "slug": "dry_white_wine",
+      "source": "paste"
+    },
+    {
+      "line": "1 quart beef broth",
+      "quantity": 1,
+      "unit_key": "quart",
+      "name": "beef broth",
+      "note": null,
+      "slug": "beef_broth",
+      "source": "paste"
+    },
+    {
+      "line": "2 cups shredded mozzarella",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "shredded mozzarella",
+      "note": null,
+      "slug": "mozzarella",
+      "source": "paste"
+    },
+    {
+      "line": "1 pint cherry tomatoes, halved",
+      "quantity": 1,
+      "unit_key": "pint",
+      "name": "cherry tomatoes",
+      "note": "halved",
+      "slug": "cherry_tomato",
+      "source": "paste"
+    },
+    {
+      "line": "1 tablespoon rice vinegar",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "rice vinegar",
+      "note": null,
+      "slug": "rice_vinegar",
+      "source": "paste"
+    },
+    {
+      "line": "2 teaspoons sesame oil",
+      "quantity": 2,
+      "unit_key": "tsp",
+      "name": "sesame oil",
+      "note": null,
+      "slug": "sesame_oil",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup uncooked jasmine rice",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "uncooked jasmine rice",
+      "note": null,
+      "slug": "jasmine_rice",
+      "source": "paste"
+    },
+    {
+      "line": "1 (13.5 oz) can coconut milk",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "coconut milk",
+      "note": "13.5 oz",
+      "slug": "coconut_milk",
+      "source": "paste"
+    },
+    {
+      "line": "2 tablespoons Thai red curry paste",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "Thai red curry paste",
+      "note": null,
+      "slug": "thai_red_curry_paste",
+      "source": "paste"
+    },
+    {
+      "line": "1 lime, juiced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "lime",
+      "note": "juiced",
+      "slug": "lime",
+      "source": "paste"
+    },
+    {
+      "line": "1/4 cup chopped fresh cilantro",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "chopped fresh cilantro",
+      "note": null,
+      "slug": "cilantro",
+      "source": "paste"
+    },
+    {
+      "line": "3 tablespoons fish sauce",
+      "quantity": 3,
+      "unit_key": "tbsp",
+      "name": "fish sauce",
+      "note": null,
+      "slug": "fish_sauce",
+      "source": "paste"
+    },
+    {
+      "line": "1 tablespoon brown sugar",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "brown sugar",
+      "note": null,
+      "slug": "brown_sugar",
+      "source": "paste"
+    },
+    {
+      "line": "2 boneless pork chops",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "boneless pork chops",
+      "note": null,
+      "slug": "pork_chop",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup panko breadcrumbs",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "panko breadcrumbs",
+      "note": null,
+      "slug": "panko",
+      "source": "paste"
+    },
+    {
+      "line": "2 large egg yolks",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "egg yolks",
+      "note": "large",
+      "slug": "egg_yolk",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup cream",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "cream",
+      "note": null,
+      "slug": "cream",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup sour cream",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "sour cream",
+      "note": null,
+      "slug": "sour_cream",
+      "source": "paste"
+    },
+    {
+      "line": "1 lb chicken",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "chicken",
+      "note": null,
+      "slug": "chicken",
+      "source": "paste"
+    },
+    {
+      "line": "2 cups chicken broth",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "chicken broth",
+      "note": null,
+      "slug": "chicken_broth",
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp smoked paprika",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "smoked paprika",
+      "note": null,
+      "slug": "smoked_paprika",
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp paprika",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "paprika",
+      "note": null,
+      "slug": "paprika",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup brown sugar",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "brown sugar",
+      "note": null,
+      "slug": "brown_sugar",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup sugar",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "sugar",
+      "note": null,
+      "slug": "sugar",
+      "source": "paste"
+    },
+    {
+      "line": "2 tomatos",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "tomatos",
+      "note": null,
+      "slug": "tomato",
+      "source": "paste"
+    },
+    {
+      "line": "3 green onions",
+      "quantity": 3,
+      "unit_key": null,
+      "name": "green onions",
+      "note": null,
+      "slug": "scallion",
+      "source": "paste"
+    },
+    {
+      "line": "veggie stock",
+      "quantity": null,
+      "unit_key": null,
+      "name": "veggie stock",
+      "note": null,
+      "slug": "vegetable_broth",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup ice cream",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "ice cream",
+      "note": null,
+      "slug": "ice_cream",
+      "source": "paste"
+    },
+    {
+      "line": "2 cups",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "2 cups",
+      "note": null,
+      "slug": null,
+      "source": "ocr"
+    },
+    {
+      "line": "1 (14 oz) can",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "1 (14 oz) can",
+      "note": "14 oz",
+      "slug": null,
+      "source": "ocr"
+    },
+    {
+      "line": "1 tsp garlic powder",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "garlic powder",
+      "note": null,
+      "slug": "garlic_powder",
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp onion powder",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "onion powder",
+      "note": null,
+      "slug": "onion_powder",
+      "source": "paste"
+    },
+    {
+      "line": "1 red onion, thinly sliced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "red onion",
+      "note": "thinly sliced",
+      "slug": "red_onion",
+      "source": "paste"
+    },
+    {
+      "line": "1/2 cup tomato sauce",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "tomato sauce",
+      "note": null,
+      "slug": "tomato_sauce",
+      "source": "paste"
+    },
+    {
+      "line": "1 tbsp tomato paste",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "tomato paste",
+      "note": null,
+      "slug": "tomato_paste",
+      "source": "paste"
+    },
+    {
+      "line": "2 tsp baking powder",
+      "quantity": 2,
+      "unit_key": "tsp",
+      "name": "baking powder",
+      "note": null,
+      "slug": "baking_powder",
+      "source": "paste"
+    },
+    {
+      "line": "1½ cups milk",
+      "quantity": 1.5,
+      "unit_key": "cup",
+      "name": "milk",
+      "note": null,
+      "slug": "milk",
+      "source": "paste"
+    },
+    {
+      "line": "1 ½ cups milk",
+      "quantity": 1.5,
+      "unit_key": "cup",
+      "name": "milk",
+      "note": null,
+      "slug": "milk",
+      "source": "paste"
+    },
+    {
+      "line": "1-1/2 cups whole milk",
+      "quantity": 1.5,
+      "unit_key": "cup",
+      "name": "whole milk",
+      "note": null,
+      "slug": "milk",
+      "source": "paste"
+    },
+    {
+      "line": "⅓ cup olive oil",
+      "quantity": 0.3333333333333333,
+      "unit_key": "cup",
+      "name": "olive oil",
+      "note": null,
+      "slug": "olive_oil",
+      "source": "paste"
+    },
+    {
+      "line": "⅔ cup sugar",
+      "quantity": 0.6666666666666666,
+      "unit_key": "cup",
+      "name": "sugar",
+      "note": null,
+      "slug": "sugar",
+      "source": "paste"
+    },
+    {
+      "line": "⅛ tsp cayenne pepper",
+      "quantity": 0.125,
+      "unit_key": "tsp",
+      "name": "cayenne pepper",
+      "note": null,
+      "slug": "cayenne_pepper",
+      "source": "paste"
+    },
+    {
+      "line": "2.5 lbs pork shoulder",
+      "quantity": 2.5,
+      "unit_key": "lb",
+      "name": "pork shoulder",
+      "note": null,
+      "slug": "pork_shoulder",
+      "source": "paste"
+    },
+    {
+      "line": ".5 cup sugar",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "sugar",
+      "note": null,
+      "slug": "sugar",
+      "source": "paste"
+    },
+    {
+      "line": "2 to 3 cups spinach",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "spinach",
+      "note": "2 to 3",
+      "slug": "spinach",
+      "source": "paste"
+    },
+    {
+      "line": "2 or 3 lemons",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "lemons",
+      "note": "2 or 3",
+      "slug": "lemon",
+      "source": "paste"
+    },
+    {
+      "line": "6-8 cups water",
+      "quantity": 6,
+      "unit_key": "cup",
+      "name": "water",
+      "note": "6-8",
+      "slug": "water",
+      "source": "paste"
+    },
+    {
+      "line": "4—6 slices bacon",
+      "quantity": 4,
+      "unit_key": "slice",
+      "name": "bacon",
+      "note": "4—6",
+      "slug": "bacon",
+      "source": "paste"
+    },
+    {
+      "line": "one lemon",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "lemon",
+      "note": null,
+      "slug": "lemon",
+      "source": "paste"
+    },
+    {
+      "line": "two zucchini, cubed",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "zucchini",
+      "note": "cubed",
+      "slug": "zucchini",
+      "source": "paste"
+    },
+    {
+      "line": "three eggs",
+      "quantity": 3,
+      "unit_key": null,
+      "name": "eggs",
+      "note": null,
+      "slug": "egg",
+      "source": "paste"
+    },
+    {
+      "line": "twelve oysters",
+      "quantity": 12,
+      "unit_key": null,
+      "name": "oysters",
+      "note": null,
+      "slug": "oyster",
+      "source": "paste"
+    },
+    {
+      "line": "a dash of hot sauce",
+      "quantity": 1,
+      "unit_key": "dash",
+      "name": "hot sauce",
+      "note": null,
+      "slug": "hot_sauce",
+      "source": "paste"
+    },
+    {
+      "line": "an ounce of dark chocolate",
+      "quantity": 1,
+      "unit_key": "oz",
+      "name": "dark chocolate",
+      "note": null,
+      "slug": "dark_chocolate",
+      "source": "paste"
+    },
+    {
+      "line": "a can of chickpeas, drained",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "chickpeas",
+      "note": "drained",
+      "slug": "chickpea",
+      "source": "paste"
+    },
+    {
+      "line": "an onion",
+      "quantity": null,
+      "unit_key": null,
+      "name": "an onion",
+      "note": null,
+      "slug": "onion",
+      "source": "paste"
+    },
+    {
+      "line": "10-inch flour tortillas",
+      "quantity": null,
+      "unit_key": null,
+      "name": "10-inch flour tortillas",
+      "note": null,
+      "slug": "flour_tortilla",
+      "source": "paste"
+    },
+    {
+      "line": "2% milk",
+      "quantity": null,
+      "unit_key": null,
+      "name": "2% milk",
+      "note": null,
+      "slug": "milk",
+      "source": "paste"
+    },
+    {
+      "line": "1/2-inch piece fresh ginger",
+      "quantity": null,
+      "unit_key": null,
+      "name": "1/2-inch piece fresh ginger",
+      "note": null,
+      "slug": "ginger",
+      "source": "paste"
+    },
+    {
+      "line": "One-pot lentil stew",
+      "quantity": null,
+      "unit_key": null,
+      "name": "One-pot lentil stew",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "250 g dark chocolate, chopped",
+      "quantity": 250,
+      "unit_key": "g",
+      "name": "dark chocolate",
+      "note": "chopped",
+      "slug": "dark_chocolate",
+      "source": "paste"
+    },
+    {
+      "line": "1 kg potatoes",
+      "quantity": 1,
+      "unit_key": "kg",
+      "name": "potatoes",
+      "note": null,
+      "slug": "potato",
+      "source": "paste"
+    },
+    {
+      "line": "750ml red wine",
+      "quantity": 750,
+      "unit_key": "ml",
+      "name": "red wine",
+      "note": null,
+      "slug": "red_wine",
+      "source": "paste"
+    },
+    {
+      "line": "1.5 l sparkling water",
+      "quantity": 1.5,
+      "unit_key": "l",
+      "name": "sparkling water",
+      "note": null,
+      "slug": "sparkling_water",
+      "source": "paste"
+    },
+    {
+      "line": "2 tbs tahini",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "tahini",
+      "note": null,
+      "slug": "tahini",
+      "source": "paste"
+    },
+    {
+      "line": "1 tbl harissa",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "harissa",
+      "note": null,
+      "slug": "harissa",
+      "source": "paste"
+    },
+    {
+      "line": "3 qt vegetable broth",
+      "quantity": 3,
+      "unit_key": "quart",
+      "name": "vegetable broth",
+      "note": null,
+      "slug": "vegetable_broth",
+      "source": "paste"
+    },
+    {
+      "line": "1 gal whole milk",
+      "quantity": 1,
+      "unit_key": "gallon",
+      "name": "whole milk",
+      "note": null,
+      "slug": "milk",
+      "source": "paste"
+    },
+    {
+      "line": "8 fl oz heavy cream",
+      "quantity": 8,
+      "unit_key": "floz",
+      "name": "heavy cream",
+      "note": null,
+      "slug": "heavy_cream",
+      "source": "paste"
+    },
+    {
+      "line": "1 pkg cream cheese",
+      "quantity": 1,
+      "unit_key": "package",
+      "name": "cream cheese",
+      "note": null,
+      "slug": "cream_cheese",
+      "source": "paste"
+    },
+    {
+      "line": "2 sticks butter, softened",
+      "quantity": 2,
+      "unit_key": "stick",
+      "name": "butter",
+      "note": "softened",
+      "slug": "butter",
+      "source": "paste"
+    },
+    {
+      "line": "1 jar marinara sauce",
+      "quantity": 1,
+      "unit_key": "jar",
+      "name": "marinara sauce",
+      "note": null,
+      "slug": "marinara_sauce",
+      "source": "paste"
+    },
+    {
+      "line": "1 bag frozen corn",
+      "quantity": 1,
+      "unit_key": "bag",
+      "name": "frozen corn",
+      "note": null,
+      "slug": "frozen_corn",
+      "source": "paste"
+    },
+    {
+      "line": "1 box lasagna noodles",
+      "quantity": 1,
+      "unit_key": "box",
+      "name": "lasagna noodles",
+      "note": null,
+      "slug": "lasagna_noodles",
+      "source": "paste"
+    },
+    {
+      "line": "1 bottle beer",
+      "quantity": 1,
+      "unit_key": "bottle",
+      "name": "beer",
+      "note": null,
+      "slug": "beer",
+      "source": "paste"
+    },
+    {
+      "line": "2 tins anchovies",
+      "quantity": 2,
+      "unit_key": "can",
+      "name": "anchovies",
+      "note": null,
+      "slug": "anchovies",
+      "source": "paste"
+    },
+    {
+      "line": "4 ribs celery, diced",
+      "quantity": 4,
+      "unit_key": "stalk",
+      "name": "celery",
+      "note": "diced",
+      "slug": "celery",
+      "source": "paste"
+    },
+    {
+      "line": "1 whole chicken",
+      "quantity": 1,
+      "unit_key": "piece",
+      "name": "chicken",
+      "note": null,
+      "slug": "chicken",
+      "source": "paste"
+    },
+    {
+      "line": "6 slices sourdough bread",
+      "quantity": 6,
+      "unit_key": "slice",
+      "name": "sourdough bread",
+      "note": null,
+      "slug": "sourdough_bread",
+      "source": "paste"
+    },
+    {
+      "line": "2 heads broccoli",
+      "quantity": 2,
+      "unit_key": "head",
+      "name": "broccoli",
+      "note": null,
+      "slug": "broccoli",
+      "source": "paste"
+    },
+    {
+      "line": "1 pinch saffron",
+      "quantity": 1,
+      "unit_key": "pinch",
+      "name": "saffron",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 cup walnuts (optional)",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "walnuts",
+      "note": "optional",
+      "slug": "walnuts",
+      "source": "paste"
+    },
+    {
+      "line": "2 tbsp butter, melted (optional)",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "butter",
+      "note": "optional, melted",
+      "slug": "butter",
+      "source": "paste"
+    },
+    {
+      "line": "1 (about 1 lb) eggplant",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "eggplant",
+      "note": "about 1 lb",
+      "slug": "eggplant",
+      "source": "paste"
+    },
+    {
+      "line": "Chopped parsley, for garnish",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Chopped parsley",
+      "note": "for garnish",
+      "slug": "parsley",
+      "source": "paste"
+    },
+    {
+      "line": "Lemon wedges, for serving",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Lemon wedges",
+      "note": "for serving",
+      "slug": "lemon",
+      "source": "paste"
+    },
+    {
+      "line": "2 cups flour, sifted, divided",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "flour",
+      "note": "sifted, divided",
+      "slug": "all_purpose_flour",
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp kosher salt, plus more to taste",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "kosher salt",
+      "note": "plus more to taste",
+      "slug": "salt",
+      "source": "paste"
+    },
+    {
+      "line": "Butter, at room temperature",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Butter",
+      "note": "at room temperature",
+      "slug": "butter",
+      "source": "paste"
+    },
+    {
+      "line": "3 large potatoes, quartered",
+      "quantity": 3,
+      "unit_key": null,
+      "name": "potatoes",
+      "note": "large, quartered",
+      "slug": "potato",
+      "source": "paste"
+    },
+    {
+      "line": "1 small shallot, minced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "shallot",
+      "note": "small, minced",
+      "slug": "shallot",
+      "source": "paste"
+    },
+    {
+      "line": "2 extra-large eggs",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "eggs",
+      "note": "extra-large",
+      "slug": "egg",
+      "source": "paste"
+    },
+    {
+      "line": "1 medium eggplant, cubed",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "eggplant",
+      "note": "medium, cubed",
+      "slug": "eggplant",
+      "source": "paste"
+    },
+    {
+      "line": "4 cups cooked white rice, cooled",
+      "quantity": 4,
+      "unit_key": "cup",
+      "name": "cooked white rice",
+      "note": "cooled",
+      "slug": "rice",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup shredded cheddar cheese",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "shredded cheddar cheese",
+      "note": null,
+      "slug": "cheddar_cheese",
+      "source": "paste"
+    },
+    {
+      "line": "1/2 pound bacon, cut into lardons",
+      "quantity": 0.5,
+      "unit_key": "lb",
+      "name": "bacon",
+      "note": "cut into lardons",
+      "slug": "bacon",
+      "source": "paste"
+    },
+    {
+      "line": "2 tablespoons capers, drained",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "capers",
+      "note": "drained",
+      "slug": "capers",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup canned black beans, rinsed",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "canned black beans",
+      "note": "rinsed",
+      "slug": "black_bean",
+      "source": "paste"
+    },
+    {
+      "line": "Freshly ground black pepper",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Freshly ground black pepper",
+      "note": null,
+      "slug": "black_pepper",
+      "source": "paste"
+    },
+    {
+      "line": "Flaky sea salt, for finishing",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Flaky sea salt",
+      "note": "for finishing",
+      "slug": "salt",
+      "source": "paste"
+    },
+    {
+      "line": "1 tablespoon olive oil plus more for the pan",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "olive oil",
+      "note": "plus more for the pan",
+      "slug": "olive_oil",
+      "source": "paste"
+    },
+    {
+      "line": "Zest of 1 orange",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Zest of 1 orange",
+      "note": null,
+      "slug": "orange_zest",
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp finely grated lemon zest",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "finely grated lemon zest",
+      "note": null,
+      "slug": "lemon_zest",
+      "source": "paste"
+    },
+    {
+      "line": "2 cups mixed frozen berries",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "mixed frozen berries",
+      "note": null,
+      "slug": "frozen_berries",
+      "source": "paste"
+    },
+    {
+      "line": "1 (15-ounce) can chickpeas, drained and rinsed",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "chickpeas",
+      "note": "15-ounce, drained and rinsed",
+      "slug": "chickpea",
+      "source": "paste"
+    },
+    {
+      "line": "2 (8 oz) packages cream cheese, softened",
+      "quantity": 2,
+      "unit_key": "package",
+      "name": "cream cheese",
+      "note": "8 oz, softened",
+      "slug": "cream_cheese",
+      "source": "paste"
+    },
+    {
+      "line": "1 cup pecans, toasted and chopped",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "pecans",
+      "note": "toasted and chopped",
+      "slug": "pecans",
+      "source": "paste"
+    },
+    {
+      "line": "1 tablespoon grated fresh ginger",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "grated fresh ginger",
+      "note": null,
+      "slug": "ginger",
+      "source": "paste"
+    },
+    {
+      "line": "1 onion thinly sliced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "onion",
+      "note": "thinly sliced",
+      "slug": "onion",
+      "source": "paste"
+    },
+    {
+      "line": "Salt, plus more for the pasta water",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Salt",
+      "note": "plus more for the pasta water",
+      "slug": "salt",
+      "source": "paste"
+    },
+    {
+      "line": "1 lb ground turkey (93% lean)",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "ground turkey",
+      "note": "93% lean",
+      "slug": "ground_turkey",
+      "source": "paste"
+    },
+    {
+      "line": "- 2 cups all-purpose flour",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "all-purpose flour",
+      "note": null,
+      "slug": "all_purpose_flour",
+      "source": "paste"
+    },
+    {
+      "line": "• 1 bunch cilantro",
+      "quantity": 1,
+      "unit_key": "bunch",
+      "name": "cilantro",
+      "note": null,
+      "slug": "cilantro",
+      "source": "paste"
+    },
+    {
+      "line": "* 3 tbsp butter",
+      "quantity": 3,
+      "unit_key": "tbsp",
+      "name": "butter",
+      "note": null,
+      "slug": "butter",
+      "source": "paste"
+    },
+    {
+      "line": "1. 2 cups sugar",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "sugar",
+      "note": null,
+      "slug": "sugar",
+      "source": "paste"
+    },
+    {
+      "line": "2) 1 tsp salt",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "salt",
+      "note": null,
+      "slug": "salt",
+      "source": "paste"
+    },
+    {
+      "line": "(3) 4 oz feta",
+      "quantity": 4,
+      "unit_key": "oz",
+      "name": "feta",
+      "note": null,
+      "slug": "feta",
+      "source": "paste"
+    },
+    {
+      "line": "① 1 cup rice",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "rice",
+      "note": null,
+      "slug": "rice",
+      "source": "paste"
+    },
+    {
+      "line": "☐ 2 avocados",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "avocados",
+      "note": null,
+      "slug": "avocado",
+      "source": "paste"
+    },
+    {
+      "line": "> 1 mango, diced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "mango",
+      "note": "diced",
+      "slug": "mango",
+      "source": "paste"
+    },
+    {
+      "line": "For the marinade:",
+      "quantity": null,
+      "unit_key": null,
+      "name": "For the marinade:",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "Ingredients:",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Ingredients:",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "For the topping",
+      "quantity": null,
+      "unit_key": null,
+      "name": "For the topping",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "a splash of something",
+      "quantity": null,
+      "unit_key": null,
+      "name": "a splash of something",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "2 tablespoons ube jam",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "ube jam",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 cup calamansi juice",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "calamansi juice",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "3 tablespoons kecap manis",
+      "quantity": 3,
+      "unit_key": "tbsp",
+      "name": "kecap manis",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1/4 tsp asafoetida",
+      "quantity": 0.25,
+      "unit_key": "tsp",
+      "name": "asafoetida",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "2 pandan leaves, knotted",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "pandan leaves",
+      "note": "knotted",
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 packet Brand-X taco seasoning mix",
+      "quantity": 1,
+      "unit_key": "package",
+      "name": "Brand-X taco seasoning mix",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 scoop Brandy-Z vanilla protein powder",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "scoop Brandy-Z vanilla protein powder",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "2 tbsp nutritional yeast flakes",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "nutritional yeast flakes",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 tsp black garlic paste",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "black garlic paste",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "100 g pandan-flavoured kaya",
+      "quantity": 100,
+      "unit_key": "g",
+      "name": "pandan-flavoured kaya",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 bunch ong choy",
+      "quantity": 1,
+      "unit_key": "bunch",
+      "name": "ong choy",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "2 sheets kombu",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "sheets kombu",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 tbsp toasted rice powder",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "toasted rice powder",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "Freeze-dried strawberry powder, to finish",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Freeze-dried strawberry powder",
+      "note": "to finish",
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "1 cup Brand-A gluten-free baking mix",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "Brand-A gluten-free baking mix",
+      "note": null,
+      "slug": null,
+      "source": "paste"
+    },
+    {
+      "line": "2 tablespoons olive oil, divided",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "olive oil",
+      "note": "divided",
+      "slug": "olive_oil",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 (15 ounce) can black beans, drained and rinsed",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "black beans",
+      "note": "15 ounce, drained and rinsed",
+      "slug": "black_bean",
+      "source": "jsonld"
+    },
+    {
+      "line": "3/4 cup whole milk",
+      "quantity": 0.75,
+      "unit_key": "cup",
+      "name": "whole milk",
+      "note": null,
+      "slug": "milk",
+      "source": "jsonld"
+    },
+    {
+      "line": "Kosher salt and freshly ground black pepper",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Kosher salt and freshly ground black pepper",
+      "note": null,
+      "slug": "salt_and_pepper",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 1/4 cups granulated sugar",
+      "quantity": 1.25,
+      "unit_key": "cup",
+      "name": "granulated sugar",
+      "note": null,
+      "slug": "sugar",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 teaspoons pure vanilla extract",
+      "quantity": 2,
+      "unit_key": "tsp",
+      "name": "pure vanilla extract",
+      "note": null,
+      "slug": "vanilla_extract",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 cup (2 sticks) unsalted butter, at room temperature",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "unsalted butter",
+      "note": "2 sticks, at room temperature",
+      "slug": "butter",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup (120 ml) buttermilk",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "buttermilk",
+      "note": "120 ml",
+      "slug": "buttermilk",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 cups (240 g) all-purpose flour, plus more for dusting",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "all-purpose flour",
+      "note": "240 g, plus more for dusting",
+      "slug": "all_purpose_flour",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 teaspoon fine sea salt",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "fine sea salt",
+      "note": null,
+      "slug": "salt",
+      "source": "jsonld"
+    },
+    {
+      "line": "3 large eggs, at room temperature",
+      "quantity": 3,
+      "unit_key": null,
+      "name": "eggs",
+      "note": "large, at room temperature",
+      "slug": "egg",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 pound dried spaghetti",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "dried spaghetti",
+      "note": null,
+      "slug": "spaghetti",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup freshly grated Pecorino Romano",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "freshly grated Pecorino Romano",
+      "note": null,
+      "slug": "pecorino",
+      "source": "jsonld"
+    },
+    {
+      "line": "4 ounces guanciale, diced",
+      "quantity": 4,
+      "unit_key": "oz",
+      "name": "guanciale",
+      "note": "diced",
+      "slug": null,
+      "source": "jsonld"
+    },
+    {
+      "line": "1 teaspoon coarsely ground black pepper",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "coarsely ground black pepper",
+      "note": null,
+      "slug": "black_pepper",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 pounds bone-in chicken thighs",
+      "quantity": 2,
+      "unit_key": "lb",
+      "name": "bone-in chicken thighs",
+      "note": null,
+      "slug": "chicken_thigh",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 tablespoon smoked paprika, divided",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "smoked paprika",
+      "note": "divided",
+      "slug": "smoked_paprika",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 large yellow onion, halved and thinly sliced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "yellow onion",
+      "note": "large, halved and thinly sliced",
+      "slug": "onion",
+      "source": "jsonld"
+    },
+    {
+      "line": "4 garlic cloves, thinly sliced",
+      "quantity": 4,
+      "unit_key": null,
+      "name": "garlic cloves",
+      "note": "thinly sliced",
+      "slug": "garlic",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 cup long-grain white rice, rinsed",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "long-grain white rice",
+      "note": "rinsed",
+      "slug": "rice",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 1/2 cups low-sodium chicken broth",
+      "quantity": 2.5,
+      "unit_key": "cup",
+      "name": "low-sodium chicken broth",
+      "note": null,
+      "slug": "chicken_broth",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/4 cup chopped fresh flat-leaf parsley",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "chopped fresh flat-leaf parsley",
+      "note": null,
+      "slug": "parsley",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 (14-ounce) can artichoke hearts, drained",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "artichoke hearts",
+      "note": "14-ounce, drained",
+      "slug": "artichoke_hearts",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/3 cup mayonnaise",
+      "quantity": 0.3333333333333333,
+      "unit_key": "cup",
+      "name": "mayonnaise",
+      "note": null,
+      "slug": "mayonnaise",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/4 cup sour cream",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "sour cream",
+      "note": null,
+      "slug": "sour_cream",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 cup shredded Monterey Jack cheese",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "shredded Monterey Jack cheese",
+      "note": null,
+      "slug": "monterey_jack_cheese",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 teaspoon crushed red pepper flakes",
+      "quantity": 0.5,
+      "unit_key": "tsp",
+      "name": "crushed red pepper flakes",
+      "note": null,
+      "slug": "red_pepper_flakes",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 tablespoon fresh lemon juice",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "fresh lemon juice",
+      "note": null,
+      "slug": "lemon_juice",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 cups baby spinach, packed",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "baby spinach",
+      "note": "packed",
+      "slug": "spinach",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 (2-inch) piece fresh ginger, peeled and grated",
+      "quantity": 1,
+      "unit_key": "piece",
+      "name": "fresh ginger",
+      "note": "2-inch, peeled and grated",
+      "slug": "ginger",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 tablespoons low-sodium soy sauce",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "low-sodium soy sauce",
+      "note": null,
+      "slug": "soy_sauce",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 tablespoon toasted sesame oil",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "toasted sesame oil",
+      "note": null,
+      "slug": "sesame_oil",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 teaspoon cornstarch",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "cornstarch",
+      "note": null,
+      "slug": "cornstarch",
+      "source": "jsonld"
+    },
+    {
+      "line": "8 ounces rice noodles",
+      "quantity": 8,
+      "unit_key": "oz",
+      "name": "rice noodles",
+      "note": null,
+      "slug": "rice_noodles",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 pound large shrimp, peeled and deveined",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "shrimp",
+      "note": "large, peeled and deveined",
+      "slug": "shrimp",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 tablespoons vegetable oil, divided",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "vegetable oil",
+      "note": "divided",
+      "slug": "vegetable_oil",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup unsweetened coconut milk",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "unsweetened coconut milk",
+      "note": null,
+      "slug": "coconut_milk",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 tablespoon Thai green curry paste",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "Thai green curry paste",
+      "note": null,
+      "slug": "thai_green_curry_paste",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 cup frozen shelled edamame, thawed",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "frozen shelled edamame",
+      "note": "thawed",
+      "slug": "edamame",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup roasted salted peanuts, chopped",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "roasted salted peanuts",
+      "note": "chopped",
+      "slug": "peanuts",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 lime, cut into wedges",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "lime",
+      "note": "cut into wedges",
+      "slug": "lime",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 tablespoons pure maple syrup",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "pure maple syrup",
+      "note": null,
+      "slug": "maple_syrup",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 1/2 cups old-fashioned rolled oats",
+      "quantity": 1.5,
+      "unit_key": "cup",
+      "name": "old-fashioned rolled oats",
+      "note": null,
+      "slug": "oats",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup semisweet chocolate chips",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "semisweet chocolate chips",
+      "note": null,
+      "slug": "chocolate_chips",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/4 cup unsweetened cocoa powder, sifted",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "unsweetened cocoa powder",
+      "note": "sifted",
+      "slug": "cocoa_powder",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 teaspoon ground cinnamon",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "ground cinnamon",
+      "note": null,
+      "slug": "ground_cinnamon",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup raisins",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "raisins",
+      "note": null,
+      "slug": "raisins",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 (13.5-ounce) can full-fat coconut milk",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "full-fat coconut milk",
+      "note": "13.5-ounce",
+      "slug": "coconut_milk",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 tablespoons tahini",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "tahini",
+      "note": null,
+      "slug": "tahini",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 teaspoon za'atar",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "za'atar",
+      "note": null,
+      "slug": null,
+      "source": "jsonld"
+    },
+    {
+      "line": "1/4 cup pomegranate molasses",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "pomegranate molasses",
+      "note": null,
+      "slug": null,
+      "source": "jsonld"
+    },
+    {
+      "line": "4 (6-ounce) salmon fillets, skin on",
+      "quantity": 4,
+      "unit_key": null,
+      "name": "salmon fillets",
+      "note": "6-ounce, skin on",
+      "slug": "salmon",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 pound Yukon Gold potatoes, halved",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "Yukon Gold potatoes",
+      "note": "halved",
+      "slug": "potato",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 cups shredded red cabbage",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "shredded red cabbage",
+      "note": null,
+      "slug": "red_cabbage",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/3 cup apple cider vinegar",
+      "quantity": 0.3333333333333333,
+      "unit_key": "cup",
+      "name": "apple cider vinegar",
+      "note": null,
+      "slug": "apple_cider_vinegar",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 tablespoon whole-grain mustard",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "whole-grain mustard",
+      "note": null,
+      "slug": "dijon_mustard",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 (8-ounce) package cremini mushrooms, sliced",
+      "quantity": 1,
+      "unit_key": "package",
+      "name": "cremini mushrooms",
+      "note": "8-ounce, sliced",
+      "slug": "mushroom",
+      "source": "jsonld"
+    },
+    {
+      "line": "3 tablespoons all-purpose flour",
+      "quantity": 3,
+      "unit_key": "tbsp",
+      "name": "all-purpose flour",
+      "note": null,
+      "slug": "all_purpose_flour",
+      "source": "jsonld"
+    },
+    {
+      "line": "2 cups whole milk, warmed",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "whole milk",
+      "note": "warmed",
+      "slug": "milk",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/4 teaspoon freshly grated nutmeg",
+      "quantity": 0.25,
+      "unit_key": "tsp",
+      "name": "freshly grated nutmeg",
+      "note": null,
+      "slug": "nutmeg",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 cup grated Gruyère",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "grated Gruyère",
+      "note": null,
+      "slug": null,
+      "source": "jsonld"
+    },
+    {
+      "line": "1 pound elbow macaroni",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "elbow macaroni",
+      "note": null,
+      "slug": "macaroni",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup panko breadcrumbs, toasted",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "panko breadcrumbs",
+      "note": "toasted",
+      "slug": "panko",
+      "source": "jsonld"
+    },
+    {
+      "line": "Flaky salt and cracked pepper, to serve",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Flaky salt and cracked pepper",
+      "note": "to serve",
+      "slug": "salt_and_pepper",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 recipe pizza dough, at room temperature",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "recipe pizza dough",
+      "note": "at room temperature",
+      "slug": "pizza_dough",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/2 cup tomato passata",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "tomato passata",
+      "note": null,
+      "slug": "tomato_sauce",
+      "source": "jsonld"
+    },
+    {
+      "line": "8 ounces fresh mozzarella, torn",
+      "quantity": 8,
+      "unit_key": "oz",
+      "name": "fresh mozzarella",
+      "note": "torn",
+      "slug": "mozzarella",
+      "source": "jsonld"
+    },
+    {
+      "line": "1/4 cup fresh basil leaves",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "fresh basil leaves",
+      "note": null,
+      "slug": "basil",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 tablespoon extra-virgin olive oil, for drizzling",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "extra-virgin olive oil",
+      "note": "for drizzling",
+      "slug": "olive_oil",
+      "source": "jsonld"
+    },
+    {
+      "line": "2  cups  vegetable  broth",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "vegetable broth",
+      "note": null,
+      "slug": "vegetable_broth",
+      "source": "ocr"
+    },
+    {
+      "line": "1  tsp   kosher  salt",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "kosher salt",
+      "note": null,
+      "slug": "salt",
+      "source": "ocr"
+    },
+    {
+      "line": "2cups flour",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "flour",
+      "note": null,
+      "slug": "all_purpose_flour",
+      "source": "ocr"
+    },
+    {
+      "line": "3tbsp butter",
+      "quantity": 3,
+      "unit_key": "tbsp",
+      "name": "butter",
+      "note": null,
+      "slug": "butter",
+      "source": "ocr"
+    },
+    {
+      "line": "1tsp.salt",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "salt",
+      "note": null,
+      "slug": "salt",
+      "source": "ocr"
+    },
+    {
+      "line": "1 lb. ground beef",
+      "quantity": 1,
+      "unit_key": "lb",
+      "name": "ground beef",
+      "note": null,
+      "slug": "ground_beef",
+      "source": "ocr"
+    },
+    {
+      "line": "2 TBSP OLIVE OIL",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "OLIVE OIL",
+      "note": null,
+      "slug": "olive_oil",
+      "source": "ocr"
+    },
+    {
+      "line": "1 CUP HEAVY CREAM",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "HEAVY CREAM",
+      "note": null,
+      "slug": "heavy_cream",
+      "source": "ocr"
+    },
+    {
+      "line": "KOSHER SALT",
+      "quantity": null,
+      "unit_key": null,
+      "name": "KOSHER SALT",
+      "note": null,
+      "slug": "salt",
+      "source": "ocr"
+    },
+    {
+      "line": "FRESH PARSLEY, CHOPPED",
+      "quantity": null,
+      "unit_key": null,
+      "name": "FRESH PARSLEY",
+      "note": "CHOPPED",
+      "slug": "parsley",
+      "source": "ocr"
+    },
+    {
+      "line": "1 onion 2 carrots",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "onion 2 carrots",
+      "note": null,
+      "slug": null,
+      "source": "ocr"
+    },
+    {
+      "line": "2 eggs 1 cup milk",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "eggs 1 cup milk",
+      "note": null,
+      "slug": null,
+      "source": "ocr"
+    },
+    {
+      "line": "1 cup sugar.",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "sugar.",
+      "note": null,
+      "slug": "sugar",
+      "source": "ocr"
+    },
+    {
+      "line": "2 tbsp honey .",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "honey .",
+      "note": null,
+      "slug": "honey",
+      "source": "ocr"
+    },
+    {
+      "line": "Salt and pepper .",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Salt and pepper .",
+      "note": null,
+      "slug": "salt_and_pepper",
+      "source": "ocr"
+    },
+    {
+      "line": "1 /2 cup milk",
+      "quantity": null,
+      "unit_key": null,
+      "name": "1 /2 cup milk",
+      "note": null,
+      "slug": "milk",
+      "source": "ocr"
+    },
+    {
+      "line": "1 l/2 cups flour",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "l/2 cups flour",
+      "note": null,
+      "slug": "all_purpose_flour",
+      "source": "ocr"
+    },
+    {
+      "line": "O.5 cup water",
+      "quantity": null,
+      "unit_key": null,
+      "name": "O.5 cup water",
+      "note": null,
+      "slug": "water",
+      "source": "ocr"
+    },
+    {
+      "line": "l tbsp olive oil",
+      "quantity": null,
+      "unit_key": null,
+      "name": "l tbsp olive oil",
+      "note": null,
+      "slug": "olive_oil",
+      "source": "ocr"
+    },
+    {
+      "line": "2 cups  chicken  brotln",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "chicken brotln",
+      "note": null,
+      "slug": "chicken_broth",
+      "source": "ocr"
+    },
+    {
+      "line": "1 tsp grourrd cumin",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "grourrd cumin",
+      "note": null,
+      "slug": "ground_cumin",
+      "source": "ocr"
+    },
+    {
+      "line": "3 cloves gar1ic, minced",
+      "quantity": 3,
+      "unit_key": "clove",
+      "name": "gar1ic",
+      "note": "minced",
+      "slug": "garlic",
+      "source": "ocr"
+    },
+    {
+      "line": "1 CAN DICED TOMATOES",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "DICED TOMATOES",
+      "note": null,
+      "slug": "canned_tomatoes",
+      "source": "ocr"
+    },
+    {
+      "line": "2 TSP GROUND CUMIN",
+      "quantity": 2,
+      "unit_key": "tsp",
+      "name": "GROUND CUMIN",
+      "note": null,
+      "slug": "ground_cumin",
+      "source": "ocr"
+    },
+    {
+      "line": "1 BUNCH CILANTRO",
+      "quantity": 1,
+      "unit_key": "bunch",
+      "name": "CILANTRO",
+      "note": null,
+      "slug": "cilantro",
+      "source": "ocr"
+    },
+    {
+      "line": "1/2 CUP SOUR CREAM",
+      "quantity": 0.5,
+      "unit_key": "cup",
+      "name": "SOUR CREAM",
+      "note": null,
+      "slug": "sour_cream",
+      "source": "ocr"
+    },
+    {
+      "line": "  1 cup basmati rice  ",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "basmati rice",
+      "note": null,
+      "slug": "basmati_rice",
+      "source": "ocr"
+    },
+    {
+      "line": "1  (14  oz)  can  black  beans",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "black beans",
+      "note": "14 oz",
+      "slug": "black_bean",
+      "source": "ocr"
+    },
+    {
+      "line": "2 tomatoes , diced",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "tomatoes",
+      "note": "diced",
+      "slug": "tomato",
+      "source": "ocr"
+    },
+    {
+      "line": "1 avocado ,sliced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "avocado",
+      "note": "sliced",
+      "slug": "avocado",
+      "source": "ocr"
+    },
+    {
+      "line": "- 1 cup GREEK YOGURT",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "GREEK YOGURT",
+      "note": null,
+      "slug": "greek_yogurt",
+      "source": "ocr"
+    },
+    {
+      "line": "* 2 limes",
+      "quantity": 2,
+      "unit_key": null,
+      "name": "limes",
+      "note": null,
+      "slug": "lime",
+      "source": "ocr"
+    },
+    {
+      "line": "1/4 cup ollve oil",
+      "quantity": 0.25,
+      "unit_key": "cup",
+      "name": "ollve oil",
+      "note": null,
+      "slug": "olive_oil",
+      "source": "ocr"
+    },
+    {
+      "line": "2 cups mozzarela, shredded",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "mozzarela",
+      "note": "shredded",
+      "slug": "mozzarella",
+      "source": "ocr"
+    },
+    {
+      "line": "1 tsp drled oregano",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "drled oregano",
+      "note": null,
+      "slug": "oregano",
+      "source": "ocr"
+    },
+    {
+      "line": "1 bell peper, diced",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "bell peper",
+      "note": "diced",
+      "slug": "bell_pepper",
+      "source": "ocr"
+    },
+    {
+      "line": "2 cups chickn broth",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "chickn broth",
+      "note": null,
+      "slug": "chicken_broth",
+      "source": "ocr"
+    },
+    {
+      "line": "1 tbsp butter softened",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "butter",
+      "note": "softened",
+      "slug": "butter",
+      "source": "ocr"
+    },
+    {
+      "line": "1 lemcn",
+      "quantity": 1,
+      "unit_key": null,
+      "name": "lemcn",
+      "note": null,
+      "slug": "lemon",
+      "source": "ocr"
+    },
+    {
+      "line": "4 slices swiss cheese",
+      "quantity": 4,
+      "unit_key": "slice",
+      "name": "swiss cheese",
+      "note": null,
+      "slug": "swiss_cheese",
+      "source": "ocr"
+    },
+    {
+      "line": "1 cup cofiee",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "cofiee",
+      "note": null,
+      "slug": "coffee",
+      "source": "ocr"
+    },
+    {
+      "line": "2 cups spinacn",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "spinacn",
+      "note": null,
+      "slug": "spinach",
+      "source": "ocr"
+    },
+    {
+      "line": "1 tsp turrneric",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "turrneric",
+      "note": null,
+      "slug": "turmeric",
+      "source": "ocr"
+    },
+    {
+      "line": "1 cup quiroa, rinsed",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "quiroa",
+      "note": "rinsed",
+      "slug": "quinoa",
+      "source": "ocr"
+    },
+    {
+      "line": "2 tbsp maple syrnp",
+      "quantity": 2,
+      "unit_key": "tbsp",
+      "name": "maple syrnp",
+      "note": null,
+      "slug": "maple_syrup",
+      "source": "ocr"
+    },
+    {
+      "line": "1 package tofu, pressed",
+      "quantity": 1,
+      "unit_key": "package",
+      "name": "tofu",
+      "note": "pressed",
+      "slug": "tofu",
+      "source": "ocr"
+    },
+    {
+      "line": "3 cups kaie, stemmed",
+      "quantity": 3,
+      "unit_key": "cup",
+      "name": "kaie",
+      "note": "stemmed",
+      "slug": "kale",
+      "source": "ocr"
+    },
+    {
+      "line": "1 tsp korner salt",
+      "quantity": 1,
+      "unit_key": "tsp",
+      "name": "korner salt",
+      "note": null,
+      "slug": "salt",
+      "source": "ocr"
+    },
+    {
+      "line": "2 cups brocoli florets",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "brocoli florets",
+      "note": null,
+      "slug": "broccoli",
+      "source": "ocr"
+    },
+    {
+      "line": "1 cup shredded carot",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "shredded carot",
+      "note": null,
+      "slug": "carrot",
+      "source": "ocr"
+    },
+    {
+      "line": "200g plain flour",
+      "quantity": 200,
+      "unit_key": "g",
+      "name": "plain flour",
+      "note": null,
+      "slug": "all_purpose_flour",
+      "source": "paste"
+    },
+    {
+      "line": "1 x 400g tin chopped tomatoes",
+      "quantity": 1,
+      "unit_key": "can",
+      "name": "chopped tomatoes",
+      "note": "400g",
+      "slug": "canned_tomatoes",
+      "source": "paste"
+    },
+    {
+      "line": "2 cups plus 2 tablespoons all-purpose flour",
+      "quantity": 2,
+      "unit_key": "cup",
+      "name": "all-purpose flour",
+      "note": "plus 2 tablespoons",
+      "slug": "all_purpose_flour",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 to 2 tablespoons water, as needed",
+      "quantity": 1,
+      "unit_key": "tbsp",
+      "name": "water",
+      "note": "1 to 2, as needed",
+      "slug": "water",
+      "source": "jsonld"
+    },
+    {
+      "line": "Juice and zest of 1 lime",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Juice and zest of 1 lime",
+      "note": null,
+      "slug": "lime",
+      "source": "paste"
+    },
+    {
+      "line": "½–1 tsp chili flakes",
+      "quantity": 0.5,
+      "unit_key": "tsp",
+      "name": "chili flakes",
+      "note": "½–1",
+      "slug": "red_pepper_flakes",
+      "source": "paste"
+    },
+    {
+      "line": "3 pounds mixed chicken pieces (thighs and drumsticks)",
+      "quantity": 3,
+      "unit_key": "lb",
+      "name": "mixed chicken pieces",
+      "note": "thighs and drumsticks",
+      "slug": "chicken",
+      "source": "jsonld"
+    },
+    {
+      "line": "1 cup frozen corn, thawed",
+      "quantity": 1,
+      "unit_key": "cup",
+      "name": "frozen corn",
+      "note": "thawed",
+      "slug": "frozen_corn",
+      "source": "paste"
+    },
+    {
+      "line": "Salt",
+      "quantity": null,
+      "unit_key": null,
+      "name": "Salt",
+      "note": null,
+      "slug": "salt",
+      "source": "paste"
+    }
+  ]
+}

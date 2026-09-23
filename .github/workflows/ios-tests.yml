@@ -1,0 +1,175 @@
+name: iOS Tests
+
+# Builds the app + Share Extension and runs the Swift unit suite on a macOS
+# runner. The Xcode project is generated from project.yml by XcodeGen, and the
+# build links the vendored lfwdesignsystem Swift Package at the repo root.
+#
+# Inherited from workout-logger@5bffddfb80fc .github/workflows/ios-tests.yml (the
+# two-job shape) with the font step and the test-retry flags from
+# a-new-word-every-day@e829bcc9c0dc .github/workflows/ios-tests.yml.
+#
+# Two jobs, deliberately on different runners:
+#   - unit-tests (macos-14): the shipping-floor build + test run.
+#   - foundation-models-guard (macos-26): proves the
+#     `#if canImport(FoundationModels)` branch actually compiles. On any
+#     toolchain without that SDK the app still builds green using only the
+#     deterministic fallback, so without this job the FM parser
+#     (Parsing/FoundationRecipeParser.swift) could silently drop out of CI
+#     coverage. SPEC §7.6 makes both branches a first-class gate.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ios-tests-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  unit-tests:
+    name: Swift unit tests
+    runs-on: macos-14
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # Fonts must be fetched BEFORE `xcodegen generate`: the Resources group is
+      # an enumerated group (not a folder reference), so XcodeGen only bundles the
+      # font files that exist on disk at generation time. The .ttf files are
+      # gitignored (fetched, not committed), so generating first would leave them
+      # out of the app bundle and any test that checks Theme.bundledTypefaces
+      # against the bundle would see a system fallback instead.
+      - name: Fetch bundled OFL variable fonts (Fraunces, Inter)
+        run: bash scripts/fetch_fonts.sh
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Toolchain + sims
+        run: |
+          set -euo pipefail
+          echo "::group::xcodebuild version"
+          xcodebuild -version
+          echo "::endgroup::"
+          echo "::group::available iPhone simulators"
+          xcrun simctl list devices available | grep -E "iPhone|iOS " || true
+          echo "::endgroup::"
+          echo "::group::vendored Swift package"
+          ls -la lfwdesignsystem
+          echo "::endgroup::"
+
+      # Build first, test second: a compile error fails here with the real
+      # swiftc error in this step's log instead of buried inside a combined
+      # `xcodebuild test` that also does simulator boot + install.
+      #
+      # EXCLUDED_ARCHS=x86_64: macos-14 runners are Apple Silicon and the iOS
+      # Simulator runs as arm64, so the x86_64 slice is never needed here.
+      # SWIFT_ACTIVE_COMPILATION_CONDITIONS adds the `CI` compile flag so
+      # `#if CI` test gates fire on the runner (the Simulator process doesn't
+      # inherit the host env, so a compile-time flag is the only reliable path).
+      - name: Build for testing
+        run: |
+          set -euo pipefail
+          xcodebuild build-for-testing \
+            -scheme RecipeToGroceryList \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            EXCLUDED_ARCHS=x86_64 \
+            SWIFT_ACTIVE_COMPILATION_CONDITIONS="DEBUG CI"
+
+      # Pin a UDID rather than `name=iPhone 15`: the name form resolves to
+      # OS:latest and fails when several runtimes expose the same device name.
+      - name: Run unit tests
+        run: |
+          set -euo pipefail
+          DEST=$(python3 <<'PY'
+          import json, subprocess
+          out = subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"], text=True)
+          iphones = [d for ds in json.loads(out)["devices"].values() for d in ds
+                     if d.get("isAvailable") and d["name"].startswith("iPhone")]
+          if not iphones:
+              raise SystemExit("No iPhone simulator available on this runner")
+          for preferred in ("iPhone 15", "iPhone 16", "iPhone 17"):
+              for d in iphones:
+                  if d["name"] == preferred:
+                      print(f"platform=iOS Simulator,id={d['udid']}")
+                      raise SystemExit
+          print(f"platform=iOS Simulator,id={iphones[0]['udid']}")
+          PY
+          )
+          # Retry flaky tests (e.g. the simulator's intermittent "Failed to
+          # terminate" on app relaunch) instead of failing the whole run. A
+          # genuinely broken test still fails after all iterations. The golden
+          # corpus test prints its pass rate; look for "[GoldenCorpus]" in the log.
+          xcodebuild test-without-building \
+            -scheme RecipeToGroceryList \
+            -destination "$DEST" \
+            -retry-tests-on-failure \
+            -test-iterations 3 \
+            CODE_SIGNING_ALLOWED=NO
+
+  foundation-models-guard:
+    name: Foundation Models compile guard
+    runs-on: macos-26
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      # The build alone can never prove the FM branch compiled: on a toolchain
+      # without the SDK, `canImport` quietly selects the fallback and the build
+      # stays green. This probe makes absence loud — it type-checks a file that
+      # #errors unless FoundationModels is importable with this runner's iOS
+      # simulator SDK. If GitHub's default Xcode on this image ever regresses
+      # below the required SDK, this step (not a silent fallback) is what fails.
+      - name: Assert FoundationModels is importable
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          cat > "$RUNNER_TEMP/fm_probe.swift" <<'SWIFT'
+          #if canImport(FoundationModels)
+          import FoundationModels
+          #else
+          #error("FoundationModels SDK missing from this toolchain — the on-device parser would silently compile out")
+          #endif
+          SWIFT
+          SDK_PATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+          SDK_VERSION=$(xcrun --sdk iphonesimulator --show-sdk-version)
+          echo "iphonesimulator SDK: $SDK_VERSION at $SDK_PATH"
+          xcrun swiftc -typecheck \
+            -sdk "$SDK_PATH" \
+            -target "arm64-apple-ios${SDK_VERSION}-simulator" \
+            "$RUNNER_TEMP/fm_probe.swift"
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # No font fetch here: this job only compiles, and the .ttf files are
+      # resources, not code. Keeping it offline-except-brew keeps it fast.
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      # With the probe green, `canImport(FoundationModels)` is true here, so
+      # this build genuinely compiles FoundationRecipeParser and the FM side of
+      # RecipeParserFactory — catching symbol drift the macos-14 job can't see.
+      - name: Build with the FM branch compiled in
+        run: |
+          set -euo pipefail
+          xcodebuild build \
+            -scheme RecipeToGroceryList \
+            -destination 'generic/platform=iOS Simulator' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            EXCLUDED_ARCHS=x86_64
