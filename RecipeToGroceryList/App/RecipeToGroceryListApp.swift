@@ -91,7 +91,10 @@ private struct AppRoot: View {
         .environmentObject(model)
         .tint(model.theme.colors.accent)
         .preferredColorScheme(colorScheme)
-        .onChange(of: scenePhase) { _, phase in
+        // `initial: true`: AppRoot mounts only after the async bootstrap, by which
+        // time the scene is already `.active` — without it a share made while the
+        // app was closed would wait for the next background/foreground cycle.
+        .onChange(of: scenePhase, initial: true) { _, phase in
             if phase == .active { model.drainInbox() }
         }
     }

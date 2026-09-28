@@ -100,6 +100,8 @@ enum HTMLEntities {
                 } else {
                     rest = rest[rest.endIndex...]
                 }
+                // The block is gone, but it was a boundary: "a<script>…</script>b" is "a b".
+                result.append("\n")
                 continue
             }
             if breakingTags.contains(name) {

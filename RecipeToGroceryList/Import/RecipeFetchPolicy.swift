@@ -75,8 +75,8 @@ enum RecipeFetchPolicy {
         guard !trimmed.isEmpty, let url = URL(string: trimmed), let scheme = url.scheme else {
             return .failure(.invalidURL)
         }
-        guard let host = url.host, !host.isEmpty else { return .failure(.invalidURL) }
         guard scheme.lowercased() == "https" else { return .failure(.notHTTPS) }
+        guard let host = url.host, !host.isEmpty else { return .failure(.invalidURL) }
         return .success(url)
     }
 
