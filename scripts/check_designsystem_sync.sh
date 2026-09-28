@@ -21,7 +21,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DS="$ROOT/lfwdesignsystem"
 MANIFEST="$DS/CHECKSUMS.txt"
 
-[ -f "$MANIFEST" ] || { echo "::error::missing $MANIFEST — run scripts/sync_designsystem.sh"; exit 1; }
+[ -f "$MANIFEST" ] || { echo "::error::missing $MANIFEST — run scripts/sync_designsystem.sh in a-new-word-every-day (it lives there, not here)"; exit 1; }
 
 # Must match sync_designsystem.sh: hash the code/tests/manifest/version only —
 # LICENSE and README.md are per-repo and deliberately excluded.

@@ -38,8 +38,9 @@ is never uploaded anywhere by the app.
 The app also has an **App Group** container, and it is used for one thing only:
 the Share Extension's inbox. When you share a link or some text to the app from
 another app, the extension writes it into a small file in that container, where
-it waits until you open Recipe to Grocery List. The app reads the file, deletes
-it, and shows you the Confirm screen. The database itself is not in the App
+it waits until you open Recipe to Grocery List. The app reads the file, removes
+what it took, and opens the Add screen with what you shared filled in; a shared
+link is not fetched until you tap. The database itself is not in the App
 Group; the extension cannot read your recipes or your list.
 
 Standard iOS device backups (iCloud Backup or an encrypted local backup) may
@@ -92,8 +93,8 @@ its deterministic parser and a few more rows may need a tap; nothing else change
 - No analytics, no telemetry, no crash reporter, no advertising, no ad
   identifiers, no ATT prompt, no third-party SDKs.
 - No selling or sharing of data — there is no data leaving the device to sell.
-- No request to any address other than the one you gave it, and none at all
-  unless you did.
+- No request to any address other than the one you gave it (and the `https`
+  redirects it sends you through, five at most), and none at all unless you did.
 
 ## Children's privacy
 

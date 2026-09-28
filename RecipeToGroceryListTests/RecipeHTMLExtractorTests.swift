@@ -74,7 +74,7 @@ final class RecipeHTMLExtractorTests: XCTestCase {
     }
 
     func testPageWithNoRecipeExtractsNothing() throws {
-        XCTAssertNil(RecipeHTMLExtractor.extract(from: fixture("no_recipe")),
+        XCTAssertNil(try RecipeHTMLExtractor.extract(from: fixture("no_recipe")),
                      "a BlogPosting is not a Recipe — the Link screen shows its dead end instead of guessing")
     }
 

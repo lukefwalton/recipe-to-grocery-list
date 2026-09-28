@@ -71,7 +71,7 @@ final class ShareViewController: UIViewController {
         }
     }
 
-    private static func string(from item: NSSecureCoding?) -> String? {
+    nonisolated private static func string(from item: NSSecureCoding?) -> String? {
         switch item {
         case let url as URL: return url.absoluteString
         case let text as String: return text

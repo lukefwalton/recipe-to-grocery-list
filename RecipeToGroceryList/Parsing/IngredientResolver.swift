@@ -179,7 +179,13 @@ struct IngredientResolver {
     /// The row is never resolved from the guess directly, and a low confidence never
     /// removes a deterministic hit; confidence only affects how the row is shown.
     func resolveRow(_ line: StructuredLine, lineIndex: Int, canonicalGuess: String?, confidence: RowConfidence) -> DraftRow {
-        let outcome = resolve(line.name)
+        // An unresolved line (§7.2: nothing was left for a name, so `name` is the whole
+        // line) has no name to match. Running the layers on "to taste" fuzzy-hits Tomato
+        // paste, and a fuzzy row is accepted by Save without a tap — so only the model's
+        // guess (layer 4) may propose an ingredient for such a line.
+        let outcome = line.isUnresolved
+            ? (hit: IngredientResolution?.none, alternatives: [IngredientSuggestion]())
+            : resolve(line.name)
         var row = DraftRow(lineIndex: lineIndex,
                            rawLine: line.rawLine,
                            name: line.name,

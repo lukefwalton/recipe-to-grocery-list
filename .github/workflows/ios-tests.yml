@@ -71,9 +71,10 @@ jobs:
       #
       # EXCLUDED_ARCHS=x86_64: macos-14 runners are Apple Silicon and the iOS
       # Simulator runs as arm64, so the x86_64 slice is never needed here.
-      # SWIFT_ACTIVE_COMPILATION_CONDITIONS adds the `CI` compile flag so
-      # `#if CI` test gates fire on the runner (the Simulator process doesn't
-      # inherit the host env, so a compile-time flag is the only reliable path).
+      # SWIFT_ACTIVE_COMPILATION_CONDITIONS adds the `CI` compile flag so an
+      # `#if CI` test gate would fire on the runner (none exists today; the
+      # Simulator process doesn't inherit the host env, so a compile-time flag
+      # is the only reliable path when one is needed).
       - name: Build for testing
         run: |
           set -euo pipefail

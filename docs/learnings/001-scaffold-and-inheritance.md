@@ -98,5 +98,5 @@ the checklist in `docs/app-store-metadata.md`.
 ## What's intentionally absent
 
 No `LICENSE`, no price in any copy, no real icon, no `docs/learnings/00N` for
-gates 1–9 yet (they land as `002`–`009`; see the Status section of the spec), no
-widget, no URL scheme, no ATS exceptions, no dependency.
+gates 1–9 at the time (they landed as `002`–`010`; see the Status section of the
+spec), no widget, no URL scheme, no ATS exceptions, no dependency.

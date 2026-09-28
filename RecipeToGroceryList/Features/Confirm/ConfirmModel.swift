@@ -126,14 +126,25 @@ final class ConfirmModel: ObservableObject {
     }
 
     /// Point a row at an ingredient the user created earlier in this session ("New in
-    /// this recipe" in the picker). No alias: the pending canonical has no id yet and
-    /// the store resolves the reference inside its transaction.
-    func choosePending(_ rowID: UUID, pendingID: UUID) {
+    /// this recipe" in the picker). The *Same as…* rule is the same as `choose`: an
+    /// alias `name → pending` is queued (the store resolves the pending id inside
+    /// its transaction, `RecipeStore.save`), unless the name already normalizes to the
+    /// pending name, in which case there is nothing to learn.
+    func choosePending(_ rowID: UUID, pendingID: UUID, addAlias: Bool) throws {
         guard let position = rowIndex(rowID), let pending = draft.pendingIngredient(id: pendingID) else { return }
         let row = draft.rows[position]
+        let target = IngredientRef.pending(pending.id)
+        let needsAlias = addAlias
+            && IngredientNormalizer.normalize(row.name) != IngredientNormalizer.normalize(pending.name)
+        if needsAlias, let refusal = conflict(alias: row.name, target: target, in: draft, decidingRow: row) {
+            throw refusal
+        }
         var updated = draft
         Self.dropAliases(contributedBy: row, in: &updated)
-        Self.decide(&updated.rows[position], ingredient: .pending(pending.id), name: pending.name)
+        Self.decide(&updated.rows[position], ingredient: target, name: pending.name)
+        if needsAlias {
+            Self.queueAlias(PendingAlias(alias: Self.trimmed(row.name), target: target), in: &updated)
+        }
         Self.prune(&updated)
         draft = updated
     }

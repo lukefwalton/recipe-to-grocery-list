@@ -32,7 +32,8 @@ Please **do not open a public issue** for a security problem. Instead:
   extension), or that sends recipe or list data off the device
 - On-device data exposure through the App Group inbox (`inbox.json`): another
   process reading or planting items, or the app acting on inbox content beyond
-  opening the Confirm flow for it
+  prefilling the Link or Paste screen with it (a shared link is never fetched
+  without a tap)
 - The Share Extension doing anything other than appending to the inbox
   (parsing, networking, opening the database)
 - Malicious page content reaching further than the extractor should allow (the

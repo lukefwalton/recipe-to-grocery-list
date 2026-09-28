@@ -23,9 +23,12 @@ fi
 
 # Fall back to the OU field on the Apple Development certificate.
 if [ -z "$TEAM" ]; then
+  # `|| true`: with no certificate, `security` exits 44 and `set -e` would end the
+  # script here with no message. OpenSSL 3 prints the subject as "OU = XXXX", so
+  # the field pattern allows spaces around "=".
   TEAM=$(security find-certificate -c "Apple Development" -p 2>/dev/null \
     | openssl x509 -noout -subject 2>/dev/null \
-    | sed -n 's/.*OU=\([^,/]*\).*/\1/p' | head -1)
+    | sed -n 's/.*OU *= *\([^,/]*\).*/\1/p' | head -1 || true)
 fi
 
 if [ -z "$TEAM" ]; then

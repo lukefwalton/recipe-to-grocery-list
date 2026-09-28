@@ -121,8 +121,8 @@ every time, with enough detail to answer "where did this come from?" later.
 - **Used as:** the extraction contract for the URL import path.
 
 ### Unicode vulgar-fraction table — `Model/Units.swift` and `Parsing/QuantityParser.swift` (own)
-- **Source:** the nine code points U+00BC–U+00BE and U+215B–U+215E plus U+2153/U+2154
-  (½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞) and their arithmetic values, typed in by hand.
+- **Source:** the fifteen code points U+00BC–U+00BE and U+2153–U+215E
+  (½ ⅓ ⅔ ¼ ¾ ⅛ ⅜ ⅝ ⅞ ⅕ ⅖ ⅗ ⅘ ⅙ ⅚) and their arithmetic values, typed in by hand.
 - **License:** Unicode character names and values are facts; no Unicode data
   files are bundled. The display table (`QuantityFormat.fractions`) and the
   parse table (`QuantityParser.value(ofVulgarFraction:)`) are original.

@@ -118,7 +118,7 @@ enum RecipeHTMLExtractor {
         var inner = Substring(text[open.upperBound..<close.lowerBound])
         while let last = inner.last, last.isWhitespace { inner = inner.dropLast() }
         if inner.hasSuffix("//") { inner = inner.dropLast(2) }
-        return String(inner)
+        return String(inner).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// Every `Recipe` node reachable from a decoded JSON value: the value itself,

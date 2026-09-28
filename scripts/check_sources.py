@@ -171,6 +171,8 @@ PRIVATE_STORED = re.compile(
     r"((?:@\w+(?:\([^)]*\))?\s*)*)(private|fileprivate)\s+(?:static\s+)?(var|let)\s+(\w+)\s*(.*)$"
 )
 BUILT_WITH_ARGS = re.compile(r"(?<![\w.])([A-Z]\w*)\(\s*\w+\s*:")
+INIT_DECL = re.compile(r"(?<![\w.])init[?!]?\s*\(")
+EXTENSION = re.compile(r"\bextension\s+([A-Z]\w*)\b")
 
 structs: dict[str, dict] = {}
 sources: dict[str, str] = {}
@@ -195,16 +197,36 @@ for path, text in sources.items():
             candidate = PRIVATE_STORED.match(line.strip()) if depth == 0 else None
             if candidate:
                 prefix = line.split(candidate.group(3))[0]
-                # `{` in the tail means a computed property, not a stored one.
-                if "{" not in candidate.group(5) and "static" not in prefix:
+                tail = candidate.group(5)
+                # `{` in the tail means a computed property, not a stored one; a `let`
+                # with a value is stored but is not a memberwise parameter.
+                let_with_value = candidate.group(3) == "let" and "=" in tail
+                if "{" not in tail and "static" not in prefix and not let_with_value:
                     private_stored.append(candidate.group(4))
             depth += line.count("{") + line.count("(") - line.count("}") - line.count(")")
 
         structs[name] = {
             "file": path,
-            "has_init": re.search(r"\binit[?!]?\s*\(", body) is not None,
+            # A declared `init(`, not a `.init(` call or `Foo.init(` reference.
+            "has_init": INIT_DECL.search(body) is not None,
             "private_stored": private_stored,
         }
+
+# An `init` declared in an extension counts too.
+for path, text in sources.items():
+    for match in EXTENSION.finditer(text):
+        name = match.group(1)
+        if name not in structs:
+            continue
+        brace = text.find("{", match.end())
+        if brace < 0:
+            continue
+        index, depth = brace + 1, 1
+        while index < len(text) and depth:
+            depth += (text[index] == "{") - (text[index] == "}")
+            index += 1
+        if INIT_DECL.search(text[brace + 1:index - 1]):
+            structs[name]["has_init"] = True
 
 for path, text in sources.items():
     seen: set[str] = set()

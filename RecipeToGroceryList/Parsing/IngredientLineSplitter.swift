@@ -109,7 +109,13 @@ enum IngredientLineSplitter {
         }
 
         var commaNote: String? = nil
-        if let comma = remainder.firstIndex(of: ",") {
+        // A comma glued to a digit ("1,000 g", "1,5 kg") belongs to a number the
+        // grammar did not read, not to a note — the whole line stays the name.
+        if let comma = remainder.indices.first(where: { index in
+            guard remainder[index] == "," else { return false }
+            let next = remainder.index(after: index)
+            return next == remainder.endIndex || !remainder[next].isNumber
+        }) {
             let tail = collapseWhitespace(String(remainder[remainder.index(after: comma)...]))
             commaNote = tail.isEmpty ? nil : tail
             remainder = String(remainder[..<comma])
@@ -117,9 +123,13 @@ enum IngredientLineSplitter {
 
         var name = collapseWhitespace(remainder)
         var sizeNote: String? = nil
-        if let size = leadingSizeWord(in: name) {
+        // "a large onion": an article only reads as a quantity before a unit (§7.2), so
+        // it can still be sitting in front of the size word here. Look past it and drop
+        // it with the size — left alone, "a large onion" fuzzy-matches Red onion, not Onion.
+        let afterArticle = dropping(leadingWord: "a", from: name) ?? dropping(leadingWord: "an", from: name)
+        if let size = leadingSizeWord(in: afterArticle ?? name) {
             sizeNote = size
-            name = collapseWhitespace(String(name.dropFirst(size.count)))
+            name = collapseWhitespace(String((afterArticle ?? name).dropFirst(size.count)))
         }
         var prepNote: String? = nil
         if let prep = trailingPrepPhrase(in: name) {

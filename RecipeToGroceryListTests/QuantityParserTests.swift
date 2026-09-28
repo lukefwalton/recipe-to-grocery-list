@@ -132,4 +132,12 @@ final class QuantityParserTests: XCTestCase {
         XCTAssertEqual(ParsedQuantity(value: 1, text: "1"), ParsedQuantity(value: 1, text: "1", rangeText: nil))
         XCTAssertNotEqual(ParsedQuantity(value: 1, text: "1"), ParsedQuantity(value: 1, text: "1", rangeText: "1-2"))
     }
+
+    func testAThousandsCommaAndAnOCRSplitFractionAreNotQuantities() {
+        // "1,000" is one number the grammar does not parse, and "1 /2" is OCR for ½:
+        // reading either as 1 would be a wrong quantity, which is worse than none.
+        XCTAssertNil(QuantityParser.parse(leading: "1,000 g flour"))
+        XCTAssertNil(QuantityParser.parse(leading: "1 /2 cup milk"))
+        XCTAssertEqual(QuantityParser.parse(leading: "1, diced")?.quantity.value, 1, "a comma before a word is still a boundary")
+    }
 }

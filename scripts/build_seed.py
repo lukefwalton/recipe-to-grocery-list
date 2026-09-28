@@ -195,7 +195,10 @@ def validate(rows: object, source_name: str) -> list[dict]:
     # The Settings screen shows IngredientSeed.version; keep it honest.
     if SWIFT_SEED.exists():
         match = re.search(r'static\s+let\s+version\s*=\s*"([^"]*)"', SWIFT_SEED.read_text(encoding="utf-8"))
-        if match and match.group(1) != SEED_VERSION:
+        if match is None:
+            errors.append(f"could not find `static let version = \"…\"` in {SWIFT_SEED.relative_to(REPO_ROOT)}; "
+                          "the version check would otherwise be silently skipped")
+        elif match.group(1) != SEED_VERSION:
             errors.append(f"SEED_VERSION {SEED_VERSION!r} != IngredientSeed.version {match.group(1)!r} "
                           f"in {SWIFT_SEED.relative_to(REPO_ROOT)}; bump both together")
 

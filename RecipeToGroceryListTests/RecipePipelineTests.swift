@@ -17,10 +17,10 @@ final class RecipePipelineTests: XCTestCase {
     /// against every name and alias here (checked with the Python port of the metric),
     /// so they reach layer 4 / land in *New* deterministically.
     private let index = IngredientIndex(entries: [
-        entry(1, "Vegetable broth", .pantry, ["veggie broth", "vegetable stock"]),
-        entry(2, "Garlic", .produce),
-        entry(3, "Onion", .produce),
-        entry(4, "Olive oil", .pantry),
+        RecipePipelineTests.entry(1, "Vegetable broth", .pantry, ["veggie broth", "vegetable stock"]),
+        RecipePipelineTests.entry(2, "Garlic", .produce),
+        RecipePipelineTests.entry(3, "Onion", .produce),
+        RecipePipelineTests.entry(4, "Olive oil", .pantry),
     ])
 
     private let source = RecipeSource(kind: .text, titleGuess: "Lentil soup")
@@ -236,7 +236,7 @@ final class RecipePipelineTests: XCTestCase {
         XCTAssertEqual(row.resolution, .exact)
         XCTAssertNil(row.suggestion)
         XCTAssertEqual(row.confidence, .low)
-        XCTAssertEqual(row.state, .resolved, "low confidence never removes a deterministic hit")
+        XCTAssertEqual(row.state, .highlighted, "low confidence never removes a deterministic hit — it flags it")
         XCTAssertFalse(row.blocksSave)
     }
 

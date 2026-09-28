@@ -80,7 +80,7 @@ final class AppModel: ObservableObject {
          embedding: IngredientEmbedding = IngredientEmbeddingFactory.make(),
          inbox: ShareInbox? = ShareInbox.appGroup()) {
         #if DEBUG
-        Self.applyUITestLaunchOverrides(to: settings)
+        AppModel.applyUITestLaunchOverrides(to: settings)   // by name: `Self` is `self`'s type, not yet initialized
         #endif
         self.store = store
         self.settings = settings
@@ -139,6 +139,10 @@ final class AppModel: ObservableObject {
     /// a convenience, never a reason to block launch.
     func drainInbox() {
         guard let inbox else { return }
+        // An item nobody has consumed yet (the Add tab is not mounted during
+        // onboarding; a Confirm is in progress) stays where it is: taking the next
+        // one would overwrite it, and the inbox file is the only other copy.
+        guard pendingImport == nil else { return }
         let items: [SharedInboxItem]
         do {
             items = try inbox.drain()

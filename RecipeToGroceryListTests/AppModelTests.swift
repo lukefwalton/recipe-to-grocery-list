@@ -166,6 +166,28 @@ final class AppModelTests: XCTestCase {
         XCTAssertEqual(model.selectedTab, .recipes)
     }
 
+    func testDrainInboxLeavesTheFileAloneWhileAnItemIsStillUnconsumed() throws {
+        let inbox = ShareInbox(directory: inboxDirectory)
+        try inbox.append(SharedInboxItem(kind: .url, value: "https://example.com/a"))
+        let model = makeModel(inbox: inbox)
+        model.drainInbox()
+        XCTAssertEqual(model.pendingImport, .url(URL(string: "https://example.com/a")!))
+
+        // A second share lands before the Add tab consumed the first (onboarding, or a
+        // Confirm in progress): the first must not be overwritten, and the second must
+        // stay in the file — it is the only other copy.
+        try inbox.append(SharedInboxItem(kind: .text, value: "2 cups flour"))
+        model.drainInbox()
+        XCTAssertEqual(model.pendingImport, .url(URL(string: "https://example.com/a")!), "the unconsumed item wins")
+        XCTAssertEqual(try inbox.peek().map(\.value), ["2 cups flour"], "the later share waits in the file")
+
+        // Consumed: the next foreground takes it.
+        model.pendingImport = nil
+        model.drainInbox()
+        XCTAssertEqual(model.pendingImport, .text("2 cups flour"))
+        XCTAssertEqual(try inbox.peek(), [])
+    }
+
     func testDrainInboxKeepsLaterItemsForTheNextForeground() throws {
         let inbox = ShareInbox(directory: inboxDirectory)
         try inbox.append(SharedInboxItem(kind: .url, value: "https://example.com/one"))

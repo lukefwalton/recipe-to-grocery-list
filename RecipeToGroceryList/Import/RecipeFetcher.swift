@@ -57,9 +57,17 @@ private final class FetchSession: NSObject, URLSessionDataDelegate, URLSessionTa
                                  delegate: self,
                                  delegateQueue: delegateQueue)
         defer { session.finishTasksAndInvalidate() }
-        return try await withCheckedThrowingContinuation { continuation in
-            self.continuation = continuation
-            session.dataTask(with: RecipeFetchPolicy.makeRequest(url)).resume()
+        let task = session.dataTask(with: RecipeFetchPolicy.makeRequest(url))
+        // Cancelling the Swift task (the Link screen going away) cancels the download
+        // too; the delegate then completes with URLError.cancelled and `finish` resumes
+        // the continuation exactly once, as for any other error.
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                self.continuation = continuation
+                task.resume()
+            }
+        } onCancel: {
+            task.cancel()
         }
     }
 
@@ -112,6 +120,13 @@ private final class FetchSession: NSObject, URLSessionDataDelegate, URLSessionTa
                     dataTask: URLSessionDataTask,
                     didReceive response: URLResponse,
                     completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        // A refused redirect passes nil to its completion handler, which delivers
+        // the 3xx here as the "final" response before the cancel lands. The first
+        // error is the real one; never let it be overwritten by badStatus(301).
+        if policyError != nil {
+            completionHandler(.cancel)
+            return
+        }
         if let http = response as? HTTPURLResponse {
             guard (200...299).contains(http.statusCode) else {
                 policyError = .badStatus(http.statusCode)

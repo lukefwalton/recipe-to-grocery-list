@@ -9,7 +9,7 @@ free-vs-paid decision is made (SPEC §13).
 
 ## Name
 
-**Use:** `Recipe to Grocery List` (23 chars) — descriptive, matches the repo and
+**Use:** `Recipe to Grocery List` (22 chars) — descriptive, matches the repo and
 `CFBundleDisplayName`. **Availability must be checked in App Store Connect**
 before submission; the name is reserved when the app record is created. If
 taken, keep the display name and pick a listing name from the same words
@@ -86,7 +86,7 @@ Everything works with the camera denied and on devices without Apple Intelligenc
 
 Smoke test: Add tab → Paste → paste a few ingredient lines (e.g. "2 cups flour", "3 cloves garlic, minced", "1 tsp salt") → Confirm → Save. Recipes tab → toggle "cooking this". List tab → grouped list; tap a heading to check it; "Done shopping" clears.
 
-Share Extension: in Safari, Share → Recipe to Grocery List → "Added." → open the app; the Confirm screen appears.
+Share Extension: in Safari, Share → Recipe to Grocery List → "Added." → open the app; the Link screen opens with the address filled in, and Fetch leads to Confirm.
 
 App Privacy: Data Not Collected. Camera/photo permission is requested only when the Photo path is chosen.
 ```
