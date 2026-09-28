@@ -110,9 +110,12 @@ path.
   when last words match. `003`'s "0 wrong matches" holds on the in-repo corpus
   only. Adding these as negative rows would take the resolution rate below the
   baseline, so they are recorded here instead of in the fixture.
-- **The corpus baseline has slack.** Baseline 0.95 / 0.93; measured 320/323 and
-  311/323 through the mirror. Up to a dozen regressions pass silently, which is
-  not what §11 says. Ratchet it once the Swift numbers are real.
+- **The corpus baseline had slack.** It was 0.95 / 0.93 against a measured
+  320/323 and 311/323, so up to a dozen regressions would have passed silently,
+  which is not what §11 says. The first CI run printed exactly the mirror's
+  numbers, so the baseline is now 0.99 / 0.96 — at 323 lines, one lost line on
+  either side fails the build. Adding a row that does not pass means bumping the
+  baseline on purpose in the same change, which is the point.
 - **The model may overwrite a stated quantity or unit.** `ModelIngredientMapping`
   accepts any finite model quantity where the regex found one (2 → 3, "2–3" →
   2.5), any known unit spelling (cup → tbsp, which moves the line between sums),

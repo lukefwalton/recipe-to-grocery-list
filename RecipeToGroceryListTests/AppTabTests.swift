@@ -64,7 +64,8 @@ final class PrivacyCopyTests: XCTestCase {
     func testPolicyLinkIsHTTPSOnTheAuthorSite() {
         XCTAssertEqual(PrivacyCopy.policyURL.scheme, "https")
         XCTAssertEqual(PrivacyCopy.policyURL.host, "lukefwalton.com")
-        XCTAssertEqual(PrivacyCopy.policyURL.path, "/recipe-to-grocery-list/privacy/")
+        // `URL.path` drops a trailing slash on the iOS 17+ Foundation; compare the whole address.
+        XCTAssertEqual(PrivacyCopy.policyURL.absoluteString, "https://lukefwalton.com/recipe-to-grocery-list/privacy/")
     }
 
     func testEveryPointHasASymbol() {
