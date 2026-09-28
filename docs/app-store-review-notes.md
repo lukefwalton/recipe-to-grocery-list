@@ -64,7 +64,9 @@ Suggested smoke test on a clean install:
    the ingredients are extracted from the page's JSON-LD and land on the same
    Confirm screen. Paste an `http://` link → refused with a clear message.
 8. (Optional) In Safari, Share → *Recipe to Grocery List* → "Added. Open Recipe
-   to Grocery List to finish." → open the app → the Confirm flow opens.
+   to Grocery List to finish." → open the app → the Add tab opens on **Link** with
+   the address filled in; tap **Fetch** to reach Confirm (nothing is downloaded
+   until that tap).
 
 ## Data: not collected
 

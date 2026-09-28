@@ -91,15 +91,16 @@ struct IngredientSuggestion: Equatable, Identifiable, Sendable {
 
 /// The Confirm screen's row state (§7.5), derived from the row's fields.
 enum ConfirmRowState: Equatable, Sendable {
-    /// exact / alias / loose / user-chosen, high confidence — accepted by Save.
+    /// exact / alias / loose with high confidence, or any user decision — accepted by Save.
     case resolved
-    /// fuzzy / embedding hit, or medium confidence — accepted by Save, shown with a
-    /// `warning`-tone dot and "matched to X".
+    /// fuzzy / embedding hit, or a model confidence below high — accepted by Save,
+    /// shown with a `warning`-tone dot and "matched to X".
     case highlighted
     /// The LLM's `canonicalGuess` hit an existing canonical — "Looks like X", needs
     /// a **Use** tap (the model never writes an alias).
     case suggested
-    /// Nothing hit (or low confidence) — needs Create / Same as… / Keep as text.
+    /// Nothing hit — needs Create / Same as… / Keep as text. (Low confidence alone
+    /// never lands here: a deterministic hit is kept and highlighted instead.)
     case new
     /// The user chose *Keep as text*: stored with a NULL ingredient under Other.
     case text
@@ -179,7 +180,9 @@ struct DraftRow: Identifiable, Equatable, Sendable {
         if isRemoved { return .removed }
         if keepAsText { return .text }
         if ingredient != nil {
-            if resolution == .fuzzy || resolution == .embedding || confidence == .medium {
+            // The user decided: nothing left to flag, whatever the model thought.
+            if resolution == .user { return .resolved }
+            if resolution == .fuzzy || resolution == .embedding || confidence != .high {
                 return .highlighted
             }
             return .resolved

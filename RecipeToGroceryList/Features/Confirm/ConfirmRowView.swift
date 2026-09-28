@@ -92,9 +92,9 @@ struct ConfirmRowView: View {
             .contextMenu {
                 if !row.isRemoved {
                     Button {
-                        sheet = .picker(addAlias: !isDecided)
+                        sheet = .picker(addAlias: pickTeachesAlias)
                     } label: {
-                        Label(isDecided ? "Change ingredient" : "Same as…", systemImage: "arrow.left.arrow.right")
+                        Label(pickTeachesAlias ? "Same as…" : "Change ingredient", systemImage: "arrow.left.arrow.right")
                     }
                     Button {
                         sheet = .edit
@@ -140,6 +140,13 @@ struct ConfirmRowView: View {
     /// Rows with an ingredient or kept as text have been decided; new/suggested have not.
     private var isDecided: Bool {
         row.ingredient != nil || row.keepAsText
+    }
+
+    /// Picking an ingredient teaches an alias unless the row already has one to change.
+    /// A kept-as-text row has none, so from it the pick is *Same as…* — the same rule
+    /// the row's own tap applies, so the menu and the tap can never disagree.
+    private var pickTeachesAlias: Bool {
+        row.keepAsText || !isDecided
     }
 
     // MARK: - States
@@ -348,7 +355,7 @@ struct ConfirmRowView: View {
         case .existing(let id):
             try model.choose(row.id, ingredientID: id, addAlias: addAlias)
         case .pending(let id):
-            model.choosePending(row.id, pendingID: id)
+            try model.choosePending(row.id, pendingID: id, addAlias: addAlias)
         case .create(let category):
             model.createIngredient(row.id, category: category)
         }
@@ -386,6 +393,7 @@ struct RowEditSheet: View {
     private let rowID: UUID
     private let rawLine: String
     private let originalUnitKey: String?
+    private let originalQuantityText: String
 
     @Environment(\.dismiss) private var dismiss
     @State private var name: String
@@ -399,8 +407,9 @@ struct RowEditSheet: View {
         self.rowID = row.id
         self.rawLine = row.rawLine
         self.originalUnitKey = row.unitKey
+        self.originalQuantityText = row.quantity.map { QuantityFormat.string($0) } ?? ""
         _name = State(initialValue: row.name)
-        _quantityText = State(initialValue: row.quantity.map { QuantityFormat.string($0) } ?? "")
+        _quantityText = State(initialValue: originalQuantityText)
         _unitKey = State(initialValue: row.unitKey)
         _note = State(initialValue: row.note ?? "")
     }
@@ -469,11 +478,16 @@ struct RowEditSheet: View {
 
     private func apply() {
         model.setName(rowID, name)
+        // Only a quantity the user actually changed is written back: the field shows
+        // the *display* form (3.14 → "3.1"), so re-parsing an untouched field would
+        // silently round the stored value (§1 "honest numbers").
         let quantity = quantityText.trimmingCharacters(in: .whitespaces)
-        if quantity.isEmpty {
-            model.setQuantity(rowID, nil)
-        } else if let value = Self.parseQuantity(quantity) {
-            model.setQuantity(rowID, value)
+        if quantity != originalQuantityText {
+            if quantity.isEmpty {
+                model.setQuantity(rowID, nil)
+            } else if let value = Self.parseQuantity(quantity) {
+                model.setQuantity(rowID, value)
+            }
         }
         if unitKey != originalUnitKey {
             model.setUnit(rowID, unitKey: unitKey, unitText: nil)

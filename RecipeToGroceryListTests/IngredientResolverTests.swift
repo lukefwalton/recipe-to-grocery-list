@@ -247,7 +247,7 @@ final class IngredientResolverTests: XCTestCase {
         let outcome = built.resolver.resolve("mozzarela")
         XCTAssertEqual(outcome.hit?.resolution, .fuzzy)
         XCTAssertTrue(outcome.alternatives.isEmpty, "the cosine-1.0 broth was never even scored")
-        XCTAssertFalse(built.embedding.requests.contains("mozzarela"), "0.98 ≥ the 0.85 bar: the query is not embedded")
+        XCTAssertFalse(built.embedding.requests.contains("mozzarela"), "0.98 ≥ the 0.93 bar: the query is not embedded")
     }
 
     func testSemanticThresholdIsTunable() {
@@ -346,7 +346,7 @@ final class IngredientResolverTests: XCTestCase {
         let low = makeRow("2 cups veggie stock", confidence: .low)
         XCTAssertEqual(low.ingredient, .existing(1), "a low confidence never removes a deterministic hit")
         XCTAssertEqual(low.confidence, .low)
-        XCTAssertEqual(low.state, .resolved)
+        XCTAssertEqual(low.state, .highlighted, "kept, but shown for a second look")
 
         let medium = makeRow("2 cups veggie stock", confidence: .medium)
         XCTAssertEqual(medium.state, .highlighted)
@@ -356,6 +356,18 @@ final class IngredientResolverTests: XCTestCase {
         let row = makeRow("2 cups")
         XCTAssertEqual(row.name, "2 cups")
         XCTAssertEqual(row.quantity, 2)
+        XCTAssertNil(row.ingredient)
+        XCTAssertEqual(row.state, .new)
+    }
+
+    func testUnresolvedLineIsNeverFuzzyMatched() {
+        // "to taste" alone leaves nothing for a name (§7.2), so the whole line is the
+        // name — and the whole line fuzzy-hits "Tomato paste" at 0.87. The row builder
+        // must not run the layers on it: a fuzzy row is accepted by Save without a tap.
+        let trap = IngredientResolver(index: IngredientIndex(entries: [Self.entry(20, "Tomato paste", .pantry)]))
+        XCTAssertTrue(IngredientLineSplitter.split("to taste").isUnresolved)
+        XCTAssertNotNil(trap.resolve("to taste").hit, "the trap is real: the metric alone would match")
+        let row = makeRow("to taste", resolver: trap)
         XCTAssertNil(row.ingredient)
         XCTAssertEqual(row.state, .new)
     }

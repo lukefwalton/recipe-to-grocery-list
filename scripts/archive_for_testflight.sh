@@ -32,5 +32,5 @@ xcodebuild archive \
 
 echo ""
 echo "Archive ready: $ARCHIVE"
-echo "Upload via Xcode Organizer (Product → Archive) or:"
+echo "Upload via Xcode Organizer (Product → Archive), or export the .ipa for Transporter with:"
 echo "  xcodebuild -exportArchive -archivePath $ARCHIVE -exportPath build/export -exportOptionsPlist ExportOptions.plist -allowProvisioningUpdates"

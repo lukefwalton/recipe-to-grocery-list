@@ -143,9 +143,11 @@ known_file() {
 }
 
 failed=0
-compare_lists "fetch_fonts.sh" "${FETCH_FONTS[@]}" || failed=1
-compare_lists "RecipeToGroceryList/App/Info.plist" "${APP_FONTS[@]}" || failed=1
-for f in "${FETCH_FONTS[@]}" "${APP_FONTS[@]}"; do
+# `${arr[@]+"${arr[@]}"}`: bash 3.2 (macOS) treats an empty array as unbound
+# under `set -u`, which would crash the failure path instead of reporting it.
+compare_lists "fetch_fonts.sh" ${FETCH_FONTS[@]+"${FETCH_FONTS[@]}"} || failed=1
+compare_lists "RecipeToGroceryList/App/Info.plist" ${APP_FONTS[@]+"${APP_FONTS[@]}"} || failed=1
+for f in ${FETCH_FONTS[@]+"${FETCH_FONTS[@]}"} ${APP_FONTS[@]+"${APP_FONTS[@]}"}; do
   if ! known_file "$f"; then
     echo "❌ $f is not one of LFWTypeface.bundledFileName's values (${LFW_FILES[*]})"
     failed=1

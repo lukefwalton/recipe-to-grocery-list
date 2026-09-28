@@ -20,6 +20,10 @@ name: Checks
 #   - seed_ingredients.json is exactly what scripts/build_seed.py produces from
 #     the hand-authored, CC0 scripts/seed_source.json (bundled data is built,
 #     not hand-edited — SPEC §3)
+#   - the Python mirrors of the Swift normalizer and parser pass their own
+#     designed cases (the seed is built through the normalizer mirror, and the
+#     corpus is calibrated through the parser mirror — a mirror that drifts from
+#     the Swift silently miscalibrates both)
 #   - the golden corpus fixture is well-formed and only references unit keys and
 #     seed slugs that actually exist
 #   - every .swift file belongs to a target (XcodeGen silently omits a file in a
@@ -66,6 +70,11 @@ jobs:
             echo "::error::seed_ingredients.json is out of date or untracked — run python3 scripts/build_seed.py and commit the output."
             exit 1
           fi
+      - name: Python mirrors self-test (ingredient_normalize.py ↔ Normalize.swift, reference_parser.py ↔ the splitter)
+        run: |
+          set -euo pipefail
+          python3 scripts/ingredient_normalize.py
+          python3 scripts/reference_parser.py --selftest
       - name: Golden corpus fixture is well-formed (ingredient_lines.json)
         run: |
           python3 - <<'PY'

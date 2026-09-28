@@ -360,11 +360,20 @@ def _scan_range_tail(chars: list[str], i: int) -> int | None:
 
 def _is_boundary(chars: list[str], i: int) -> bool:
     """Swift `isBoundary`: end of text, whitespace, a letter (a glued unit like "500ml"),
-    "(" or ",". Everything else ("10-inch", "2%", "1/2-inch") means no quantity."""
+    "(" or "," — but not the thousands comma of "1,000", and not whitespace that only
+    separates the number from a fraction slash ("1 /2"). Everything else ("10-inch",
+    "2%", "1/2-inch") means no quantity."""
     if i >= len(chars):
         return True
     ch = chars[i]
-    return ch.isspace() or ch.isalpha() or ch in "(,"
+    if ch == ",":
+        return not (i + 1 < len(chars) and _is_ascii_digit(chars[i + 1]))
+    if ch.isspace():
+        j = i
+        while j < len(chars) and chars[j].isspace():
+            j += 1
+        return not (j < len(chars) and chars[j] in "/⁄")
+    return ch.isalpha() or ch == "("
 
 
 def _remainder(chars: list[str], i: int) -> str:
@@ -575,16 +584,24 @@ def split(raw_line: str) -> dict:
             remainder = _dropping_unit(unit_text, remainder)
 
     comma_note: str | None = None
-    comma = remainder.find(",")
+    # Swift: the first comma not glued to a digit ("1,000 g" / "1,5 kg" keep their comma).
+    comma = next((i for i, ch in enumerate(remainder)
+                  if ch == "," and not (i + 1 < len(remainder) and remainder[i + 1].isnumeric())), -1)
     if comma >= 0:
         tail = collapse_whitespace(remainder[comma + 1:])
         comma_note = tail or None
         remainder = remainder[:comma]
 
     name = collapse_whitespace(remainder)
-    size_note = _leading_size_word(name)
+    # Swift: look past a leading article ("a large onion") — it only reads as a
+    # quantity before a unit, so it can still be sitting in front of the size word.
+    after_article = _dropping_leading_word("a", name)
+    if after_article is None:
+        after_article = _dropping_leading_word("an", name)
+    size_base = after_article if after_article is not None else name
+    size_note = _leading_size_word(size_base)
     if size_note is not None:
-        name = collapse_whitespace(name[len(size_note):])
+        name = collapse_whitespace(size_base[len(size_note):])
     prep_note = _trailing_prep_phrase(name)
     if prep_note is not None:
         name = collapse_whitespace(name[: len(name) - len(prep_note)])

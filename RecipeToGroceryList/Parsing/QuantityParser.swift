@@ -203,10 +203,20 @@ enum QuantityParser {
         return nil
     }
 
+    /// Whether a number may end at `i`: end of text, whitespace, a letter (a glued
+    /// unit, "500ml"), "(" or a comma — but not the thousands comma of "1,000", and
+    /// not whitespace that only separates the number from a fraction slash ("1 /2" is
+    /// OCR for ½, not 1). Either would be a wrong quantity, which is worse than none.
     private static func isBoundary(_ chars: [Character], at i: Int) -> Bool {
         guard i < chars.count else { return true }
         let c = chars[i]
-        return c.isWhitespace || c.isLetter || c == "(" || c == ","
+        if c == "," { return !(i + 1 < chars.count && isASCIIDigit(chars[i + 1])) }
+        if c.isWhitespace {
+            var j = i
+            while j < chars.count, chars[j].isWhitespace { j += 1 }
+            return !(j < chars.count && isFractionSlash(chars[j]))
+        }
+        return c.isLetter || c == "("
     }
 
     private static func remainder(_ chars: [Character], from i: Int) -> String {

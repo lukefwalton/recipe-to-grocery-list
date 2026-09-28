@@ -29,6 +29,11 @@ struct AddView: View {
         case paste
         case photo
         case confirm(ConfirmToken)
+
+        var isConfirm: Bool {
+            if case .confirm = self { return true }
+            return false
+        }
     }
 
     private var palette: LFWPaletteColors { appModel.theme.colors }
@@ -45,6 +50,10 @@ struct AddView: View {
         .onAppear(perform: consumePendingImport)
         .onChange(of: appModel.pendingImport) { _, _ in
             consumePendingImport()
+        }
+        .onChange(of: path) { _, newPath in
+            // Confirm finished or backed out: a shared item that waited can open now.
+            if !newPath.contains(where: \.isConfirm) { consumePendingImport() }
         }
     }
 
@@ -65,6 +74,7 @@ struct AddView: View {
 
                 VStack(spacing: 12) {
                     Button {
+                        linkPrefill = ""          // a share consumed earlier must not linger
                         path.append(.link)
                     } label: {
                         Label("Link", systemImage: SourceKind.url.symbol)
@@ -72,6 +82,7 @@ struct AddView: View {
                     .buttonStyle(LFWCTAButtonStyle())
 
                     Button {
+                        pastePrefill = ""
                         path.append(.paste)
                     } label: {
                         Label("Paste", systemImage: SourceKind.text.symbol)
@@ -146,6 +157,9 @@ struct AddView: View {
 
     private func consumePendingImport() {
         guard let pending = appModel.pendingImport else { return }
+        // Never over a Confirm in progress: replacing the path would throw away every
+        // row decision in that draft. The item stays pending until the stack unwinds.
+        guard !path.contains(where: \.isConfirm) else { return }
         appModel.pendingImport = nil
         switch pending {
         case .url(let url):

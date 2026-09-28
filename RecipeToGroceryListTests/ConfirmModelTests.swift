@@ -251,6 +251,44 @@ final class ConfirmModelTests: XCTestCase {
         XCTAssertEqual(try row(fixture.highlighted.id, in: model), fixture.highlighted)
     }
 
+    func testSameAsAnIngredientCreatedInThisRecipeQueuesAnAliasToThePendingTarget() throws {
+        let paste = DraftRow(lineIndex: 0, rawLine: "1 tbsp harissa paste", name: "harissa paste")
+        let rose = DraftRow(lineIndex: 1, rawLine: "2 tsp rose harissa", name: "rose harissa")
+        let same = DraftRow(lineIndex: 2, rawLine: "Harissa Paste, to taste", name: "Harissa Paste", note: "to taste")
+        let clash = DraftRow(lineIndex: 3, rawLine: "1 clove garlic", name: "garlic")
+        let model = makeModel(rows: [paste, rose, same, clash])
+
+        model.createIngredient(paste.id, category: .pantry)
+        let pending = try XCTUnwrap(model.draft.newIngredients.first)
+
+        // Same as… → the new canonical teaches "rose harissa" for next time (§7.5).
+        try model.choosePending(rose.id, pendingID: pending.id, addAlias: true)
+        let decided = try row(rose.id, in: model)
+        XCTAssertEqual(decided.ingredient, .pending(pending.id))
+        XCTAssertEqual(decided.ingredientName, "harissa paste")
+        XCTAssertEqual(decided.resolution, .user)
+        XCTAssertEqual(decided.state, .resolved)
+        XCTAssertEqual(model.draft.newAliases, [PendingAlias(alias: "rose harissa", target: .pending(pending.id))])
+
+        // A name that already normalizes to the pending name has nothing to learn.
+        try model.choosePending(same.id, pendingID: pending.id, addAlias: true)
+        XCTAssertEqual(try row(same.id, in: model).ingredient, .pending(pending.id))
+        XCTAssertEqual(model.draft.newAliases.count, 1)
+
+        // A term the registry already owns is refused, naming the owner.
+        XCTAssertThrowsError(try model.choosePending(clash.id, pendingID: pending.id, addAlias: true)) { error in
+            XCTAssertEqual(error as? AliasRefusal, AliasRefusal(alias: "garlic", ownerName: "Garlic"))
+        }
+        XCTAssertNil(try row(clash.id, in: model).ingredient, "a refused tap changes nothing")
+
+        // A plain change of ingredient teaches nothing, and drops the alias the row sponsored.
+        try model.choose(rose.id, ingredientID: Self.onionID, addAlias: false)
+        try model.choosePending(rose.id, pendingID: pending.id, addAlias: false)
+        XCTAssertTrue(model.draft.newAliases.isEmpty)
+        model.keepAsText(clash.id)
+        XCTAssertTrue(model.canSave)
+    }
+
     func testChangingYourMindReplacesYourOwnAliasButNotAnotherRowsAlias() throws {
         let first = DraftRow(lineIndex: 0, rawLine: "1 cup stock", name: "stock")
         let second = DraftRow(lineIndex: 1, rawLine: "2 cups stock", name: "stock")
@@ -470,6 +508,10 @@ final class ConfirmModelTests: XCTestCase {
         edited = try row(id, in: model)
         XCTAssertNil(edited.quantity)
         XCTAssertNil(edited.note, "blank collapses to nil")
+
+        // Decide the rows that still need a tap; the edits above must leave the rest valid.
+        try model.useSuggestion(fixture.suggested.id)
+        model.keepAsText(fixture.new.id)
         XCTAssertNoThrow(try RecipeValidator.validate(model.draft))
     }
 

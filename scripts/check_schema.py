@@ -79,12 +79,30 @@ def spec_sql_block() -> str:
 
 
 def swift_enum_cases(filename: str, enum: str) -> list[str]:
-    """Raw values of a `String`-backed enum whose cases are declared on one line."""
+    """Raw values of a `String`-backed enum: every `case` declared at the top level
+    of its body, whether the cases share one line or take one each. (Reading only
+    the first `case` line would let a case added on its own line slip past the
+    CHECK comparison — the exact mistake this guard exists to catch.)"""
     src = read(os.path.join(MODEL, filename))
-    match = re.search(rf"enum {enum}: String[^{{]*\{{\s*\n\s*case ([^\n]+)\n", src)
+    match = re.search(rf"enum {enum}: String[^{{]*\{{", src)
     if not match:
+        sys.exit(f"::error::could not find `enum {enum}: String` in {filename}")
+    index, depth = match.end(), 1
+    while index < len(src) and depth:
+        depth += (src[index] == "{") - (src[index] == "}")
+        index += 1
+    body = src[match.end():index - 1]
+    cases: list[str] = []
+    depth = 0
+    for line in body.split("\n"):
+        stripped = line.strip()
+        # Only the enum's own cases: a `case .url:` inside a nested `switch` sits deeper.
+        if depth == 0 and stripped.startswith("case "):
+            cases.extend(case.strip() for case in stripped[len("case "):].split(","))
+        depth += line.count("{") - line.count("}")
+    if not cases:
         sys.exit(f"::error::could not read the cases of `{enum}` in {filename}")
-    return [case.strip() for case in match.group(1).split(",")]
+    return cases
 
 
 # --------------------------------------------------------------------------- #

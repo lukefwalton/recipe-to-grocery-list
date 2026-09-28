@@ -29,8 +29,8 @@ struct UnitDefinition: Equatable, Sendable {
 /// matches after normalization (§8); nothing here converts between keys.
 ///
 /// The spec's starting set plus a handful the golden corpus needed (fluid ounces,
-/// quarts/pints/gallons, jars, bags, stalks, dashes, handfuls). Extend here and in
-/// the corpus together.
+/// quarts/pints/gallons, jars, bottles, bags, boxes, stalks, dashes, handfuls).
+/// Extend here and in the corpus together.
 enum UnitTable {
     static let all: [UnitDefinition] = [
         UnitDefinition(key: "tsp", singular: "tsp", plural: "tsp",
@@ -193,6 +193,9 @@ enum QuantityFormat {
 
     static func string(_ value: Double) -> String {
         guard value.isFinite else { return "" }
+        // Past any real quantity, and past this `Int(_:)` would trap: a pasted
+        // "99999999999999999999 g" has to render, not crash the Confirm screen.
+        guard value < 1e15 else { return String(format: "%.0f", value) }
         let whole = value.rounded(.down)
         let fraction = value - whole
         if fraction < fractionTolerance || fraction > 1 - fractionTolerance {

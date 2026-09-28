@@ -337,7 +337,7 @@ private struct ListScreen: View {
                 Button("Done shopping", role: .destructive) { doneShopping() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This clears every check and deselects all recipes.")
+                Text("This clears every check, removes the checked items you added, and deselects all recipes.")
             }
         }
         .padding(.horizontal, 16)

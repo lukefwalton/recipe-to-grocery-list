@@ -26,7 +26,7 @@ The word app's posture (`docs/prior-art-and-licensing.md`,
 `docs/learnings/001-architecture.md` at `e829bcc9c0dc`): the cleanest way to avoid
 a license question is to own the data. So `scripts/seed_source.json` is
 hand-authored for this app and dedicated CC0 — 346 grocery items with categories
-and 2,108 aliases, nothing scraped from a recipe site, a licensed dictionary or an
+and 2,116 aliases, nothing scraped from a recipe site, a licensed dictionary or an
 ingredient dataset. `scripts/build_seed.py` (modelled on the word app's
 `build_corpus.py`) validates it and writes `Resources/seed_ingredients.json`;
 CI runs `--check` and a `git status --porcelain` guard so the bundled file can
@@ -55,7 +55,7 @@ countables ("Onion", "Egg"); plurals resolve through normalization, not aliases.
 ## One normalization, shared with the alias PRIMARY KEY
 
 SPEC §7.1 defines it; `Model/Normalize.swift` is the only implementation and
-`scripts/ingredient_normalize.py` mirrors it step for step (81 self-test cases).
+`scripts/ingredient_normalize.py` mirrors it step for step (83 self-test cases).
 In order: NFKC, strip diacritics, lowercase, drop parentheticals, collapse
 whitespace, trim leading/trailing punctuation per token, drop a leading article
 when something follows it, singularize the **last word only** (so "brussels
@@ -67,10 +67,10 @@ drop two letters (tomatoes → tomato, peaches → peach); otherwise one trailin
 An explicit exception set covers mass nouns that end in s (grits, oats, greens).
 
 The layer-1.5 **loose key** is the normalized form with every non-alphanumeric
-removed, so "chick peas", "chickpeas" and "chick-peas" join — with one caveat
-carried as a follow-up: `singularize` currently skips a hyphenated last word, so
-"chick-peas" is not yet singularized; the fix has to land in the Swift and the
-Python mirror together, with the seed rebuilt.
+removed, so "chick peas", "chickpeas" and "chick-peas" join. (`singularize`
+originally skipped a hyphenated last word, so "chick-peas" was not singularized;
+that landed in the Swift and the Python mirror together, with the seed rebuilt —
+`f9e7a41`.)
 
 Normalization is applied **exactly once** at insert and exactly once at lookup;
 it is not guaranteed idempotent in theory (removing one article can expose

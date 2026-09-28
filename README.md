@@ -76,13 +76,14 @@ design document; when the two disagree, the spec wins and the README gets fixed.
 - [docs/app-store-metadata.md](docs/app-store-metadata.md) and
   [docs/app-store-review-notes.md](docs/app-store-review-notes.md) — listing
   copy (no price words), review notes, the 1.0 checklist.
-- [docs/learnings/](docs/learnings/) — decision write-ups, one per gate, 001–010:
+- [docs/learnings/](docs/learnings/) — decision write-ups, one per gate, 001–011:
   [scaffold and inheritance](docs/learnings/001-scaffold-and-inheritance.md),
   the seed and normalizer, [fuzzy thresholds calibrated on the
   corpus](docs/learnings/003-fuzzy-thresholds.md), per-row model fallback, the
   computed list, URL import and the inbox, photo import, [the device without
   Apple Intelligence](docs/learnings/008-non-ai-path.md), App Store readiness,
-  and [the CI guards that stand in for a compiler](docs/learnings/010-guards-without-a-compiler.md).
+  [the CI guards that stand in for a compiler](docs/learnings/010-guards-without-a-compiler.md),
+  and [the first read-through](docs/learnings/011-first-read-through.md).
 - [.github/STANDARDS.md](.github/STANDARDS.md) — the doctrine PRs are reviewed
   against. [NOTICE.md](NOTICE.md) — the reuse log.
 

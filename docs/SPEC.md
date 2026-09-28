@@ -198,7 +198,7 @@ Photo is the weakest path (multi-column cookbook layouts, drop caps, run-on line
 
 Store `source_ref` = final URL after redirects. HTML is parsed once and discarded; we keep only the raw lines. We never store the page.
 
-**Share Extension** does zero parsing and zero networking. It writes `{url, sharedAt}` (or `{text, sharedAt}` for shared plain text) into an App Group inbox — a small JSON file — and shows "Added. Open Recipe to Grocery List to finish." The app drains the inbox on foreground and opens the Confirm flow. This is the only use of the App Group; the extension never links the store. Extension memory limits and the lack of Foundation Models access in extensions are why the extension does nothing clever.
+**Share Extension** does zero parsing and zero networking. It writes `{kind: url | text, value, sharedAt}` into an App Group inbox — a small JSON file — and shows "Added. Open Recipe to Grocery List to finish." The app drains the inbox on foreground and opens the Add flow with the item filled in — a shared link is fetched only when the user taps, so the one network request is always behind a tap. This is the only use of the App Group; the extension never links the store. Extension memory limits and the lack of Foundation Models access in extensions are why the extension does nothing clever.
 
 ### 5.2 Pasted text
 
@@ -346,7 +346,7 @@ One `LanguageModelSession` request per recipe, not per line. Instructions includ
 Mapping back (FM-free, always compiled, unit-tested, mirrors `ModelDraftMapping`):
 
 - Rows are matched to input lines by `rawLine`. A model row whose `rawLine` doesn't match any input, or an input line the model skipped, falls back to the regex result for that line. The model can never add or remove lines.
-- Unknown `confidence` string → `low`. Non-finite or negative `quantity` → nil. A model `quantity` where the regex found none → nil (the model may not invent numbers).
+- Unknown `confidence` string → `low`. A non-finite or negative model `quantity` is ignored (the regex value stays). A model `quantity` where the regex found none → nil (the model may not invent numbers).
 - The whole response fails validation (`declined`) only if it is unparseable; then every line uses regex + layers 0–3 and the UI says "Parsed without on-device AI".
 
 ### 7.4 Resolve (layers, per row, first hit wins)
@@ -371,10 +371,10 @@ One row per raw line, in source order, with section-header dividers greyed. Row 
 
 | State | Looks like | User can |
 |---|---|---|
-| Resolved (exact / alias / loose, high) | canonical name, quantity + unit, note | tap to change ingredient, edit fields |
-| Resolved, highlighted (fuzzy / embedding, or medium) | same, `warning`-tone dot, "matched to *X*" | confirm by leaving it, or change |
+| Resolved (exact / alias / loose with high confidence, or any user decision) | canonical name, quantity + unit, note | tap to change ingredient, edit fields |
+| Resolved, highlighted (fuzzy / embedding, or a hit with medium / low confidence) | same, `warning`-tone dot, "matched to *X*" | confirm by leaving it, or change |
 | Suggested (llm) | "Looks like *X*" with **Use** button | Use → writes an alias `name → X` |
-| New (none / low) | name in bold, "New ingredient" | **Create** (new canonical, `is_custom`), **Same as…** (picker → writes alias), **Keep as text** (`ingredient_id NULL`) |
+| New (none — a deterministic hit is never demoted by low confidence, only highlighted) | name in bold, "New ingredient" | **Create** (new canonical, `is_custom`), **Same as…** (picker → writes alias), **Keep as text** (`ingredient_id NULL`) |
 | Not an ingredient | greyed | Remove, or keep as text |
 
 The **Same as…** and **Use** taps are how the alias table grows: `ingredient_aliases (alias: normalize(name), ingredient_id, is_custom: 1)`. If that alias already exists for a different owner (the PK), the tap is refused with "*name* already means *Y*" — the user picks explicitly. The model never writes an alias.
@@ -448,7 +448,7 @@ The list is a **pure function** of `(selected recipes, manual items, check_state
 
 ## 10. Privacy and NOTICE
 
-- **Network**: exactly one kind of request (§5.1). `docs/privacy.md`, the App Store privacy label ("Data Not Collected"), and the in-app privacy screen must all describe it in the same words. `PrivacyInfo.xcprivacy` declares no tracking, no required-reason APIs beyond what SQLite/file timestamps need.
+- **Network**: exactly one kind of request (§5.1). `docs/privacy.md`, the App Store privacy label ("Data Not Collected"), and the in-app privacy screen must all describe it in the same words. `PrivacyInfo.xcprivacy` declares no tracking and, as its only required-reason API, `UserDefaults` (CA92.1) for the theme and onboarding flag.
 - **Photos**: image is processed in memory and never stored. Camera/photo permission is opt-in, requested at first use with the reason string "To read ingredients off a page".
 - **LLM**: on-device Foundation Models only; copy uses the family's wording, "no **cloud** AI".
 - **NOTICE.md**: inherit the copy rule and reuse log. Expected v1 entries: `lfwdesignsystem` (same author), XcodeGen (MIT, not shipped), Fraunces and Inter (SIL OFL 1.1, bundled, `OFL.txt` shipped), the seed ingredient list (own-authored, CC0; a scraped list from a licensed dictionary or a recipe site is *Never*), and any fraction/unit tables or string-similarity code ported from elsewhere (attribution in the file, per the FSRS precedent).
@@ -458,7 +458,7 @@ The list is a **pure function** of `(selected recipes, manual items, check_state
 
 ## 11. Testing
 
-- **Golden corpus**: `Tests/Fixtures/ingredient_lines.json`, a few hundred real-world lines (paste, JSON-LD, OCR-shaped) with expected `(quantity, unit_key, name, note, expected slug or null)`. Layers 0–3 and the splitter are tested against it; the pass rate is printed in test output and any drop fails the build. This corpus is how thresholds get calibrated, replacing the workout values.
+- **Golden corpus**: `RecipeToGroceryListTests/Fixtures/ingredient_lines.json`, a few hundred real-world lines (paste, JSON-LD, OCR-shaped) with expected `(quantity, unit_key, name, note, expected slug or null)`. Layers 0–3 and the splitter are tested against it; the pass rate is printed in test output and any drop fails the build. This corpus is how thresholds get calibrated, replacing the workout values.
 - **JSON-LD fixtures**: saved HTML from a handful of recipe sites (with `@graph`, arrays, microdata-only). Extraction tests run offline; there is no network in tests.
 - **Store tests**: one write path, migrations from fresh and from v1, seed upsert idempotency, alias PK refusal, check-state GC on deselect and delete, list regeneration as a pure function.
 - **Mapping tests**: FM-free `ModelIngredientMapping` against hand-written model outputs including skipped lines, invented lines, invented quantities, junk confidence.
@@ -542,6 +542,7 @@ Decision write-ups, one per gate, in `docs/learnings/`:
 8. `008-non-ai-path.md`: the `refiner == nil` path end to end, corpus pass rate without layer 4, the manual QA record (gate 9).
 9. `009-app-store-readiness.md`: privacy manifest, metadata, screenshots, NOTICE audit, the archive (gate 10).
 10. `010-guards-without-a-compiler.md`: the three CI guards that stand in for a toolchain, and the build errors they found.
+11. `011-first-read-through.md`: the line-by-line read of every layer against this document — what it broke, what it moved, and what it found but left for the owner.
 
 History: **v0.2** (design only) superseded v0.1, which lived in a chat; it
 corrected the inheritance section against the actual `workout-logger` source,

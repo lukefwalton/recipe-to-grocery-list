@@ -106,7 +106,9 @@ capture_set() {
   capture_one "03-add" -OpenTabAdd
 }
 
-IPHONE_SIM="${IPHONE_SIM:-$(pick_sim "iPhone 15 Pro Max" "iPhone 14 Plus" "iPhone 15 Plus" "iPhone 16 Plus")}"
+# Newest first: Xcode 26 ships iPhone 17-series simulators only, and each newer
+# runtime drops the oldest names. The resize below copes with any 6.x" panel.
+IPHONE_SIM="${IPHONE_SIM:-$(pick_sim "iPhone 17 Pro Max" "iPhone 16 Pro Max" "iPhone 16 Plus" "iPhone 15 Pro Max" "iPhone 15 Plus" "iPhone 14 Plus")}"
 
 capture_set "$IPHONE_SIM" "build/app-store-screenshots/iphone" 1284 2778 "iPhone 6.5\""
 

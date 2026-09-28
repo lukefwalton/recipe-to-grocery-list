@@ -669,8 +669,7 @@ final class RecipeStoreTests: XCTestCase {
         let onion = try id("onion")
         let store = try XCTUnwrap(self.store)
         let group = DispatchGroup()
-        var inconsistencies = 0
-        let lock = NSLock()
+        let inconsistencies = TornReadCounter()
 
         DispatchQueue(label: "snapshot-reader").async(group: group) {
             for _ in 0..<200 {
@@ -678,7 +677,7 @@ final class RecipeStoreTests: XCTestCase {
                     (try store.count(inTable: "recipe_ingredients"), try store.count(inTable: "recipe_ingredients"))
                 }) ?? (0, 0)
                 if observed.0 % 2 != 0 || observed.0 != observed.1 {
-                    lock.lock(); inconsistencies += 1; lock.unlock()
+                    inconsistencies.increment()
                 }
             }
         }
@@ -691,7 +690,7 @@ final class RecipeStoreTests: XCTestCase {
         }
 
         group.wait()
-        XCTAssertEqual(inconsistencies, 0,
+        XCTAssertEqual(inconsistencies.value, 0,
                        "a snapshot observed a torn save (odd row count, or two reads disagreeing)")
         XCTAssertEqual(try store.count(inTable: "recipe_ingredients"), 80, "every save must have committed cleanly")
     }
@@ -734,5 +733,22 @@ final class RecipeStoreTests: XCTestCase {
         XCTAssertEqual(RecipeStore.decodeStringArray(nil), [])
         XCTAssertEqual(RecipeStore.decodeStringArray("not json"), [])
         XCTAssertEqual(RecipeStore.encodeStringArray([]), "[]")
+    }
+}
+
+/// A lock-guarded counter the background reader can bump. This test class is
+/// `@MainActor`, so a captured `var` mutated inside the dispatch closure is a
+/// concurrency diagnostic that the non-isolated `SQLiteDBTests` hammer never sees.
+private final class TornReadCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    func increment() {
+        lock.lock(); count += 1; lock.unlock()
+    }
+
+    var value: Int {
+        lock.lock(); defer { lock.unlock() }
+        return count
     }
 }

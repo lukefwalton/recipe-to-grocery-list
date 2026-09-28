@@ -60,7 +60,8 @@ struct LinkImportView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     field
 
-                    // The privacy sentence, verbatim from §5.1 / docs/privacy.md.
+                    // The §5.1 / docs/privacy.md sentence minus its "When you give it a
+                    // link," clause — this screen is that condition.
                     Text("The app downloads that page, once, and nothing else.")
                         .font(Theme.bodyFont(size: 13))
                         .foregroundStyle(palette.secondaryText)
@@ -86,9 +87,13 @@ struct LinkImportView: View {
         .navigationTitle("Link")
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
-            // Leaving the screen abandons the request; nothing is retried on return.
+            // Leaving the screen abandons the request (the fetcher cancels its URLSession
+            // task); nothing is retried on return. The phase is reset here because the
+            // cancelled `download` never gets to — otherwise the view sits on
+            // "Downloading…" with Fetch disabled when the user comes back.
             fetchTask?.cancel()
             fetchTask = nil
+            if phase == .fetching { phase = .idle }
         }
     }
 
@@ -206,8 +211,10 @@ struct LinkImportView: View {
             case .draft(let parsed):
                 phase = .idle
                 onParsed(parsed)
-            case .declined(let reason):
-                phase = .failed(reason.message)
+            case .declined:
+                // Recipe data, but no ingredient line to make a row from: the same dead
+                // end as no recipe at all — downloading the page again cannot help.
+                phase = .noRecipe(page.finalURL)
             }
         } catch let error as RecipeFetchError {
             guard !Task.isCancelled else { return }

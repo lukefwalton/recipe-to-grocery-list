@@ -218,9 +218,10 @@ extension RecipeStore {
     // MARK: - Private row helpers
 
     /// Refreshes the seed-owned category on reseed without touching the (possibly
-    /// user-renamed) display name or the is_custom flag.
+    /// user-renamed) display name or the is_custom flag. A custom row that a later
+    /// seed happens to share a slug with keeps the category the user picked.
     private func updateSeedCategory(_ id: Int64, category: IngredientCategory) throws {
-        let stmt = try db.prepare("UPDATE ingredients SET category = ? WHERE id = ?;")
+        let stmt = try db.prepare("UPDATE ingredients SET category = ? WHERE id = ? AND is_custom = 0;")
         defer { stmt.finalize() }
         stmt.bind(text: category.rawValue, at: 1)
         stmt.bind(int: id, at: 2)

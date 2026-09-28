@@ -57,9 +57,17 @@ private final class FetchSession: NSObject, URLSessionDataDelegate, URLSessionTa
                                  delegate: self,
                                  delegateQueue: delegateQueue)
         defer { session.finishTasksAndInvalidate() }
-        return try await withCheckedThrowingContinuation { continuation in
-            self.continuation = continuation
-            session.dataTask(with: RecipeFetchPolicy.makeRequest(url)).resume()
+        let task = session.dataTask(with: RecipeFetchPolicy.makeRequest(url))
+        // Cancelling the Swift task (the Link screen going away) cancels the download
+        // too; the delegate then completes with URLError.cancelled and `finish` resumes
+        // the continuation exactly once, as for any other error.
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                self.continuation = continuation
+                task.resume()
+            }
+        } onCancel: {
+            task.cancel()
         }
     }
 

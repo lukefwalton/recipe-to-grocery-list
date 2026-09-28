@@ -135,12 +135,14 @@ private struct RecipesScreen: View {
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button(role: .destructive) {
+                        // No `.destructive` role: SwiftUI animates a destructive swipe
+                        // button's row out on tap, before the confirmation below has run
+                        // (and would paint it system red). The tint keeps it on-palette.
+                        Button {
                             deleting = recipe
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
-                        // The destructive role would paint system red; status stays on-palette.
                         .tint(Theme.danger)
                     }
                     .contextMenu {
