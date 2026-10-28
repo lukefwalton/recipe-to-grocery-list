@@ -74,8 +74,10 @@ design document; when the two disagree, the spec wins and the README gets fixed.
 - [docs/SPEC.md](docs/SPEC.md) — the v1 design: principles, inheritance, data
   model, parse pipeline, units policy, list behavior, privacy, testing, the
   [PR-gate table](docs/SPEC.md#12-pr-gates) the build followed, open decisions.
-- [docs/privacy.md](docs/privacy.md) — the privacy policy; the in-app screen
-  and the App Store label use the same words.
+- [docs/privacy.md](docs/privacy.md) — a mirror of the privacy policy. The
+  canonical copy is [lukefwalton.com/recipe-to-grocery-list/privacy](https://lukefwalton.com/recipe-to-grocery-list/privacy/);
+  the in-app screen and the App Store label use the same words, and an edit
+  starts on the site.
 - [docs/prior-art-and-licensing.md](docs/prior-art-and-licensing.md) — what was
   reused, what was deliberately not, and why the seed is our own.
 - [docs/app-store-metadata.md](docs/app-store-metadata.md) and

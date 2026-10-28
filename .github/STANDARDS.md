@@ -65,6 +65,13 @@ must behave. Inherited from `workout-logger` (`.github/STANDARDS.md` at
 
 ## Privacy
 
+- **The privacy sentences live in four places and the site is canonical:**
+  https://lukefwalton.com/recipe-to-grocery-list/privacy/ first, then
+  `docs/privacy.md`, the in-app Privacy screen (`PrivacyCopy` in
+  `Features/Settings/PrivacyView.swift`) and the App Store listing
+  (`docs/app-store-metadata.md`). An edit to any one of them is an edit to all
+  four, in that order, in one PR. lukefwalton.com is the source of truth for
+  everything public-facing (privacy, support, terms if they ever exist).
 - Claims in UI copy, `docs/privacy.md`, the App Store privacy label and the
   README must describe the same product, in the same words. The fetch policy is
   one sentence everywhere: *"When you give it a link, the app downloads that
