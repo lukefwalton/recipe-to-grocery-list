@@ -98,9 +98,8 @@ design document; when the two disagree, the spec wins and the README gets fixed.
 
 **1.0 (build 1) submitted to App Review, October 2026.** Every gate in SPEC §12
 landed in order; the real app icon shipped with the archive; the Support and
-Privacy pages are live. Pricing is decided: free
-([012](docs/learnings/012-release-prep.md)). The source license is the one
-§13 decision still open; see below. The App Store link lands here and on the
+Privacy pages are live. Pricing is decided (free) and so is
+the license (MIT), both in [012](docs/learnings/012-release-prep.md). The App Store link lands here and on the
 product page once the app is approved.
 
 ## Building
@@ -123,8 +122,7 @@ file is compiled and imports what it uses).
 
 ## License
 
-Copyright Luke F. Walton. License TBD; see [docs/SPEC.md §13](docs/SPEC.md#13-open-decisions).
-Until it is decided there is deliberately no `LICENSE` file, so all rights are
-reserved; the source is public so the privacy posture can be audited.
+Code: MIT, see [LICENSE](LICENSE), including the vendored `lfwdesignsystem/`.
+Bundled fonts are SIL OFL 1.1 and the ingredient seed is CC0.
 [NOTICE.md](NOTICE.md) logs third-party references (fonts, the seed vocabulary,
 build tooling). Going public? See [docs/publishing-source.md](docs/publishing-source.md).

@@ -5,9 +5,9 @@ Checklist before flipping visibility on GitHub. Inherited from
 
 ## Already handled in-repo
 
-- [x] **Copyright posture:** no root `LICENSE` by decision (SPEC §13), so all
-      rights reserved. `NOTICE.md`, `CONTRIBUTING.md`, `SECURITY.md` and the
-      README all say so in the same words.
+- [x] **License:** [LICENSE](../LICENSE) — MIT, Luke F. Walton. `NOTICE.md`,
+      `CONTRIBUTING.md`, `SECURITY.md`, `lfwdesignsystem/LICENSE` and the README
+      all say so in the same words.
 - [x] **Secrets gitignored:** `project.local.yml`, signing assets, `build/`,
       `*.xcodeproj/`, `ExportOptionsLocal.plist`, fetched fonts — see
       [.gitignore](../.gitignore).
@@ -31,13 +31,11 @@ Checklist before flipping visibility on GitHub. Inherited from
    website `https://lukefwalton.com/recipe-to-grocery-list/`, and topics:
    `ios`, `swift`, `swiftui`, `privacy`, `grocery-list`, `recipes`, `local-first`.
 3. **Keep Issues enabled**; the product page links to them.
-4. Visibility is "Public". Actions minutes on a public repo are free, so
+4. Visibility is "Public". GitHub should detect the MIT license from the
+   root file; confirm the badge in the sidebar. Actions minutes on a public repo are free, so
    `ios-tests.yml` keeps running on every PR.
 
 ## After going public
 
 - Do not commit `project.local.yml` or signing assets (`.p12`, `.mobileprovision`).
 - App Store releases stay tied to your signing identity and Apple Developer account.
-- Choosing the source license is a single PR that touches `LICENSE`,
-  `NOTICE.md`, `CONTRIBUTING.md`, `SECURITY.md`, `lfwdesignsystem/LICENSE`,
-  `NSHumanReadableCopyright` and the README together (009).

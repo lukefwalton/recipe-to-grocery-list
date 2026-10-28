@@ -124,10 +124,9 @@ Decisions first (SPEC §13 — these gate the listing, not the code):
 
 - [x] **Decide free vs paid** (§13). **Free**, no in-app purchases —
       [012](learnings/012-release-prep.md).
-- [ ] **Decide the source license** (§13), tied to the pricing decision. Add the
-      root `LICENSE`, update `NOTICE.md`, `CONTRIBUTING.md`, `SECURITY.md`,
-      `lfwdesignsystem/LICENSE`, `NSHumanReadableCopyright` and the README's
-      License section in the same PR.
+- [x] **Decide the source license** (§13). **MIT** — [012](learnings/012-release-prep.md);
+      `LICENSE`, `NOTICE.md`, `CONTRIBUTING.md`, `SECURITY.md`,
+      `lfwdesignsystem/LICENSE` and the README landed together.
 - [ ] **Check the name is available** in App Store Connect.
 
 Local prep:

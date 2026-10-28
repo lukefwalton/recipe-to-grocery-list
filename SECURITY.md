@@ -47,9 +47,8 @@ Please **do not open a public issue** for a security problem. Instead:
 - Feature requests, visual/UI bugs, or parser mistakes (a wrong quantity, a
   missed ingredient) with no security impact — file those as
   [issues](https://github.com/lukefwalton/recipe-to-grocery-list/issues).
-- Reminder: this repo's source license is still to be decided
-  ([docs/SPEC.md §13](docs/SPEC.md#13-open-decisions)) — treat it as
-  all-rights-reserved public source. Security reports are welcome regardless.
+- Reminder: this repo is MIT-licensed ([LICENSE](LICENSE)); the App Store
+  build is the official release. Security reports are welcome regardless.
 
 ## Supported versions
 

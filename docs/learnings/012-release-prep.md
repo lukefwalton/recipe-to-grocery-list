@@ -14,14 +14,17 @@ rule in `docs/app-store-metadata.md`, the word does not appear in the name,
 subtitle, keywords or promotional text, only in the site copy and the
 description body.
 
-## Still open: the source license
+## MIT
 
-`NOTICE.md`, `CONTRIBUTING.md` and the README keep saying the same thing: no
-root `LICENSE`, so all rights reserved, with the source public so the privacy
-claims can be audited. Free pricing leans toward the word app's MIT precedent,
-but that is a decision, not a consequence, and it touches seven files at once
-(009 lists them). The repository goes public under the all-rights-reserved
-default; the license, when chosen, is one PR.
+The source license followed the pricing: free app, open code, the word app's
+precedent rather than the workout app's. 009 listed the files a license
+touches and they landed together: root `LICENSE` (MIT), `lfwdesignsystem/LICENSE`
+(same terms, by reference), `NOTICE.md`, `CONTRIBUTING.md`, `SECURITY.md` and
+the README. `NSHumanReadableCopyright` was already a plain copyright line and
+needed no change; MIT does not alter who holds the copyright. `CONTRIBUTING.md`
+had to change in substance, not just wording: an MIT repository cannot forbid
+forks or require written permission for use, so those lines became a request
+(do not ship a fork under this name) and the PR policy stayed.
 
 ## Going public
 

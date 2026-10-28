@@ -496,7 +496,7 @@ marked **Closed** are decided and listed only so the reasoning is on record.
 |---|---|---|
 | App Store name | "Recipe to Grocery List" is descriptive and matches the repo; check availability | Gate 10 |
 | Free vs paid | **Closed: free.** No server, no ongoing cost; the word app is the precedent. The 1.0 listing was submitted at no charge, with no in-app purchases (`docs/learnings/012-release-prep.md`). | — |
-| Source license | Family has both: source-available all-rights-reserved (`workout-logger`) and MIT (`a-new-word-every-day`). Pricing is now decided (free), which leans MIT, but the repository can go public without it: no `LICENSE` means all rights reserved. | Before any release that names a license |
+| Source license | **Closed: MIT**, the `a-new-word-every-day` precedent, decided with the free pricing (`docs/learnings/012-release-prep.md`). | — |
 | Category grouping | **Closed**: ship the eight categories in §6 in store order. Dropping grouping saves nothing and the seed carries the data anyway. | — |
 | Photo capture API | **Closed**: still photo + `VNRecognizeTextRequest`. | — |
 | May `canonicalGuess` propose something outside the seed + custom set? | Yes, unconstrained; but it can only ever produce a *suggestion*, and a guess that matches nothing lands in *New* like any other row. Model proposes, app confirms. | Gate 4 |
@@ -520,9 +520,9 @@ a learnings entry says otherwise.
 The branch was authored without a Swift toolchain
 (`docs/learnings/001-scaffold-and-inheritance.md`); the first real build, the
 archive and the submission happened on a Mac afterwards. Pricing is closed
-(free). What is still owed on paper: the gate 9 device record in
-`docs/learnings/008-non-ai-path.md` (the checklist there is unticked) and the
-source-license decision. `docs/learnings/012-release-prep.md` is the release
+(free) and so is the license (MIT). What is still owed on paper: the gate 9
+device record in `docs/learnings/008-non-ai-path.md` (the checklist there is
+unticked). `docs/learnings/012-release-prep.md` is the release
 entry.
 
 ### Implementation notes
