@@ -1,7 +1,7 @@
 # 012 — Release prep: 1.0 submitted, free, repository going public
 
-**October 2026.** Recipe to Grocery List 1.0 (build 1) was archived on a Mac
-and submitted to App Review. This entry closes the parts of gate 10 that were
+**2026-10-27.** Recipe to Grocery List 1.0 (build 1) was archived on a Mac
+and submitted to App Review at 5:52 PM Pacific (status: Waiting for Review). This entry closes the parts of gate 10 that were
 owed to a human and records the one §13 decision that landed with it.
 
 ## Free
