@@ -1,4 +1,5 @@
 import Foundation
+import os
 @testable import RecipeToGroceryList
 
 /// A scripted `RecipeRefining` for the pipeline tests. It **never imports
@@ -11,16 +12,17 @@ import Foundation
 /// Port of `WorkoutChatLogTests/FakeWorkoutParsing.swift` at
 /// `workout-logger@5bffddfb80fc`. `RecipeRefining` is `Sendable`, so the recorded calls
 /// sit behind a lock and the class is `@unchecked Sendable` rather than an actor —
-/// tests can then read `calls` synchronously.
+/// tests can then read `calls` synchronously. `OSAllocatedUnfairLock` rather than
+/// `NSLock`: `refine` is `async`, and `NSLock.lock()` is an error in the Swift 6
+/// language mode when called from an asynchronous context.
 final class FakeRefiner: RecipeRefining, @unchecked Sendable {
     struct Call: Equatable {
         let lines: [String]
         let knownIngredients: [String]
     }
 
-    private let lock = NSLock()
+    private let recorded = OSAllocatedUnfairLock(initialState: [Call]())
     private let sequence: [RecipeRefinement?]
-    private var recorded: [Call] = []
 
     /// One refinement (or nil = declined) returned on every call.
     init(_ refinement: RecipeRefinement?) {
@@ -33,18 +35,16 @@ final class FakeRefiner: RecipeRefining, @unchecked Sendable {
     }
 
     var calls: [Call] {
-        lock.lock()
-        defer { lock.unlock() }
-        return recorded
+        recorded.withLock { $0 }
     }
 
     var callCount: Int { calls.count }
 
     func refine(lines: [String], knownIngredients: [String]) async -> RecipeRefinement? {
-        lock.lock()
-        defer { lock.unlock() }
-        recorded.append(Call(lines: lines, knownIngredients: knownIngredients))
-        let index = recorded.count - 1
+        let index = recorded.withLock { recorded -> Int in
+            recorded.append(Call(lines: lines, knownIngredients: knownIngredients))
+            return recorded.count - 1
+        }
         if index < sequence.count { return sequence[index] }
         if let last = sequence.last { return last }
         return nil
