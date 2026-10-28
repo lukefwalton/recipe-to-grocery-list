@@ -4,7 +4,7 @@ Recipe to Grocery List is **public source, copyright Luke F. Walton.** The
 source license is still an open decision ([docs/SPEC.md §13](docs/SPEC.md#13-open-decisions));
 until it is made there is deliberately no `LICENSE` file, which means the default
 applies — all rights reserved. The code is visible so you can verify the privacy
-posture; the App Store build will be the official release.
+posture; the App Store build is the official release.
 
 By participating in the issue tracker you agree to abide by the
 [Code of Conduct](CODE_OF_CONDUCT.md).
@@ -20,7 +20,7 @@ Having a problem with the app or the repo?
 - **[luke@lukefwalton.com](mailto:luke@lukefwalton.com)** — same, or if you prefer email.
   Preferred for security or privacy concerns.
 
-Product page (planned): [lukefwalton.com/recipe-to-grocery-list](https://lukefwalton.com/recipe-to-grocery-list/)
+Product page: [lukefwalton.com/recipe-to-grocery-list](https://lukefwalton.com/recipe-to-grocery-list/)
 
 ## What we do not accept (without prior agreement)
 

@@ -98,8 +98,8 @@ App Privacy: Data Not Collected. Camera/photo permission is requested only when 
 | Support | https://lukefwalton.com/recipe-to-grocery-list/ |
 | Privacy | https://lukefwalton.com/recipe-to-grocery-list/privacy/ (mirrors `docs/privacy.md`) |
 
-Both pages are **planned**; publish them before submitting (the privacy URL must
-resolve for review).
+Both pages are live (published 2026-10-27, `lukefwalton.com`
+`bd3a72b`); the privacy page mirrors `docs/privacy.md`.
 
 ## App Privacy
 
@@ -122,9 +122,8 @@ Primary: **Food & Drink** (`LSApplicationCategoryType` =
 
 Decisions first (SPEC §13 — these gate the listing, not the code):
 
-- [ ] **Decide free vs paid** (§13). Free has no server cost and the word app's
-      precedent; paid up front is the workout app's. Either is fine; write the
-      reason in a `docs/learnings/` entry.
+- [x] **Decide free vs paid** (§13). **Free**, no in-app purchases —
+      [012](learnings/012-release-prep.md).
 - [ ] **Decide the source license** (§13), tied to the pricing decision. Add the
       root `LICENSE`, update `NOTICE.md`, `CONTRIBUTING.md`, `SECURITY.md`,
       `lfwdesignsystem/LICENSE`, `NSHumanReadableCopyright` and the README's
@@ -133,9 +132,9 @@ Decisions first (SPEC §13 — these gate the listing, not the code):
 
 Local prep:
 
-- [ ] **Replace the placeholder app icon.** `AppIcon-1024.png` is a generated
-      forest-green square with a gold disc (see
-      `docs/learnings/001-scaffold-and-inheritance.md`). Ship real artwork.
+- [x] **Replace the placeholder app icon.** Real artwork landed in `f23b57b`
+      (the same 1024 px image is `/recipe-to-grocery-list/app-icon.png` on the
+      site).
 - [ ] `bash scripts/fetch_fonts.sh && bash scripts/run_tests.sh` green on a Mac
       (the branch was authored without a Swift toolchain — this is the first
       real verification).
@@ -148,7 +147,7 @@ Local prep:
 - [ ] `NOTICE.md` audit: every bundled thing has an entry; `OFL.txt` is in the
       bundle; Acknowledgements screen lists Fraunces, Inter, the CC0 seed, the
       design system.
-- [ ] Publish the Support and Privacy pages.
+- [x] Publish the Support and Privacy pages (2026-10-27).
 
 App Store Connect + Xcode:
 
@@ -157,4 +156,4 @@ App Store Connect + Xcode:
 3. **App Privacy** — Data Not Collected.
 4. **Review notes** — paste the block above.
 5. **Age rating** — 4+.
-6. **Submit** — Add for Review.
+6. **Submit** — Add for Review. _Done: 1.0 (1), October 2026._

@@ -495,8 +495,8 @@ marked **Closed** are decided and listed only so the reasoning is on record.
 | Question | Lean | Decide by |
 |---|---|---|
 | App Store name | "Recipe to Grocery List" is descriptive and matches the repo; check availability | Gate 10 |
-| Free vs paid | Free (no server, no ongoing cost; the word app is the precedent). Paid up front is equally honest and is the workout app's precedent. Either is fine; "simple" is not the reason. | Gate 0 (affects README + license posture) |
-| Source license | Family has both: source-available all-rights-reserved (`workout-logger`) and MIT (`a-new-word-every-day`). Tie to the pricing decision. | Gate 0 |
+| Free vs paid | **Closed: free.** No server, no ongoing cost; the word app is the precedent. The 1.0 listing was submitted at no charge, with no in-app purchases (`docs/learnings/012-release-prep.md`). | — |
+| Source license | Family has both: source-available all-rights-reserved (`workout-logger`) and MIT (`a-new-word-every-day`). Pricing is now decided (free), which leans MIT, but the repository can go public without it: no `LICENSE` means all rights reserved. | Before any release that names a license |
 | Category grouping | **Closed**: ship the eight categories in §6 in store order. Dropping grouping saves nothing and the seed carries the data anyway. | — |
 | Photo capture API | **Closed**: still photo + `VNRecognizeTextRequest`. | — |
 | May `canonicalGuess` propose something outside the seed + custom set? | Yes, unconstrained; but it can only ever produce a *suggestion*, and a guess that matches nothing lands in *New* like any other row. Model proposes, app confirms. | Gate 4 |
@@ -509,24 +509,21 @@ marked **Closed** are decided and listed only so the reasoning is on record.
 
 ## Status & scope
 
-**v1.0 — implemented, device verification outstanding.** Every gate in §12 has
-landed on this branch in order: 0 scaffold, 1 schema + seed, 2 paste → splitter
+**v1.0 (build 1) — submitted to App Review, October 2026.** Every gate in §12
+landed in order: 0 scaffold, 1 schema + seed, 2 paste → splitter
 → Confirm → save, 3 fuzzy/embedding resolution + aliases + golden corpus, 4
 Foundation Models adapter with per-row mapping, 5 Recipes screen, 6 List screen,
 7 URL import + Share Extension inbox, 8 photo import, plus the copy, corpus
 measurement and tooling for 9 and 10. The design above is unchanged except where
 a learnings entry says otherwise.
 
-What is **not** done, because it cannot be done where this was written (no
-Swift toolchain — see `docs/learnings/001-scaffold-and-inheritance.md`):
-
-- the first real `xcodebuild` (`bash scripts/fetch_fonts.sh && bash
-  scripts/generate.sh && bash scripts/run_tests.sh`) and whatever it turns up;
-- **gate 9** — manual QA on a device without Apple Intelligence, recorded in
-  `docs/learnings/008-non-ai-path.md`;
-- **gate 10** — the TestFlight archive via `scripts/archive_for_testflight.sh`,
-  real app-icon artwork, the two §13 decisions (free vs paid, source license)
-  and the checklist in `docs/app-store-metadata.md`.
+The branch was authored without a Swift toolchain
+(`docs/learnings/001-scaffold-and-inheritance.md`); the first real build, the
+archive and the submission happened on a Mac afterwards. Pricing is closed
+(free). What is still owed on paper: the gate 9 device record in
+`docs/learnings/008-non-ai-path.md` (the checklist there is unticked) and the
+source-license decision. `docs/learnings/012-release-prep.md` is the release
+entry.
 
 ### Implementation notes
 

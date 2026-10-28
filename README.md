@@ -7,7 +7,7 @@ paste text, or photograph a page; confirm the ingredients; pick what you're
 cooking; shop from a single merged, checkable list.
 
 ![Platform: iOS 17+](https://img.shields.io/badge/Platform-iOS%2017%2B-lightgrey.svg)
-![Status: v1 implemented — device verification pending](https://img.shields.io/badge/Status-v1%20implemented%20%E2%80%94%20device%20verification%20pending-F8B500.svg)
+![Status: 1.0 submitted for App Store review](https://img.shields.io/badge/Status-1.0%20submitted%20for%20App%20Store%20review-F8B500.svg)
 
 </div>
 
@@ -16,9 +16,14 @@ cooking; shop from a single merged, checkable list.
 > network request: when you give it a link, the app downloads that page, once,
 > and nothing else.
 
-Same family as [Private Workout Logger](https://github.com/lukefwalton/workout-logger)
-and [A New Word Every Day](https://github.com/lukefwalton/a-new-word-every-day):
-SwiftUI, on-device, shared design system, XcodeGen, one write path.
+Free, no in-app purchases. Product page and support:
+[lukefwalton.com/recipe-to-grocery-list](https://lukefwalton.com/recipe-to-grocery-list/)
+· [privacy policy](https://lukefwalton.com/recipe-to-grocery-list/privacy/).
+
+Same family as [A New Word Every Day](https://github.com/lukefwalton/a-new-word-every-day)
+and [Private Workout Logger](https://github.com/lukefwalton/workout-logger)
+(withdrawn October 2026): SwiftUI, on-device, shared design system, XcodeGen,
+one write path.
 
 ## What it does
 
@@ -76,25 +81,27 @@ design document; when the two disagree, the spec wins and the README gets fixed.
 - [docs/app-store-metadata.md](docs/app-store-metadata.md) and
   [docs/app-store-review-notes.md](docs/app-store-review-notes.md) — listing
   copy (no price words), review notes, the 1.0 checklist.
-- [docs/learnings/](docs/learnings/) — decision write-ups, one per gate, 001–011:
+- [docs/learnings/](docs/learnings/) — decision write-ups, one per gate, 001–012:
   [scaffold and inheritance](docs/learnings/001-scaffold-and-inheritance.md),
   the seed and normalizer, [fuzzy thresholds calibrated on the
   corpus](docs/learnings/003-fuzzy-thresholds.md), per-row model fallback, the
   computed list, URL import and the inbox, photo import, [the device without
   Apple Intelligence](docs/learnings/008-non-ai-path.md), App Store readiness,
   [the CI guards that stand in for a compiler](docs/learnings/010-guards-without-a-compiler.md),
-  and [the first read-through](docs/learnings/011-first-read-through.md).
+  [the first read-through](docs/learnings/011-first-read-through.md), and
+  [release prep](docs/learnings/012-release-prep.md). [docs/publishing-source.md](docs/publishing-source.md)
+  is the going-public checklist.
 - [.github/STANDARDS.md](.github/STANDARDS.md) — the doctrine PRs are reviewed
   against. [NOTICE.md](NOTICE.md) — the reuse log.
 
 ## Status
 
-**v1 implemented on this branch, gate by gate** (SPEC §12, gates 0–8 and the
-tooling for 9–10). The code was written without a Swift toolchain, so the
-remaining work is verification on a Mac and a device: the first `xcodebuild`,
-manual QA on a phone without Apple Intelligence (gate 9), and a TestFlight
-archive (gate 10). Two decisions stay open by design — free vs paid and the
-source license (SPEC §13).
+**1.0 (build 1) submitted to App Review, October 2026.** Every gate in SPEC §12
+landed in order; the real app icon shipped with the archive; the Support and
+Privacy pages are live. Pricing is decided: free
+([012](docs/learnings/012-release-prep.md)). The source license is the one
+§13 decision still open; see below. The App Store link lands here and on the
+product page once the app is approved.
 
 ## Building
 
@@ -119,3 +126,5 @@ file is compiled and imports what it uses).
 Copyright Luke F. Walton. License TBD; see [docs/SPEC.md §13](docs/SPEC.md#13-open-decisions).
 Until it is decided there is deliberately no `LICENSE` file, so all rights are
 reserved; the source is public so the privacy posture can be audited.
+[NOTICE.md](NOTICE.md) logs third-party references (fonts, the seed vocabulary,
+build tooling). Going public? See [docs/publishing-source.md](docs/publishing-source.md).
