@@ -3,13 +3,10 @@
 Recipe to Grocery List (RecipeToGroceryList) and LFWDesignSystem
 Copyright (c) 2026 Luke F. Walton
 
-**License posture, honestly:** the source license for this repository is still an
-open decision — see [docs/SPEC.md §13](docs/SPEC.md#13-open-decisions) (the
-family has both precedents: source-available all-rights-reserved in
-`workout-logger`, MIT in `a-new-word-every-day`). There is deliberately no root
-`LICENSE` file yet. Until one lands, the default of copyright law applies: all
-rights reserved; the code is public so the privacy posture can be audited. The
-app and `lfwdesignsystem/` are original work by the same author.
+**License:** MIT, see [LICENSE](LICENSE) — decided October 2026
+(`docs/learnings/012-release-prep.md`), the `a-new-word-every-day` precedent.
+The app and `lfwdesignsystem/` are original work by the same author and carry
+the same license.
 
 Third-party components referenced by this project remain under their own licenses.
 The copy rule for scavenged code (internal discipline, inherited from
@@ -35,8 +32,8 @@ every time, with enough detail to answer "where did this come from?" later.
   *from* `a-new-word-every-day` (`e829bcc9c0dc`, package version 2.3.0) with
   `scripts/sync_designsystem.sh`; `scripts/check_designsystem_sync.sh` guards the
   copy against accidental edits.
-- **Copyright:** Luke F. Walton — same terms as the root license (to be decided,
-  see above; `lfwdesignsystem/LICENSE`).
+- **Copyright:** Luke F. Walton — MIT, same as the root license
+  (`lfwdesignsystem/LICENSE`).
 - **What is used:** linked via XcodeGen — `LFWColors`, `LFWThemeConfig`,
   `LFWTypography`, onboarding kit, `LFWCard`, `LFWEmptyState`, `LFWCTAButtonStyle`,
   `LFWHaptics`. `App/Theme.swift` forwards to it.

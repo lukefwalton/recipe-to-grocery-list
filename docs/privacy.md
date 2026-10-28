@@ -2,6 +2,14 @@
 
 _Last updated: 2026-09-16_
 
+> **This file is a mirror, not the source.** The canonical privacy policy is
+> https://lukefwalton.com/recipe-to-grocery-list/privacy/ (lukefwalton.com is
+> the source of truth for everything public-facing). The same sentences live in
+> four places: that page, this file, the in-app Privacy screen
+> (`Features/Settings/PrivacyView.swift`, `PrivacyCopy`) and the App Store
+> listing. **Edit the site first, then bring the other three to match in one
+> PR.** Never edit this file alone.
+
 Recipe to Grocery List is built privacy-first. The short version: **your recipes
 and your list stay on your phone.** There is no account, no server of ours, and
 no tracking. The app makes exactly one kind of network request, and only when you

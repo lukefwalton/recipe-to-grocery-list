@@ -1,10 +1,10 @@
 # Contributing
 
-Recipe to Grocery List is **public source, copyright Luke F. Walton.** The
-source license is still an open decision ([docs/SPEC.md §13](docs/SPEC.md#13-open-decisions));
-until it is made there is deliberately no `LICENSE` file, which means the default
-applies — all rights reserved. The code is visible so you can verify the privacy
-posture; the App Store build will be the official release.
+Recipe to Grocery List is **open source under the MIT license** ([LICENSE](LICENSE)),
+copyright Luke F. Walton. The code is public so you can verify the privacy
+posture and build it yourself; the App Store build is the official release.
+Forking is permitted by the license. What is asked, not required: do not ship a
+fork under this name or icon, and do not present a fork as the official app.
 
 By participating in the issue tracker you agree to abide by the
 [Code of Conduct](CODE_OF_CONDUCT.md).
@@ -20,13 +20,12 @@ Having a problem with the app or the repo?
 - **[luke@lukefwalton.com](mailto:luke@lukefwalton.com)** — same, or if you prefer email.
   Preferred for security or privacy concerns.
 
-Product page (planned): [lukefwalton.com/recipe-to-grocery-list](https://lukefwalton.com/recipe-to-grocery-list/)
+Product page: [lukefwalton.com/recipe-to-grocery-list](https://lukefwalton.com/recipe-to-grocery-list/)
 
 ## What we do not accept (without prior agreement)
 
-- Pull requests that add features, refactors, or dependency changes.
-- Forks published to the App Store or redistributed as competing products.
-- Use of this codebase beyond personal local audit/build without written permission.
+- Pull requests that add features, refactors, or dependency changes. Open an
+  issue first; small, reproducible bug fixes with a test are the exception.
 
 If you have a concrete fix and believe it should land, open an issue first. We
 can discuss whether a PR makes sense case by case.
