@@ -48,7 +48,7 @@ name is open (§13).
 
 | Decision | Choice |
 |---|---|
-| Platform | iOS only, iPhone only (`TARGETED_DEVICE_FAMILY "1"`), same as siblings |
+| Platform | iOS. iPhone and iPad (`TARGETED_DEVICE_FAMILY "1,2"`). App Store Connect requires 13-inch iPad screenshots and will not submit an iPhone-only app. |
 | Deployment target | iOS 17.0, matching the family; Foundation Models gated behind `#if canImport(FoundationModels)` + `#available(iOS 26.0, *)` + runtime availability, exactly as `workout-logger` does |
 | Account / cloud / analytics | None. Zero. |
 | LLM | On-device Foundation Models only. No cloud LLM of any kind, not even as an opt-in. |

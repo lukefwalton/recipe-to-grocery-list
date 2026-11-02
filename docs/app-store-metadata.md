@@ -114,9 +114,10 @@ Primary: **Food & Drink** (`LSApplicationCategoryType` =
 
 ## Screenshots
 
-`bash scripts/capture_app_store_screenshots.sh` → `build/app-store-screenshots/iphone/`
-(6.5", 1284×2778): `01-list`, `02-recipes`, `03-add`. iPhone only; no iPad set
-(`TARGETED_DEVICE_FAMILY 1`).
+`bash scripts/capture_app_store_screenshots.sh`
+
+- iPhone 6.3" (1206×2622) → `build/app-store-screenshots/iphone-6.3/` — `01-list`, `02-recipes`, `03-add`. This is the slot App Store Connect calls “iPhone with Dynamic Island (medium display)”. 6.9" (1320×2868) is rejected there.
+- iPad 13" (2064×2752) → `build/app-store-screenshots/ipad/` — the same three shots. Required. An iPhone-only app is not accepted.
 
 ## 1.0 submission checklist
 

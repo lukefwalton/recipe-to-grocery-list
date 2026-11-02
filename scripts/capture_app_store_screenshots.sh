@@ -13,7 +13,9 @@
 #   -ScreenshotDemo         seed a few saved recipes + a list so screens aren't empty
 #   -OpenTabRecipes / -OpenTabAdd   start on that tab (default is List)
 #
-# Output: build/app-store-screenshots/iphone/   6.5" (1284×2778)
+# Output:
+#   build/app-store-screenshots/iphone-6.3/   1206×2622  (the slot Connect accepts)
+#   build/app-store-screenshots/ipad/         2064×2752  (13-inch iPad, required)
 #
 # Requires: Xcode, iOS Simulator, fonts (scripts/fetch_fonts.sh).
 set -euo pipefail
@@ -108,11 +110,16 @@ capture_set() {
 
 # Newest first: Xcode 26 ships iPhone 17-series simulators only, and each newer
 # runtime drops the oldest names. The resize below copes with any 6.x" panel.
+# 1206×2622 is the 6.3" size Connect's "iPhone with Dynamic Island (medium
+# display)" slot accepts. 1320×2868 (6.9") is rejected there.
 IPHONE_SIM="${IPHONE_SIM:-$(pick_sim "iPhone 17 Pro Max" "iPhone 16 Pro Max" "iPhone 16 Plus" "iPhone 15 Pro Max" "iPhone 15 Plus" "iPhone 14 Plus")}"
+IPAD_SIM="${IPAD_SIM:-$(pick_sim "iPad Pro 13-inch (M5)" "iPad Pro 13-inch" "iPad Air 13-inch (M4)" "iPad Pro (12.9-inch) (6th generation)")}"
 
-capture_set "$IPHONE_SIM" "build/app-store-screenshots/iphone" 1284 2778 "iPhone 6.5\""
+capture_set "$IPHONE_SIM" "build/app-store-screenshots/iphone-6.3" 1206 2622 "iPhone 6.3\""
+capture_set "$IPAD_SIM" "build/app-store-screenshots/ipad" 2064 2752 "iPad 13\""
 
 echo ""
 echo "Done."
-echo "  iPhone → build/app-store-screenshots/iphone/"
+echo "  iPhone 6.3\" → build/app-store-screenshots/iphone-6.3/"
+echo "  iPad 13\"    → build/app-store-screenshots/ipad/"
 open build/app-store-screenshots
