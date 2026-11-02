@@ -136,6 +136,11 @@ struct AddView: View {
     }
 
     private func showConfirm(_ parsed: ParsedRecipe) {
+        // The photo review stays under Confirm. Choosing the lines again replaces
+        // the confirm screen instead of stacking a second one.
+        if case .confirm = path.last {
+            path.removeLast()
+        }
         path.append(.confirm(ConfirmToken(parsed: parsed)))
     }
 

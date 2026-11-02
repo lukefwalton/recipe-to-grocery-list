@@ -59,7 +59,8 @@ enum RowConfidence: String, Codable, CaseIterable, Sendable {
     case high, medium, low
 
     /// Tolerant decode of the model's free-form string: anything unrecognised is
-    /// `.low`, so a misspelling can only make a row *more* visible, never less.
+    /// `.low`. A low-confidence line starts off the list, so a misspelling cannot
+    /// quietly become a selected ingredient.
     init(modelString raw: String) {
         switch raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
         case "high": self = .high
@@ -93,14 +94,13 @@ struct IngredientSuggestion: Equatable, Identifiable, Sendable {
 enum ConfirmRowState: Equatable, Sendable {
     /// exact / alias / loose with high confidence, or any user decision — accepted by Save.
     case resolved
-    /// fuzzy / embedding hit, or a model confidence below high — accepted by Save,
-    /// shown with a `warning`-tone dot and "matched to X".
+    /// A deterministic hit the model was not sure about — accepted by Save once the
+    /// line is on the list, shown with a `warning`-tone dot and "matched to X".
     case highlighted
-    /// The LLM's `canonicalGuess` hit an existing canonical — "Looks like X", needs
-    /// a **Use** tap (the model never writes an alias).
+    /// A fuzzy match, an embedding match, or the model's guess — "Looks like X",
+    /// needs a **Use** tap. None of these is selected on its own.
     case suggested
-    /// Nothing hit — needs Create / Same as… / Keep as text. (Low confidence alone
-    /// never lands here: a deterministic hit is kept and highlighted instead.)
+    /// Nothing hit — needs Create / Same as… / Keep as text.
     case new
     /// The user chose *Keep as text*: stored with a NULL ingredient under Other.
     case text

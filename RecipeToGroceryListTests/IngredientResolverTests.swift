@@ -272,8 +272,16 @@ final class IngredientResolverTests: XCTestCase {
 
     // MARK: - resolveRow
 
-    private func makeRow(_ line: String, guess: String? = nil, confidence: RowConfidence = .high, resolver: IngredientResolver? = nil) -> DraftRow {
-        (resolver ?? self.resolver).resolveRow(IngredientLineSplitter.split(line), lineIndex: 3, canonicalGuess: guess, confidence: confidence)
+    private func makeRow(_ line: String,
+                         guess: String? = nil,
+                         confidence: RowConfidence = .high,
+                         dropUncertain: Bool = true,
+                         resolver: IngredientResolver? = nil) -> DraftRow {
+        (resolver ?? self.resolver).resolveRow(IngredientLineSplitter.split(line),
+                                               lineIndex: 3,
+                                               canonicalGuess: guess,
+                                               confidence: confidence,
+                                               dropUncertain: dropUncertain)
     }
 
     func testRowCarriesTheLineAndTheHit() {
@@ -295,15 +303,17 @@ final class IngredientResolverTests: XCTestCase {
         XCTAssertFalse(row.blocksSave)
     }
 
-    func testFuzzyRowIsHighlightedWithAlternatives() {
+    func testFuzzyRowIsASuggestionWithAlternatives() {
         let row = makeRow("1 lb chiken, cubed")
         XCTAssertEqual(row.name, "chiken")
         XCTAssertEqual(row.note, "cubed")
-        XCTAssertEqual(row.ingredient, .existing(3))
-        XCTAssertEqual(row.resolution, .fuzzy)
+        XCTAssertNil(row.ingredient, "a fuzzy match is not selected")
+        XCTAssertEqual(row.resolution, .none)
+        XCTAssertEqual(row.suggestion?.ingredientID, 3)
+        XCTAssertEqual(row.suggestion?.via, .fuzzy)
         XCTAssertEqual(row.alternatives.map(\.ingredientID), [10])
-        XCTAssertEqual(row.state, .highlighted)
-        XCTAssertFalse(row.blocksSave)
+        XCTAssertEqual(row.state, .suggested)
+        XCTAssertTrue(row.blocksSave)
     }
 
     func testCanonicalGuessOnlyEverProducesASuggestion() {
@@ -342,14 +352,31 @@ final class IngredientResolverTests: XCTestCase {
         XCTAssertNil(row.suggestion)
     }
 
-    func testConfidenceOnlyAffectsHowTheRowIsShown() {
+    func testLowConfidenceKeepsADeterministicHitButStartsOffTheList() {
         let low = makeRow("2 cups veggie stock", confidence: .low)
-        XCTAssertEqual(low.ingredient, .existing(1), "a low confidence never removes a deterministic hit")
+        XCTAssertEqual(low.ingredient, .existing(1), "the match is kept for when the line is put back")
         XCTAssertEqual(low.confidence, .low)
-        XCTAssertEqual(low.state, .highlighted, "kept, but shown for a second look")
+        XCTAssertTrue(low.isRemoved)
+        XCTAssertEqual(low.state, .removed)
+        XCTAssertFalse(low.blocksSave)
+
+        let kept = makeRow("2 cups veggie stock", confidence: .low, dropUncertain: false)
+        XCTAssertFalse(kept.isRemoved, "a line the reader already checked stays on the list")
+        XCTAssertEqual(kept.state, .highlighted)
 
         let medium = makeRow("2 cups veggie stock", confidence: .medium)
+        XCTAssertFalse(medium.isRemoved)
         XCTAssertEqual(medium.state, .highlighted)
+        XCTAssertFalse(medium.blocksSave)
+    }
+
+    func testLowConfidenceDropsAnInventedGuess() {
+        let row = makeRow("Let's get started", guess: "Chicken", confidence: .low)
+        XCTAssertEqual(row.name, "Let's get started")
+        XCTAssertNil(row.ingredient)
+        XCTAssertNil(row.suggestion, "an unsure line does not offer a grocery name")
+        XCTAssertTrue(row.isRemoved)
+        XCTAssertEqual(row.state, .removed)
     }
 
     func testUnresolvedLineStillGetsARowThatNeedsATap() {
@@ -363,7 +390,7 @@ final class IngredientResolverTests: XCTestCase {
     func testUnresolvedLineIsNeverFuzzyMatched() {
         // "to taste" alone leaves nothing for a name (§7.2), so the whole line is the
         // name — and the whole line fuzzy-hits "Tomato paste" at 0.87. The row builder
-        // must not run the layers on it: a fuzzy row is accepted by Save without a tap.
+        // must not offer that as a suggestion.
         let trap = IngredientResolver(index: IngredientIndex(entries: [Self.entry(20, "Tomato paste", .pantry)]))
         XCTAssertTrue(IngredientLineSplitter.split("to taste").isUnresolved)
         XCTAssertNotNil(trap.resolve("to taste").hit, "the trap is real: the metric alone would match")
@@ -372,12 +399,15 @@ final class IngredientResolverTests: XCTestCase {
         XCTAssertEqual(row.state, .new)
     }
 
-    func testEmbeddingRowIsHighlighted() {
+    func testEmbeddingRowIsASuggestion() {
         let built = semanticResolver(entries: [Self.entry(1, "Vegetable broth", .pantry)],
                                      vectors: ["Vegetable broth": [0.99, 0.1], "stock for soup": [1, 0]])
         let row = makeRow("2 cups stock for soup", resolver: built.resolver)
-        XCTAssertEqual(row.ingredient, .existing(1))
-        XCTAssertEqual(row.resolution, .embedding)
-        XCTAssertEqual(row.state, .highlighted)
+        XCTAssertNil(row.ingredient, "an embedding match is not selected")
+        XCTAssertEqual(row.suggestion?.ingredientID, 1)
+        XCTAssertEqual(row.suggestion?.via, .embedding)
+        XCTAssertEqual(row.resolution, .none)
+        XCTAssertEqual(row.state, .suggested)
+        XCTAssertTrue(row.blocksSave)
     }
 }

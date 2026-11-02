@@ -7,11 +7,9 @@ import Foundation
 /// implementation; tests drive a fake.
 ///
 /// Shape ported from `WorkoutChatLog/Vision/TextRecognizing.swift` at
-/// `workout-logger@5bffddfb80fc`, with one difference: that app reviews each
-/// recognized line with its own confidence, whereas here OCR is just another way
-/// to produce `[String]` raw lines. Every capture path converges on the same
-/// pipeline (§5), so this returns finished lines in reading order and the Confirm
-/// screen — not a second review UI — is where the user fixes what's wrong.
+/// `workout-logger@5bffddfb80fc`. The photo screen reviews the recognized lines
+/// against the picture before they are parsed: a whole recipe page is not an
+/// ingredient list, and Confirm never sees the image.
 ///
 /// `imageData` is encoded image bytes (JPEG/PNG/HEIC): keeping the boundary at
 /// `Data` means no common code needs `UIImage`, `CGImage` or a Vision type.
@@ -20,6 +18,17 @@ protocol TextRecognizing: Sendable {
     /// or recognition is unavailable — never throws into the UI; an empty result
     /// is the honest signal, and the screen offers another photo.
     func recognizeLines(in imageData: Data) async -> [String]
+
+    /// The same lines, with the union box of each physical line when the
+    /// recognizer has one. The default builds frameless lines from `recognizeLines`.
+    func recognizePage(in imageData: Data) async -> [RecognizedLine]
+}
+
+extension TextRecognizing {
+    func recognizePage(in imageData: Data) async -> [RecognizedLine] {
+        let lines = await recognizeLines(in: imageData)
+        return lines.map { RecognizedLine(text: $0, minX: 0, minY: 0, width: 0, height: 0) }
+    }
 }
 
 /// The stand-in when Vision isn't compiled in (Linux/CI) or is unavailable: it

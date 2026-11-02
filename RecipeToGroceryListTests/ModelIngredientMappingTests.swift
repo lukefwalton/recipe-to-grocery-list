@@ -59,7 +59,7 @@ final class ModelIngredientMappingTests: XCTestCase {
         XCTAssertEqual(merged.count, 2)
 
         XCTAssertTrue(merged[0].refinedByModel)
-        XCTAssertEqual(merged[0].structured.name, "all-purpose flour")
+        XCTAssertEqual(merged[0].structured.name, "flour", "the written name is what gets matched")
         XCTAssertEqual(merged[0].canonicalGuess, "Flour")
         XCTAssertEqual(merged[0].structured.rawLine, "2 cups flour")
 
@@ -222,14 +222,15 @@ final class ModelIngredientMappingTests: XCTestCase {
         XCTAssertEqual(merged[0].canonicalGuess, "Flour")
     }
 
-    func testModelNameResolvesAnUnresolvedLine() {
+    func testModelNameDoesNotResolveAnUnresolvedLine() {
         let regex = structured("2 cups")
         XCTAssertTrue(regex[0].isUnresolved, "precondition: §7.2 unresolved, name = raw line")
         XCTAssertEqual(regex[0].name, "2 cups")
         let merged = merge(regex, [row("2 cups", name: "flour", guess: "Flour")])
-        XCTAssertEqual(merged[0].structured.name, "flour")
-        XCTAssertFalse(merged[0].structured.isUnresolved)
-        XCTAssertEqual(merged[0].structured.quantity, 2, "the regex quantity/unit survive alongside the model name")
+        XCTAssertEqual(merged[0].structured.name, "2 cups", "a rewritten name is not the match key")
+        XCTAssertTrue(merged[0].structured.isUnresolved)
+        XCTAssertEqual(merged[0].canonicalGuess, "Flour")
+        XCTAssertEqual(merged[0].structured.quantity, 2, "the regex quantity/unit survive")
         XCTAssertEqual(merged[0].structured.unitKey, "cup")
     }
 
@@ -262,7 +263,7 @@ final class ModelIngredientMappingTests: XCTestCase {
         ])
         let line = merged[0].structured
         XCTAssertEqual(line.rawLine, "2-3 tbsp olive oil, divided")
-        XCTAssertEqual(line.name, "extra-virgin olive oil")
+        XCTAssertEqual(line.name, "olive oil", "the model does not get to rename the ingredient")
         XCTAssertEqual(line.quantity, 2.5)
         XCTAssertEqual(line.quantityText, "2-3")
         XCTAssertEqual(line.unitKey, "tbsp")

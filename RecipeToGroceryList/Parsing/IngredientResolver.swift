@@ -168,21 +168,25 @@ struct IngredientResolver {
     // MARK: - Rows
 
     /// Builds the Confirm row for one structured line (§7.4 + §7.5):
-    /// - a hit at layers 0–3 sets `ingredient`, `ingredientName` and `resolution`
-    ///   (fuzzy/embedding rows show as highlighted through `DraftRow.state`);
-    /// - with no hit, layer 4 runs `resolveDeterministic` on the model's
-    ///   `canonicalGuess`; a hit there is only a `.llm` **suggestion** — the row's
-    ///   `ingredient` stays nil until the user taps Use, because the model never
-    ///   writes an alias (§7.5);
-    /// - otherwise the row is `.none` — a new ingredient that needs a tap.
+    /// - layers 0–1.5 select the ingredient (exact, alias, loose);
+    /// - a fuzzy or embedding hit is only a suggestion — `ingredient` stays nil
+    ///   until the reader taps Use, same as the model's guess;
+    /// - with no hit, layer 4 runs `resolveDeterministic` on `canonicalGuess`,
+    ///   and a hit there is a suggestion too. The model never writes an alias;
+    /// - a low-confidence line drops that suggestion. With `dropUncertain`, it
+    ///   also starts off the list. A deterministic hit is kept underneath, so
+    ///   putting the line back on does not throw away a real match.
     ///
-    /// The row is never resolved from the guess directly, and a low confidence never
-    /// removes a deterministic hit; confidence only affects how the row is shown.
-    func resolveRow(_ line: StructuredLine, lineIndex: Int, canonicalGuess: String?, confidence: RowConfidence) -> DraftRow {
+    /// `dropUncertain` is false for a line the reader already checked on the photo
+    /// screen: that check is the decision to keep it.
+    func resolveRow(_ line: StructuredLine,
+                    lineIndex: Int,
+                    canonicalGuess: String?,
+                    confidence: RowConfidence,
+                    dropUncertain: Bool = true) -> DraftRow {
         // An unresolved line (§7.2: nothing was left for a name, so `name` is the whole
         // line) has no name to match. Running the layers on "to taste" fuzzy-hits Tomato
-        // paste, and a fuzzy row is accepted by Save without a tap — so only the model's
-        // guess (layer 4) may propose an ingredient for such a line.
+        // paste — so only an explicit guess may propose an ingredient for such a line.
         let outcome = line.isUnresolved
             ? (hit: IngredientResolution?.none, alternatives: [IngredientSuggestion]())
             : resolve(line.name)
@@ -195,21 +199,39 @@ struct IngredientResolver {
                            note: line.note,
                            confidence: confidence,
                            alternatives: outcome.alternatives)
-        if let hit = outcome.hit {
-            row.ingredient = .existing(hit.ingredientID)
-            row.ingredientName = index.entry(id: hit.ingredientID)?.canonicalName
-            row.resolution = hit.resolution
-            return row
+        if let hit = outcome.hit, let entry = index.entry(id: hit.ingredientID) {
+            switch hit.resolution {
+            case .exact, .alias, .loose:
+                row.ingredient = .existing(entry.id)
+                row.ingredientName = entry.canonicalName
+                row.resolution = hit.resolution
+                row.alternatives = []
+            case .fuzzy, .embedding, .llm, .user, .none:
+                row.suggestion = IngredientSuggestion(ingredientID: entry.id,
+                                                      canonicalName: entry.canonicalName,
+                                                      score: hit.score,
+                                                      via: hit.resolution)
+                row.resolution = .none
+            }
+        } else {
+            row.resolution = .none
+            if let guess = canonicalGuess?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !guess.isEmpty,
+               let guessed = resolveDeterministic(guess),
+               let entry = index.entry(id: guessed.ingredientID) {
+                row.suggestion = IngredientSuggestion(ingredientID: entry.id,
+                                                      canonicalName: entry.canonicalName,
+                                                      score: guessed.score,
+                                                      via: .llm)
+            }
         }
-        row.resolution = .none
-        if let guess = canonicalGuess?.trimmingCharacters(in: .whitespacesAndNewlines),
-           !guess.isEmpty,
-           let guessed = resolveDeterministic(guess),
-           let entry = index.entry(id: guessed.ingredientID) {
-            row.suggestion = IngredientSuggestion(ingredientID: entry.id,
-                                                  canonicalName: entry.canonicalName,
-                                                  score: guessed.score,
-                                                  via: .llm)
+        if confidence == .low, row.ingredient == nil {
+            // An unsure line does not get to offer an invented grocery name.
+            row.suggestion = nil
+            row.alternatives = []
+        }
+        if confidence == .low, dropUncertain {
+            row.isRemoved = true
         }
         return row
     }

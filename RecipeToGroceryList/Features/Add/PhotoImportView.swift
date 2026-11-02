@@ -10,8 +10,9 @@ import LFWDesignSystem
 ///
 /// The weakest of the three paths, and the spec is honest about why: multi-column
 /// cookbook layouts interleave, drop caps confuse the merge, and a run-on line
-/// can't be split. It ships, with the limitation stated up front, and Confirm is
-/// where the user fixes what OCR got wrong.
+/// can't be split. After the page is read, the picture stays up and the proposed
+/// ingredient lines are checked. Headings and steps stay off the list. Confirm
+/// is where a checked line's quantity or match is fixed.
 ///
 /// Structure mirrors `PasteImportView` so the three Add screens read as one set;
 /// the phase machine and the latest-request-wins generation counter come from
@@ -23,9 +24,16 @@ struct PhotoImportView: View {
     let onParsed: (ParsedRecipe) -> Void
     let recognizer: TextRecognizing
 
+    private struct Review: Equatable {
+        var imageData: Data
+        var lines: [RecognizedLine]
+        var included: Set<Int>
+    }
+
     private enum Phase: Equatable {
         case idle
         case recognizing
+        case review(Review)
         case empty
         case failed(String)
     }
@@ -33,6 +41,7 @@ struct PhotoImportView: View {
     @State private var phase: Phase = .idle
     @State private var photoItem: PhotosPickerItem?
     @State private var showingCamera = false
+    @State private var isParsing = false
     /// Monotonic token: a read only applies if it is still the newest one.
     @State private var generation = 0
 
@@ -49,7 +58,7 @@ struct PhotoImportView: View {
             content
                 .padding(20)
         }
-        .navigationTitle("Photo")
+        .navigationTitle(isReviewing ? "Choose ingredients" : "Photo")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: photoItem) { _, item in
             guard let item else { return }
@@ -81,6 +90,14 @@ struct PhotoImportView: View {
                     .foregroundStyle(palette.secondaryText)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        case .review(let review):
+            PhotoLineReview(imageData: review.imageData,
+                            lines: review.lines,
+                            included: includedBinding,
+                            palette: palette,
+                            isParsing: isParsing,
+                            onUse: useSelection,
+                            onDifferentPhoto: { phase = .idle })
         case .empty:
             LFWEmptyState(symbol: "doc.text.viewfinder",
                           title: "Couldn't read that photo",
@@ -120,7 +137,7 @@ struct PhotoImportView: View {
             }
             #endif
 
-            Text("Works best on a single column of ingredients. The photo is read on this phone and never stored.")
+            Text("Works best on a single column of ingredients. You'll choose which lines are ingredients. The photo is read on this phone and never stored.")
                 .font(Theme.bodyFont(size: 13))
                 .foregroundStyle(palette.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
@@ -147,34 +164,71 @@ struct PhotoImportView: View {
         }
     }
 
-    /// Recognize → pipeline → Confirm. Every resume checks the generation token, so
-    /// a slower earlier photo can never overwrite a newer pick.
+    /// Recognize, then show the checklist. Parsing waits until she taps Use.
+    /// Every resume checks the generation token, so a slower earlier photo can
+    /// never overwrite a newer pick.
     @MainActor
     private func read(_ imageData: Data) async {
         generation += 1
         let token = generation
         phase = .recognizing
 
-        let lines = await recognizer.recognizeLines(in: imageData)
+        let lines = await recognizer.recognizePage(in: imageData)
         guard token == generation else { return }
         guard !lines.isEmpty else {
             phase = .empty
             return
         }
-        do {
-            let pipeline = try appModel.makePipeline()
-            let outcome = await pipeline.run(lines: lines, source: RecipeSource(kind: .photo))
-            guard token == generation else { return }
-            switch outcome {
-            case .draft(let parsed):
-                phase = .idle
-                onParsed(parsed)
-            case .declined(let reason):
-                phase = .failed(reason.message)
+        let roles = IngredientBlock.propose(lines.map(\.text))
+        let included = Set(roles.enumerated().compactMap { index, role in
+            role == .ingredient ? index : nil
+        })
+        phase = .review(Review(imageData: imageData, lines: lines, included: included))
+    }
+
+    /// The checklist lives inside `Phase`, so the binding writes the whole phase back.
+    private var includedBinding: Binding<Set<Int>> {
+        Binding {
+            if case .review(let review) = phase { return review.included }
+            return []
+        } set: { newValue in
+            if case .review(var review) = phase {
+                review.included = newValue
+                phase = .review(review)
             }
-        } catch {
-            guard token == generation else { return }
-            phase = .failed("The ingredient library couldn't be read. Try again.")
+        }
+    }
+
+    private var isReviewing: Bool {
+        if case .review = phase { return true }
+        return false
+    }
+
+    /// Parse only the checked lines. Unchecked text stays on this screen, which
+    /// remains under Confirm, so it can be put back without being shopped.
+    /// A line she checked is kept even when the model is unsure.
+    private func useSelection() {
+        guard case .review(let review) = phase, !review.included.isEmpty, !isParsing else { return }
+        isParsing = true
+        let lines = review.lines.map(\.text)
+        let included = review.included
+        Task { @MainActor in
+            defer { isParsing = false }
+            do {
+                let pipeline = try appModel.makePipeline()
+                let outcome = await pipeline.run(lines: lines,
+                                                  source: RecipeSource(kind: .photo),
+                                                  selection: .indices(included),
+                                                  droppingUncertainLines: false)
+                switch outcome {
+                case .draft(let parsed):
+                    onParsed(parsed)
+                case .declined(let reason):
+                    phase = .failed(reason.message)
+                }
+            } catch {
+                phase = .failed("The ingredient library couldn't be read. Try again.")
+            }
         }
     }
 }

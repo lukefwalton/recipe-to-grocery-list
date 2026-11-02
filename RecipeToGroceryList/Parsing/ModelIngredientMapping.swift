@@ -22,11 +22,13 @@ import Foundation
 ///   also found one, and only when finite and ≥ 0. Otherwise the regex value stands.
 /// - Its `unit` is used only when `UnitTable.key(forSpelling:)` recognises it; the
 ///   row's `unitKey` therefore always satisfies the validator's `isKnownKey` rule.
-/// - An unknown `confidence` string is `.low` (`RowConfidence(modelString:)`): a
-///   misspelling can only make a row *more* visible, never less.
-/// - `canonicalGuess` is carried along untouched (trimmed, nil when blank). It is
-///   never applied here: `IngredientResolver.resolveRow` consults it at layer 4 only,
-///   and only ever as a suggestion the user taps **Use** on.
+/// - An unknown `confidence` string is `.low` (`RowConfidence(modelString:)`).
+///   A low-confidence line starts off the list, so a misspelling can only make
+///   a row *less* selected, never silently accepted.
+/// - The model's `name` is ignored. The row keeps the words the splitter read, so
+///   a rewritten grocery name cannot become the query for layers 0–3. `canonicalGuess`
+///   is carried along untouched (trimmed, nil when blank) and is never applied here:
+///   `IngredientResolver.resolveRow` consults it only as a suggestion.
 enum ModelIngredientMapping {
 
     /// One input line after the merge: the (possibly refined) structured line plus the
@@ -79,13 +81,11 @@ enum ModelIngredientMapping {
     static func merged(_ line: StructuredLine, with row: RefinedRow) -> MergedLine {
         var structured = line
 
-        // A model name replaces the regex name; a blank one leaves the regex name (and
-        // an unresolved line stays unresolved — `name == rawLine` per §7.2). Once the
-        // model has named the ingredient the line is no longer "nothing left".
-        if let name = nonEmpty(row.name) {
-            structured.name = name
-            structured.isUnresolved = false
-        }
+        // The name stays what was read. The model is asked for a cleaned name, and
+        // it will invent one for a heading ("Let's get started" → "lemongrass").
+        // That string used to be matched as if the reader had typed it, so an
+        // exact hit was already selected on Confirm. The guess, if any, stays a
+        // suggestion on `MergedLine.canonicalGuess`.
 
         // Numbers: only refine a quantity the regex also saw, and only with a sane value.
         // `quantityText` stays what the author wrote — it is the "as written" display

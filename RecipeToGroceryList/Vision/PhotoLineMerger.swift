@@ -1,5 +1,22 @@
 import Foundation
 
+/// One physical line after `PhotoLineMerger` joins Vision's boxes, plus the
+/// union of those boxes. Origin is bottom-left, every value in 0…1, matching
+/// Vision. `hasFrame` is false when the line was recognized without geometry
+/// (the no-op recognizer, or a caller that only has strings).
+struct RecognizedLine: Equatable, Sendable {
+    var text: String
+    var minX: Double
+    var minY: Double
+    var width: Double
+    var height: Double
+
+    var hasFrame: Bool { width > 0 && height > 0 }
+
+    /// Vertical centre measured from the top of the image, 0…1.
+    var centerFromTop: Double { 1 - (minY + height / 2) }
+}
+
 /// One recognized text box in Vision's normalized coordinate space: origin
 /// bottom-left, every value in 0…1. Foundation-only so the merging rule can be
 /// unit-tested without Vision.
@@ -46,6 +63,12 @@ struct RecognizedTextBox: Equatable, Sendable {
 /// behaviour explicitly so it stays a decision rather than a surprise.
 enum PhotoLineMerger {
     static func lines(from boxes: [RecognizedTextBox]) -> [String] {
+        groupedLines(from: boxes).map(\.text)
+    }
+
+    /// The same grouping as `lines(from:)`, keeping each line's union box so the
+    /// photo screen can draw the ingredient band on the picture.
+    static func groupedLines(from boxes: [RecognizedTextBox]) -> [RecognizedLine] {
         let usable = boxes.filter { !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         guard !usable.isEmpty else { return [] }
 
@@ -78,13 +101,22 @@ enum PhotoLineMerger {
         if !current.isEmpty { groups.append(current) }
 
         return groups.compactMap { group in
-            let line = group
-                .sorted { $0.minX < $1.minX }
+            let ordered = group.sorted { $0.minX < $1.minX }
+            let line = ordered
                 .map { $0.text.trimmingCharacters(in: .whitespacesAndNewlines) }
                 .filter { !$0.isEmpty }
                 .joined(separator: " ")
             let collapsed = line.split(whereSeparator: { $0.isWhitespace }).joined(separator: " ")
-            return collapsed.isEmpty ? nil : collapsed
+            guard !collapsed.isEmpty else { return nil }
+            let minX = ordered.map(\.minX).min() ?? 0
+            let minY = ordered.map(\.minY).min() ?? 0
+            let maxX = ordered.map { $0.minX + $0.width }.max() ?? minX
+            let maxY = ordered.map { $0.minY + $0.height }.max() ?? minY
+            return RecognizedLine(text: collapsed,
+                                  minX: minX,
+                                  minY: minY,
+                                  width: max(0, maxX - minX),
+                                  height: max(0, maxY - minY))
         }
     }
 

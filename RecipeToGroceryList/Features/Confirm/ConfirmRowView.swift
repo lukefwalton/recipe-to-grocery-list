@@ -7,7 +7,7 @@ import LFWDesignSystem
 /// |-------------|----------------------------------------------------|--------------------------------------|
 /// | resolved    | canonical name, amount · note (· name as written)  | tap → change ingredient, Edit        |
 /// | highlighted | name as written, amount, warning dot "matched to X"| leave it, or tap → change            |
-/// | suggested   | bold name, amount, "Looks like X", **Use**         | Use writes an alias; tap → picker    |
+/// | suggested   | bold name, amount, "Looks like X", **Use**         | fuzzy, embedding, or model guess; Use writes an alias |
 /// | new         | bold name, amount, "New ingredient"                | Create / Same as… / Keep as text     |
 /// | text        | name, amount, "Kept as text"                        | tap → picker                         |
 /// | removed     | greyed, struck through                             | Restore                              |

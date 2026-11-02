@@ -205,7 +205,9 @@ struct LinkImportView: View {
                                       ref: page.finalURL.absoluteString,   // final URL after redirects (§5.1)
                                       titleGuess: extracted.title,
                                       servingsText: extracted.servingsText)
-            let outcome = await pipeline.run(lines: extracted.ingredientLines, source: source)
+            let outcome = await pipeline.run(lines: extracted.ingredientLines,
+                                               source: source,
+                                               selection: .proposedBlock)
             guard !Task.isCancelled else { return }
             switch outcome {
             case .draft(let parsed):

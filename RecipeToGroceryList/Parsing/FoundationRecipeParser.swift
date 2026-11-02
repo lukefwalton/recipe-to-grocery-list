@@ -80,19 +80,22 @@ struct FoundationRecipeParser: RecipeRefining {
         anything: you only propose, and the user confirms and can edit every field before \
         anything is saved.
 
-        Each line of the prompt is one ingredient line, exactly as the user gave it. Return \
+        Each line of the prompt is one line from the recipe, exactly as it was read. Return \
         one row per line, in the same order. Set rawLine to the input line unchanged, \
         character for character — it is how each row is matched back to its line. Never add \
-        a row for a line that is not in the input, and never merge or split lines. If a line \
-        is not an ingredient (a heading, a step, a note), still return its row with your best \
-        reading and confidence "low".
+        a row for a line that is not in the input, and never merge or split lines.
 
-        For each row:
+        If a line is not an ingredient (a heading, a step, a note, an introduction), set \
+        confidence to "low", set name to that line unchanged, and set canonicalGuess to an \
+        empty string. Do not invent a grocery name for it.
+
+        For an ingredient line:
         - name: the ingredient as written, without the quantity, unit and preparation notes \
-        ("veggie stock" for "2 cups veggie stock, warmed").
-        - canonicalGuess: the best canonical grocery name for that ingredient. Prefer one of \
-        the known ingredients below whenever one clearly fits ("vegetable broth" for "veggie \
-        stock"); if none fits, propose a short, plain grocery name of your own.
+        ("veggie stock" for "2 cups veggie stock, warmed"). Do not replace it with a \
+        different ingredient.
+        - canonicalGuess: one of the known ingredients below when one clearly fits \
+        ("vegetable broth" for "veggie stock"). If none fits, leave canonicalGuess empty. \
+        Never substitute a different food.
         - quantity: the number the line states, or nil when it states none. Never invent a \
         quantity. For a range such as "2-3" use the lower bound, 2.
         - unit: the unit exactly as written ("cups", "Tbsp", "g"), or nil when there is none.
@@ -140,9 +143,9 @@ struct FoundationRecipeParser: RecipeRefining {
 struct ModelIngredientRow {
     @Guide(description: "The input line, unchanged.")
     let rawLine: String
-    @Guide(description: "Ingredient name as written, cleaned of quantity, unit, and prep notes.")
+    @Guide(description: "Ingredient as written, without quantity, unit, or prep. For a line that is not an ingredient, repeat the line unchanged. Never substitute a different food.")
     let name: String
-    @Guide(description: "Best canonical grocery name for this ingredient, e.g. 'vegetable broth' for 'veggie stock'.")
+    @Guide(description: "A known grocery name only when this line is an ingredient and one clearly fits. Otherwise empty. Never invent a different ingredient.")
     let canonicalGuess: String
     @Guide(description: "Numeric amount if the line states one; otherwise nil. Never invent one.")
     let quantity: Double?
@@ -150,7 +153,7 @@ struct ModelIngredientRow {
     let unit: String?
     @Guide(description: "Preparation or usage note such as 'diced' or 'divided', or nil.")
     let note: String?
-    @Guide(description: "high if the line is an unambiguous single ingredient; medium if a reasonable guess; low if unsure or the line is not an ingredient.")
+    @Guide(description: "high if the line is one unambiguous ingredient; medium if a reasonable guess; low if unsure or the line is not an ingredient.")
     let confidence: String   // high | medium | low
 }
 

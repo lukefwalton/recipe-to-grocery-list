@@ -30,6 +30,10 @@ struct VisionTextRecognizer: TextRecognizing {
                              category: "OCR")
 
     func recognizeLines(in imageData: Data) async -> [String] {
+        await recognizePage(in: imageData).map(\.text)
+    }
+
+    func recognizePage(in imageData: Data) async -> [RecognizedLine] {
         // `perform` is synchronous and CPU-heavy (accurate recognition over a full
         // page), and the caller is a SwiftUI view on the main actor — without this
         // hop the UI would freeze while the sheet shows "Reading the page…".
@@ -41,7 +45,7 @@ struct VisionTextRecognizer: TextRecognizing {
         }.value
     }
 
-    private static func recognize(imageData: Data, log: Logger) -> [String] {
+    private static func recognize(imageData: Data, log: Logger) -> [RecognizedLine] {
         let request = VNRecognizeTextRequest()
         // Accurate over fast: a one-shot import is worth the extra second, and a
         // misread ingredient costs the user a correction. Language correction helps
@@ -60,7 +64,7 @@ struct VisionTextRecognizer: TextRecognizing {
             log.error("text recognition failed: \(error.localizedDescription, privacy: .public)")
             return []
         }
-        return PhotoLineMerger.lines(from: boxes(from: request.results ?? []))
+        return PhotoLineMerger.groupedLines(from: boxes(from: request.results ?? []))
     }
 
     /// Vision observations → the Foundation-only boxes `PhotoLineMerger` groups.

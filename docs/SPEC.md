@@ -205,14 +205,16 @@ Store `source_ref` = final URL after redirects. HTML is parsed once and discarde
 - Split on newlines; trim; drop empty lines.
 - Strip leading bullets, dashes, `*`, `•`, numbering (`1.`, `1)`, `①`).
 - Lines ending in `:` with no digit are **section headers** ("For the sauce:"). They are not ingredients. They appear in the Confirm UI as greyed dividers so the user sees where they went, and are not stored.
-- Everything else is a raw line.
+- Before those lines are parsed, the ingredient block is proposed (`IngredientBlock`). "Ingredients" starts it. "Instructions", "Let's get started", and other method headings end it. Prose and steps stay in the draft struck off the list, so they can be put back. They are not sent to the matcher or the model.
+- A paste that is already just an ingredient list is unchanged: every quantity line, and the bare names between them, is included.
 
 ### 5.3 Photo
 
 - `PHPickerViewController` or camera → one image (no multi-page in v1).
 - `VNRecognizeTextRequest`, `.accurate`, `usesLanguageCorrection = true`, English.
 - Sort observations top-to-bottom, left-to-right; merge boxes whose vertical centers are within half a line height into one line. Two-column pages will interleave; the user fixes it in Confirm. Document the limitation in-app ("Works best on a single column of ingredients").
-- Then the same header/bullet stripping as 5.2.
+- Show the photo with the proposed ingredient band. The reader can drag the band or tap a line. Only checked lines are parsed. Headings stay captions. Unchecked text stays on that screen, which remains under Confirm, and is not put on the list. The image is still never stored.
+- Then the same header/bullet stripping as 5.2. A line she checked is kept even when the model reports low confidence.
 
 ---
 
@@ -346,21 +348,22 @@ One `LanguageModelSession` request per recipe, not per line. Instructions includ
 Mapping back (FM-free, always compiled, unit-tested, mirrors `ModelDraftMapping`):
 
 - Rows are matched to input lines by `rawLine`. A model row whose `rawLine` doesn't match any input, or an input line the model skipped, falls back to the regex result for that line. The model can never add or remove lines.
+- The model's `name` is ignored. The row keeps the name the regex splitter read, so a rewritten grocery name cannot be what the resolver matches. `canonicalGuess` is still only a suggestion, and a low-confidence row does not offer one.
 - Unknown `confidence` string → `low`. A non-finite or negative model `quantity` is ignored (the regex value stays). A model `quantity` where the regex found none → nil (the model may not invent numbers).
 - The whole response fails validation (`declined`) only if it is unparseable; then every line uses regex + layers 0–3 and the UI says "Parsed without on-device AI".
 
 ### 7.4 Resolve (layers, per row, first hit wins)
 
-Input is the normalized `name` (regex or LLM). `canonicalGuess` is only consulted at layer 4.
+Input is the name the regex splitter read. The model's rewritten name is not used. `canonicalGuess` is only consulted at layer 4, and only when the line is not low confidence.
 
 | Layer | Method | Writes `resolution` | Default treatment |
 |---|---|---|---|
 | 0 | exact `canonical_name` match (NOCASE) | `exact` | resolved |
 | 1 | `ingredient_aliases` hit | `alias` | resolved |
 | 1.5 | loose key (7.1 applied to both sides) against names and aliases | `loose` | resolved |
-| 2 | fuzzy: `max(jaroWinkler(whole), tokenAverage)` ≥ threshold (start 0.78, recalibrate) against names and aliases — shipped at **0.86**, with a symmetric token metric and a head-noun cap (`003`) | `fuzzy` | resolved, highlighted |
-| 3 | `NLContextualEmbedding` mean-pooled cosine ≥ threshold (start 0.85) when fuzzy is below its escalation bar; additive, never displaces a fuzzy hit — shipped at 0.85 with the bar at **0.93**, which must stay above the layer-2 threshold or this path is unreachable (`003`) | `embedding` | resolved, highlighted |
-| 4 | run layers 0–1.5 again on the LLM's `canonicalGuess`; if it hits, that ingredient is the suggestion | `llm` | suggested, requires tap |
+| 2 | fuzzy: `max(jaroWinkler(whole), tokenAverage)` ≥ threshold (start 0.78, recalibrate) against names and aliases — shipped at **0.86**, with a symmetric token metric and a head-noun cap (`003`) | suggestion `via: fuzzy`; the row stays `none` until **Use**, which records `user` | suggested, requires tap |
+| 3 | `NLContextualEmbedding` mean-pooled cosine ≥ threshold (start 0.85) when fuzzy is below its escalation bar; additive, never displaces a fuzzy hit — shipped at 0.85 with the bar at **0.93**, which must stay above the layer-2 threshold or this path is unreachable (`003`) | suggestion `via: embedding`; the row stays `none` until **Use** | suggested, requires tap |
+| 4 | run layers 0–1.5 again on the LLM's `canonicalGuess`; if it hits, that ingredient is the suggestion. Dropped when confidence is `low` | `llm` | suggested, requires tap |
 | — | nothing hit | `none` | **new ingredient**, requires tap |
 
 Two protections carried over from exercises: an alias can have one owner (PK), and two existing canonicals are never auto-merged by any layer. Watch-outs specific to food, to encode in the golden corpus: substring traps (`cream` vs `ice cream` vs `sour cream`, `chicken` vs `chicken broth`), and modifiers that change identity (`smoked paprika` ≠ `paprika`, `brown sugar` ≠ `sugar`). Fuzzy and embedding thresholds will likely end up *tighter* than the workout values for this reason.
@@ -372,14 +375,14 @@ One row per raw line, in source order, with section-header dividers greyed. Row 
 | State | Looks like | User can |
 |---|---|---|
 | Resolved (exact / alias / loose with high confidence, or any user decision) | canonical name, quantity + unit, note | tap to change ingredient, edit fields |
-| Resolved, highlighted (fuzzy / embedding, or a hit with medium / low confidence) | same, `warning`-tone dot, "matched to *X*" | confirm by leaving it, or change |
-| Suggested (llm) | "Looks like *X*" with **Use** button | Use → writes an alias `name → X` |
-| New (none — a deterministic hit is never demoted by low confidence, only highlighted) | name in bold, "New ingredient" | **Create** (new canonical, `is_custom`), **Same as…** (picker → writes alias), **Keep as text** (`ingredient_id NULL`) |
-| Not an ingredient | greyed | Remove, or keep as text |
+| Resolved, highlighted (exact / alias / loose with medium confidence, or a low-confidence deterministic hit the reader put back on the list) | name as written, `warning`-tone dot, "matched to *X*" | confirm by leaving it, or change |
+| Suggested (fuzzy, embedding, or llm) | "Looks like *X*" with **Use** button | Use → writes an alias `name → X` |
+| New (nothing hit) | name in bold, "New ingredient" | **Create** (new canonical, `is_custom`), **Same as…** (picker → writes alias), **Keep as text** (`ingredient_id NULL`) |
+| Not an ingredient (removed, including a low-confidence line and any line the block proposal excluded) | greyed, struck through | Restore. A restored deterministic hit comes back already matched |
 
 The **Same as…** and **Use** taps are how the alias table grows: `ingredient_aliases (alias: normalize(name), ingredient_id, is_custom: 1)`. If that alias already exists for a different owner (the PK), the tap is refused with "*name* already means *Y*" — the user picks explicitly. The model never writes an alias.
 
-Save is disabled until no row is in the *New* state. Everything else has a default the user can accept by tapping Save.
+Save is disabled until no row is in the *New* or *Suggested* state. A removed line does not block Save. Everything else has a default the user can accept by tapping Save.
 
 ### 7.6 Devices without Apple Intelligence
 

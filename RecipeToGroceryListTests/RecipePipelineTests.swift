@@ -225,7 +225,7 @@ final class RecipePipelineTests: XCTestCase {
         XCTAssertTrue(row.blocksSave)
     }
 
-    func testDeterministicHitIsUnaffectedByAWrongGuess() async {
+    func testLowConfidenceKeepsTheDeterministicHitButStartsOffTheList() async {
         let fake = FakeRefiner(RecipeRefinement(rows: [
             RefinedRow(rawLine: "3 cloves garlic", name: "garlic", canonicalGuess: "Onion", quantity: 3, unit: "cloves", confidence: "low"),
         ]))
@@ -236,8 +236,15 @@ final class RecipePipelineTests: XCTestCase {
         XCTAssertEqual(row.resolution, .exact)
         XCTAssertNil(row.suggestion)
         XCTAssertEqual(row.confidence, .low)
-        XCTAssertEqual(row.state, .highlighted, "low confidence never removes a deterministic hit — it flags it")
+        XCTAssertTrue(row.isRemoved, "a low-confidence line starts off the list")
+        XCTAssertEqual(row.state, .removed)
         XCTAssertFalse(row.blocksSave)
+
+        guard let kept = parsed(await pipeline(fake).run(text: "3 cloves garlic",
+                                                          source: source,
+                                                          droppingUncertainLines: false)) else { return }
+        XCTAssertFalse(kept.draft.rows[0].isRemoved)
+        XCTAssertEqual(kept.draft.rows[0].state, .highlighted)
     }
 
     func testMediumConfidenceHighlightsAResolvedRow() async {
@@ -260,18 +267,50 @@ final class RecipePipelineTests: XCTestCase {
         guard let result = parsed(await pipeline(fake).run(text: "2 cups olive oil", source: source)) else { return }
         let row = result.draft.rows[0]
         XCTAssertEqual(row.rawLine, "2 cups olive oil", "raw line is never edited")
-        XCTAssertEqual(row.name, "extra-virgin olive oil")
+        XCTAssertEqual(row.name, "olive oil", "the rewritten name is not what gets matched")
         XCTAssertEqual(row.quantity, 3)
         XCTAssertEqual(row.unitKey, "tbsp")
         XCTAssertEqual(row.unitText, "Tbsp")
         XCTAssertEqual(row.note, "for frying")
-        // The model's name misses the deterministic layers and fuzzy ("extra-virgin olive
-        // oil" vs "Olive oil": different word counts, symmetric token score), so the guess
-        // becomes the suggestion — exactly the §7.4 layer-4 path.
-        XCTAssertNil(row.ingredient)
-        XCTAssertEqual(row.suggestion?.ingredientID, 4)
+        XCTAssertEqual(row.ingredient, .existing(4), "the words that were read match exactly")
+        XCTAssertEqual(row.resolution, .exact)
+        XCTAssertNil(row.suggestion, "a deterministic hit does not also offer the guess")
+        XCTAssertEqual(row.state, .resolved)
+    }
+
+    func testARewrittenNameCannotSelectADifferentIngredient() async {
+        let fake = FakeRefiner(RecipeRefinement(rows: [
+            RefinedRow(rawLine: "Let's get started", name: "lemongrass", canonicalGuess: "Onion", confidence: "high"),
+        ]))
+        guard let result = parsed(await pipeline(fake).run(text: "Let's get started", source: source)) else { return }
+        let row = result.draft.rows[0]
+        XCTAssertEqual(row.name, "Let's get started")
+        XCTAssertNil(row.ingredient, "the invented name is not matched")
+        XCTAssertEqual(row.suggestion?.ingredientID, 3, "the guess is only a suggestion")
         XCTAssertEqual(row.suggestion?.via, .llm)
         XCTAssertEqual(row.state, .suggested)
+        XCTAssertTrue(row.blocksSave)
+    }
+
+    func testProposedBlockLeavesTheIntroOffTheListAndOutOfTheModel() async {
+        let page = """
+        Let's get started
+        This soup is my favorite weeknight dinner and it comes together fast.
+        Ingredients
+        2 cups vegetable stock
+        3 cloves garlic
+        Instructions
+        Preheat the oven to 350 and roast until sweet.
+        """
+        let fake = FakeRefiner(nil)
+        guard let result = parsed(await pipeline(fake).run(text: page, source: source, selection: .proposedBlock)) else { return }
+        XCTAssertEqual(fake.calls.first?.lines, ["2 cups vegetable stock", "3 cloves garlic"])
+        XCTAssertEqual(result.draft.rows.filter { !$0.isRemoved }.map(\.name), ["vegetable stock", "garlic"])
+        XCTAssertEqual(result.draft.rows.filter { !$0.isRemoved }.map(\.ingredient), [.existing(1), .existing(2)])
+        XCTAssertTrue(result.draft.rows.contains { $0.isRemoved && $0.rawLine.hasPrefix("This soup") })
+        XCTAssertFalse(result.draft.rows.contains { $0.rawLine == "Let's get started" }, "the heading is a divider, not a row")
+        XCTAssertTrue(result.draft.rawLines.contains("Let's get started"))
+        XCTAssertFalse(result.draft.rows.contains { $0.name.localizedCaseInsensitiveContains("lemongrass") })
     }
 
     func testModelCannotInventAQuantityOrALineThroughThePipeline() async {

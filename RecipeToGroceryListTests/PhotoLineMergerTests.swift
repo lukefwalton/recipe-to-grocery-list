@@ -33,6 +33,19 @@ final class PhotoLineMergerTests: XCTestCase {
         ])
         XCTAssertEqual(lines, ["2 cups all-purpose flour"],
                        "input order doesn't matter; horizontal position does")
+        let grouped = PhotoLineMerger.groupedLines(from: [
+            box("all-purpose flour", x: 0.35, y: 0.802),
+            box("2 cups", x: 0.1, y: 0.80),
+        ])
+        guard let line = grouped.first else {
+            XCTFail("expected one merged line")
+            return
+        }
+        XCTAssertEqual(line.minX, 0.1, accuracy: 0.0001)
+        XCTAssertEqual(line.minY, 0.80, accuracy: 0.0001)
+        XCTAssertEqual(line.width, 0.45, accuracy: 0.0001)
+        XCTAssertEqual(line.height, 0.042, accuracy: 0.0001)
+        XCTAssertTrue(line.hasFrame)
     }
 
     func testSubPixelJitterDoesNotSplitALine() {

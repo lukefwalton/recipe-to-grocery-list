@@ -40,7 +40,7 @@ struct PasteImportView: View {
                 editor
                     .frame(minHeight: 200, maxHeight: .infinity)
 
-                Text("One ingredient per line. A line ending in a colon, like “For the sauce:”, is treated as a section header.")
+                Text("One ingredient per line. Headings and steps are left off the list — you can put a line back on the next screen. A line ending in a colon, like “For the sauce:”, is a section header.")
                     .font(Theme.bodyFont(size: 13))
                     .foregroundStyle(palette.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
@@ -119,7 +119,9 @@ struct PasteImportView: View {
             defer { isParsing = false }
             do {
                 let pipeline = try appModel.makePipeline()
-                let outcome = await pipeline.run(text: input, source: RecipeSource(kind: .text))
+                let outcome = await pipeline.run(text: input,
+                                                   source: RecipeSource(kind: .text),
+                                                   selection: .proposedBlock)
                 switch outcome {
                 case .draft(let parsed):
                     onParsed(parsed)
